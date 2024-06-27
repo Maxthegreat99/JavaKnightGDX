@@ -56,7 +56,7 @@ public class JavaKnight extends ApplicationAdapter {
 
 	public Sprite plr;
 	public float zoom = 0.75f;
-	private Vector3 cameraPos = new Vector3();
+	private final Vector3 cameraPos = new Vector3();
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -98,7 +98,7 @@ public class JavaKnight extends ApplicationAdapter {
 
 		ticks++;
 	}
-
+	private double delta = 0.004f;
 	@Override
 	public void render () {
 		update();
@@ -131,8 +131,11 @@ public class JavaKnight extends ApplicationAdapter {
 		}
 		batch.setShader(null);
 
-		plr.rotate(1);
+		plr.rotate(2f);
 		plr.draw(batch);
+
+		if (zoom > 0.9f || zoom < 0.1) delta = -delta;
+		zoom += (float) delta;
 
 		batch.setShader(fontShader);
 		font.getData().setScale(1);
@@ -149,9 +152,11 @@ public class JavaKnight extends ApplicationAdapter {
 
 		// scale the camera up again
 		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-		camera.zoom = (float) zoom;
+		camera.zoom = zoom;
 		cameraPos.set((float) SCREEN_WIDTH / 2 + (SCREEN_WIDTH * (1f - zoom)) / 2,
 				      (float) SCREEN_HEIGHT / 2 + (SCREEN_HEIGHT * (1f - zoom)) / 2, 0 );
+		System.out.println(zoom);
+		System.out.println(cameraPos);
 		camera.position.set(cameraPos);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
