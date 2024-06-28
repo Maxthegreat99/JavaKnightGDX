@@ -24,8 +24,8 @@ public class JavaKnight extends ApplicationAdapter {
 	private AssetManager assetManager; // asset manager instance, gets passed classes for use of assets
 	public final int SCREEN_WIDTH = 1680;
 	public final int SCREEN_HEIGHT = 1050;
-	public final int FRAME_WIDTH = 560; // Frame buffer width
-	public final int FRAME_HEIGHT = 350; // Frame buffer height
+	public final int FRAME_WIDTH = 616; // Frame buffer width
+	public final int FRAME_HEIGHT = 385; // Frame buffer height
 	//
 	public final Array<Object> LayerOne = new Array<>();
 	public final Array<Object> LayerTwo = new Array<>();
@@ -55,7 +55,7 @@ public class JavaKnight extends ApplicationAdapter {
 	public long ticks = 0;
 
 	public Sprite plr;
-	public float zoom = 0.75f;
+	public float zoom = 0.90909f;
 	private final Vector3 cameraPos = new Vector3();
 	@Override
 	public void create () {
@@ -98,7 +98,6 @@ public class JavaKnight extends ApplicationAdapter {
 
 		ticks++;
 	}
-	private double delta = 0.004f;
 	@Override
 	public void render () {
 		update();
@@ -134,9 +133,6 @@ public class JavaKnight extends ApplicationAdapter {
 		plr.rotate(2f);
 		plr.draw(batch);
 
-		if (zoom > 0.9f || zoom < 0.1) delta = -delta;
-		zoom += (float) delta;
-
 		batch.setShader(fontShader);
 		font.getData().setScale(1);
 		font.draw(batch, "Hello LibGDX World!!!", (float) FRAME_WIDTH / 3.5f, FRAME_HEIGHT - (float) FRAME_HEIGHT * 0.75f);
@@ -153,10 +149,9 @@ public class JavaKnight extends ApplicationAdapter {
 		// scale the camera up again
 		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 		camera.zoom = zoom;
-		cameraPos.set((float) SCREEN_WIDTH / 2 + (SCREEN_WIDTH * (1f - zoom)) / 2,
-				      (float) SCREEN_HEIGHT / 2 + (SCREEN_HEIGHT * (1f - zoom)) / 2, 0 );
-		System.out.println(zoom);
-		System.out.println(cameraPos);
+		cameraPos.set((float) SCREEN_WIDTH / 2f + ((SCREEN_WIDTH * (1f - zoom)) / 2f),
+				      (float) SCREEN_HEIGHT / 2f + (SCREEN_HEIGHT * (1f - zoom)) / 2f, 0 );
+
 		camera.position.set(cameraPos);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
