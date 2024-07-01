@@ -1,0 +1,32 @@
+package com.segfault.games.util;
+
+public enum indexT {
+    ONE_PARTICLE_1,
+    ONE_PARTICLE_2,
+    ZERO_PARTICLE_1,
+    ZERO_PARTICLE_2,
+    ACID_BULLET,
+    ACID_PARTICLE,
+    BOSS_BAR_OUTLINE,
+    ACID_BEAM,
+    ACID_BEAM_BALL,
+    BOSS,
+    BOSS_BAR_FILLING,
+    BOSS_DEAD,
+    BOSS_HIT,
+    BOUNCY,
+    BOUNCY_GUN,
+    BULLET,
+    NORMAL_DOOR,
+    INFINITE_DOOR,
+    QUIT_DOOR,
+    FIRE_PARTICLE,
+    FLOOR_PARTICLE,
+    GUN,
+    GUNNER,
+    LAZER_GUN,
+    PLAYER,
+    ROCKET,
+    ROCKET_GUN
+
+}

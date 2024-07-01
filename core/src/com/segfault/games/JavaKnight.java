@@ -1,5 +1,7 @@
 package com.segfault.games;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,22 +13,27 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.segfault.games.assets.AssetManager;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.dongbat.jbump.World;
+import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.sys.MovementSystem;
+import com.segfault.games.util.AssetManager;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
-import com.segfault.games.obj.abs.Object;
+import com.segfault.games.util.EntityManager;
 
 public class JavaKnight extends ApplicationAdapter {
 
 	private SpriteBatch batch;
-	private BitmapFont font; // Font the whole game is gonna use
+	public BitmapFont font; // Font the whole game is gonna use
+	public ObjectMap<BitmapFontCache, Float> StaticFonts = new ObjectMap<>();
 	// Game window dimensions
 	private AssetManager assetManager; // asset manager instance, gets passed classes for use of assets
 	public final int SCREEN_WIDTH = 1680;
 	public final int SCREEN_HEIGHT = 1050;
 	public final int FRAME_WIDTH = 616; // Frame buffer width
 	public final int FRAME_HEIGHT = 385; // Frame buffer height
-	//
+
 	public final Array<Object> LayerOne = new Array<>();
 	public final Array<Object> LayerTwo = new Array<>();
 	public final Array<Object> LayerThree = new Array<>();
@@ -50,28 +57,31 @@ public class JavaKnight extends ApplicationAdapter {
 	//public final Player Plr;
 
 	// Physics world instance
-	//public final World<PhysicObject> PhysicWorld;
+	public World<Entity> PhysicWorld;
 	public OrthographicCamera camera;
 	public long ticks = 0;
 
-	public Sprite plr;
 	public float zoom = 0.90909f;
 	private final Vector3 cameraPos = new Vector3();
+	// ECS engine instance, used to store entities, components and systems
+	public PooledEngine PooledECS;
+	public EntityManager EntityManager;
 	@Override
 	public void create () {
+		EntityManager = new EntityManager();
+		PooledECS = new PooledEngine();
+		PhysicWorld = new World<>();
+
 		batch = new SpriteBatch();
 
 		assetManager = new AssetManager();
 		atlas = new TextureAtlas(Gdx.files.internal("JavaKnight.atlas"));
 
-		plr = atlas.createSprite("player");
-		plr.setOriginCenter();
-		plr.setPosition((float) FRAME_WIDTH / 2 - 8, (float) FRAME_HEIGHT / 2 - 8);
-
 		// load fonts
 		fontTexture = new Texture(Gdx.files.internal("DisposableDroidBB.png"), true); // true enables mipmaps
 		fontTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Linear); // linear filtering in nearest mipmap image
-		font = new DistanceFieldFont(Gdx.files.internal("DisposableDroidBB.fnt"), new TextureRegion(fontTexture), false);
+		font = new BitmapFont(Gdx.files.internal("DisposableDroidBB.fnt"), new TextureRegion(fontTexture), false);
+
 		fontShader = new ShaderProgram(Gdx.files.internal("font.vert"), Gdx.files.internal("font.frag"));
 		if (!fontShader.isCompiled()) Gdx.app.error("fontShader", "compilation failed:\n" + fontShader.getLog());
 
@@ -82,25 +92,9 @@ public class JavaKnight extends ApplicationAdapter {
 
 	}
 
-	private void update() {
-		// Update objects in each layer
-		for (int i = 0; i < LayerOne.size; i++)
-			LayerOne.get(i).update();
-		for (int i = 0; i < LayerTwo.size; i++)
-			LayerTwo.get(i).update();
-		for (int i = 0; i < LayerThree.size; i++)
-			LayerThree.get(i).update();
-		for (int i = 0; i < LayerFour.size; i++)
-			LayerFour.get(i).update();
-		for (int i = 0; i < LayerUI.size; i++)
-			LayerUI.get(i).update();
-
-
-		ticks++;
-	}
 	@Override
 	public void render () {
-		update();
+		ticks++;
 
 		// Set the viewport to the framebuffer size
 		camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
@@ -115,11 +109,6 @@ public class JavaKnight extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		for (Object obj : LayerOne) obj.draw(batch);
-		for (Object obj : LayerTwo) obj.draw(batch);
-		for (Object obj : LayerThree) obj.draw(batch);
-		for (Object obj : LayerFour) obj.draw(batch);
-		for (Object obj : LayerUI) obj.draw(batch);
 
 		// Draw text objects
 		batch.setShader(fontShader);
@@ -128,14 +117,13 @@ public class JavaKnight extends ApplicationAdapter {
 			font.getData().setScale(t.Scale);
 			font.draw(batch, t.Str, t.X, t.Y);
 		}
-		batch.setShader(null);
 
-		plr.rotate(2f);
-		plr.draw(batch);
-
-		batch.setShader(fontShader);
-		font.getData().setScale(1);
-		font.draw(batch, "Hello LibGDX World!!!", (float) FRAME_WIDTH / 3.5f, FRAME_HEIGHT - (float) FRAME_HEIGHT * 0.75f);
+		ObjectMap.Keys<BitmapFontCache> kset = StaticFonts.keys();
+		for (BitmapFontCache k : kset) {
+			float scale = StaticFonts.get(k);
+			k.getFont().getData().setScale(scale);
+			k.draw(batch);
+		}
 		batch.setShader(null);
 
 		batch.end();
@@ -167,6 +155,8 @@ public class JavaKnight extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(fboTextureRegion.getTexture(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 1, 1);
 		batch.end();
+
+
 	}
 	
 	@Override
@@ -185,6 +175,8 @@ public class JavaKnight extends ApplicationAdapter {
 		LayerFour.clear();
 		LayerUI.clear();
 		Texts.clear();
+		StaticFonts.forEach(i -> i.key.clear());
+		StaticFonts.clear();
 		Rectangles.clear();
 
 	}

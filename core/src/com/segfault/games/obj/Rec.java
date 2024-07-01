@@ -1,37 +1,43 @@
 package com.segfault.games.obj;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.segfault.games.obj.abs.Object;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.function.Supplier;
 
-public class Rec extends Object {
+public class Rec {
 
     public Vector2[] Points = new Vector2[4]; // Array to hold the vertices of the rectangle
-    public Supplier update; // Supplier function for updating the rectangle
+
     public int Width;
     public int Height;
 
     public int X;
     public int Y;
-    public double angle;
+
+    private Sprite sprite;
+
+    public float angle = 0.0f;
+
+    private final Vector2 normal = new Vector2();
+    private final Matrix3 tr = new Matrix3();
     // Constructor to initialize the rectangle with position, dimensions, and color
-    public Rec(float x, float y, float w, float h, Color clr) {
+    public Rec(float x, float y, float w, float h, Sprite s) {
         // Define the vertices of the rectangle
-        Points[0] = new Vector2(x - w / 2, y - h / 2); // Bottom-left corner
-        Points[1] = new Vector2(x + w / 2, y - h / 2); // Bottom-right corner
-        Points[2] = new Vector2(x + w / 2, y + h / 2); // Top-right corner
-        Points[3] = new Vector2(x - w / 2, y + h / 2); // Top-left corner
+        Points[0].set(x - w / 2, y - h / 2); // Bottom-left corner
+        Points[1].set(x + w / 2, y - h / 2); // Bottom-right corner
+        Points[2].set(x + w / 2, y + h / 2); // Top-right corner
+        Points[3].set(x - w / 2, y + h / 2); // Top-left corner
 
         X = (int) x;    // Set the X-coordinate of the rectangle's position
         Y = (int) y;    // Set the Y-coordinate of the rectangle's position
         Width = (int) w;   // Set the width of the rectangle
         Height = (int) h;   // Set the height of the rectangle
 
+        this.sprite = s;
         if (sprite != null) {
             sprite.setOriginCenter();
             sprite.setPosition(X, Y);
@@ -40,48 +46,49 @@ public class Rec extends Object {
     }
 
     // Method to rotate the rectangle around a specified origin point
-    public void Rotate(double angle, double originX, double originY) {
+    public void Rotate(float angle, float originX, float originY) {
 
-        AffineTransform tr = new AffineTransform(); // Create a new AffineTransform for rotation
-        tr.rotate(angle, originX, originY); // Rotate around the specified origin point
+        tr.translate(-originX, -originY);
+        tr.rotate(angle);
+        tr.translate(originX, originY);
+        for (Vector2 point : Points)
+            point.mul(tr); // Update the rotated vertex
 
-        for (int i = 0; i < Points.length; i++) {
-            Point2D.Double src = new Point2D.Double(Points[i].x, Points[i].y); // Source point
-            Point2D.Double dst = new Point2D.Double(); // Destination point
-            tr.transform(src, dst); // Apply the transformation
-            Points[i] = new Vector2((float) dst.getX(), (float) dst.getY()); // Update the rotated vertex
-        }
+
+        tr.idt();
+        this.angle = angle;
+
     }
 
-    public void MoveTo(double X, double Y, int originX, int originY, double angle) {
+    public void MoveTo(float X, float Y, float originX, float originY, float angle) {
 
-        Points[0] = new Vector2((float) (X - (double) Width / 2), (float) (Y - (double) Height / 2));
-        Points[1] = new Vector2((float) (X + (double) Width / 2), (float) (Y - (double) Height / 2));
-        Points[2] = new Vector2((float) (X + (double) Width / 2), (float) (Y + (double) Height / 2));
-        Points[3] = new Vector2((float) (X - (double) Width / 2), (float) (Y + (double) Height / 2));
+        Points[0].set(X - Width / 2f, Y - Height / 2f);
+        Points[1].set(X + Width / 2f, Y - Height / 2f);
+        Points[2].set(X + Width / 2f, Y + Height / 2f);
+        Points[3].set(X - Width / 2f, Y + Height / 2f);
 
         if (angle != 0) {
-            AffineTransform tr = new AffineTransform();
-            tr.rotate(angle, originX, originY);
-            for (int i = 0; i < Points.length; i++) {
-                Point2D.Double src = new Point2D.Double(Points[i].x, Points[i].y);
-                Point2D.Double dst = new Point2D.Double();
-                tr.transform(src, dst);
-                Points[i] = new Vector2((float) dst.getX(), (float) dst.getY());
-            }
+            tr.translate(-originX, -originY);
+            tr.rotate(angle);
+            tr.translate(originX, originY);
+            for (Vector2 point : Points)
+                point.mul(tr);
+
+            tr.idt();
         }
 
         this.X = (int) X;
         this.Y = (int) Y;
 
-        if (sprite != null) sprite.setPosition((float) X, (float) Y);
+        if (sprite != null) sprite.setPosition(X, Y);
+        this.angle = angle;
     }
     // Method to move the rectangle to a new position
     public void Move(double X, double Y) {
 
-        for (int i = 0; i < Points.length; i++) {
-            Points[i].x += (float) X; // Update X coordinate of each vertex
-            Points[i].y += (float) Y; // Update Y coordinate of each vertex
+        for (Vector2 point : Points) {
+            point.x += (float) X; // Update X coordinate of each vertex
+            point.y += (float) Y; // Update Y coordinate of each vertex
         }
 
         this.X += (int) X; // Update the X coordinate of the rectangle's position
@@ -89,23 +96,48 @@ public class Rec extends Object {
 
         sprite.setPosition(this.X, this.Y);
     }
+    public boolean IsPolygonsIntersecting(Rec b)
+    {
+        Rec a = this;
 
+        for ( Rec rect : new Rec[] { a, b })
+        {
+            for (int i1 = 0; i1 < rect.Points.length; i1++)
+            {
+                int i2 = (i1 + 1) % rect.Points.length;
+                var p1 = rect.Points[i1];
+                var p2 = rect.Points[i2];
 
-    // Override the draw method to draw the rectangle
-    @Override
-    public void draw(SpriteBatch b) {
-        super.draw(b); // Call the superclass draw method (draws the image if available)
+                normal.set(p2.y - p1.y, p1.x - p2.x);
+
+                double minA = Double.NaN;
+                double maxA = Double.NaN;
+                for (var p : a.Points)
+                {
+                    var projected = normal.x * p.x + normal.y * p.y;
+                    if (Double.isNaN(minA) || projected < minA)
+                        minA = projected;
+                    if (Double.isNaN(maxA) || projected > maxA)
+                        maxA = projected;
+                }
+
+                double minB = Double.NaN;
+                double maxB = Double.NaN;
+                for (var p : b.Points)
+                {
+                    var projected = normal.x * p.x + normal.y * p.y;
+                    if (Double.isNaN(minB) || projected < minB)
+                        minB = projected;
+                    if ( Double.isNaN(maxB) || projected > maxB)
+                        maxB = projected;
+                }
+
+                if (maxA < minB || maxB < minA)
+                    return false;
+            }
+        }
+        return true;
     }
 
-    @Override
-    public void dispose() {
 
-    }
-
-    // Override the update method to update the rectangle's state
-    @Override
-    public void update() {
-        if (update == null) return;
-        update.get(); // Invoke the supplier function for updating the rectangle
-    }
 }
