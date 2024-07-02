@@ -15,12 +15,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dongbat.jbump.World;
-import com.segfault.games.obj.comp.CollidesComponent;
-import com.segfault.games.obj.sys.MovementSystem;
 import com.segfault.games.util.AssetManager;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
-import com.segfault.games.util.EntityManager;
+import com.segfault.games.obj.ent.EntityManager;
+import com.segfault.games.util.indexT;
 
 public class JavaKnight extends ApplicationAdapter {
 
@@ -29,16 +28,11 @@ public class JavaKnight extends ApplicationAdapter {
 	public ObjectMap<BitmapFontCache, Float> StaticFonts = new ObjectMap<>();
 	// Game window dimensions
 	private AssetManager assetManager; // asset manager instance, gets passed classes for use of assets
+	public final float WORLD_SCALE = 3f;
 	public final int SCREEN_WIDTH = 1680;
 	public final int SCREEN_HEIGHT = 1050;
 	public final int FRAME_WIDTH = 616; // Frame buffer width
 	public final int FRAME_HEIGHT = 385; // Frame buffer height
-
-	public final Array<Object> LayerOne = new Array<>();
-	public final Array<Object> LayerTwo = new Array<>();
-	public final Array<Object> LayerThree = new Array<>();
-	public final Array<Object> LayerFour = new Array<>();
-	public final Array<Object> LayerUI = new Array<>();
 
 	// Only used to render rectangles that are on screen for debug
 	public final Array<Rec> Rectangles = new Array<>();
@@ -90,6 +84,36 @@ public class JavaKnight extends ApplicationAdapter {
 		camera.position.set(SCREEN_WIDTH / 2f, SCREEN_HEIGHT / 2f, 0);
 		camera.update();
 
+		loadAssets();
+	}
+
+	private void loadAssets() {
+		assetManager.Textures[indexT.ONE_PARTICLE_1.ordinal()] =  atlas.findRegion("1");
+		assetManager.Textures[indexT.ONE_PARTICLE_2.ordinal()] =  atlas.findRegion("2");
+		assetManager.Textures[indexT.ZERO_PARTICLE_1.ordinal()] =  atlas.findRegion("3");
+		assetManager.Textures[indexT.ZERO_PARTICLE_2.ordinal()] =  atlas.findRegion("4");
+		assetManager.Textures[indexT.ACID_PARTICLE.ordinal()] =  atlas.findRegion("acidParticle");
+		assetManager.Textures[indexT.BOSS_BAR_OUTLINE.ordinal()] =  atlas.findRegion("barOutline");
+		assetManager.Textures[indexT.ACID_BEAM.ordinal()] =  atlas.findRegion("beam");
+		assetManager.Textures[indexT.ACID_BEAM_BALL.ordinal()] =  atlas.findRegion("beamBall");
+		assetManager.Textures[indexT.BOSS.ordinal()] =  atlas.findRegion("boss");
+		assetManager.Textures[indexT.BOSS_BAR_FILLING.ordinal()] =  atlas.findRegion("bossBarCol");
+		assetManager.Textures[indexT.BOSS_DEAD.ordinal()] =  atlas.findRegion("bossDead");
+		assetManager.Textures[indexT.BOSS_HIT.ordinal()] =  atlas.findRegion("bossHit");
+		assetManager.Textures[indexT.BOUNCY.ordinal()] =  atlas.findRegion("bouncy");
+		assetManager.Textures[indexT.BOUNCY_GUN.ordinal()] =  atlas.findRegion("bouncyGun");
+		assetManager.Textures[indexT.BULLET.ordinal()] =  atlas.findRegion("bullet");
+		assetManager.Textures[indexT.NORMAL_DOOR.ordinal()] =  atlas.findRegion("door");
+		assetManager.Textures[indexT.INFINITE_DOOR.ordinal()] =  atlas.findRegion("door1");
+		assetManager.Textures[indexT.QUIT_DOOR.ordinal()] =  atlas.findRegion("door2");
+		assetManager.Textures[indexT.FIRE_PARTICLE.ordinal()] =  atlas.findRegion("fireParticle");
+		assetManager.Textures[indexT.FLOOR_PARTICLE.ordinal()] =  atlas.findRegion("floorParticle");
+		assetManager.Textures[indexT.GUN.ordinal()] =  atlas.findRegion("gun");
+		assetManager.Textures[indexT.GUNNER.ordinal()] =  atlas.findRegion("gunner");
+		assetManager.Textures[indexT.LAZER_GUN.ordinal()] =  atlas.findRegion("lazerGun");
+		assetManager.Textures[indexT.PLAYER.ordinal()] =  atlas.findRegion("player");
+		assetManager.Textures[indexT.ROCKET.ordinal()] =  atlas.findRegion("rocket");
+		assetManager.Textures[indexT.ROCKET_GUN.ordinal()] =  atlas.findRegion("rocketGun");
 	}
 
 	@Override
@@ -112,8 +136,8 @@ public class JavaKnight extends ApplicationAdapter {
 
 		// Draw text objects
 		batch.setShader(fontShader);
-		for (int i = 0; i < Texts.size; i++) {
-			Text t = Texts.get(i);
+		for (Text t : Texts) {
+
 			font.getData().setScale(t.Scale);
 			font.draw(batch, t.Str, t.X, t.Y);
 		}
@@ -169,11 +193,6 @@ public class JavaKnight extends ApplicationAdapter {
 
 		screenBuffer.dispose();
 
-		LayerOne.clear();
-		LayerTwo.clear();
-		LayerThree.clear();
-		LayerFour.clear();
-		LayerUI.clear();
 		Texts.clear();
 		StaticFonts.forEach(i -> i.key.clear());
 		StaticFonts.clear();

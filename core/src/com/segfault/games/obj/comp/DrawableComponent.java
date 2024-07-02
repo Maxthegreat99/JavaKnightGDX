@@ -11,6 +11,7 @@ public class DrawableComponent implements Component, Pool.Poolable {
     public int order = 0;
     @Override
     public void reset() {
+        sprite.setOriginCenter();
         sprite = null;
         alpha = 0.0f;
         blending = true;

@@ -31,5 +31,7 @@ public class AlphaDecreaseSystem extends IteratingSystem {
             drawableInfo.alpha = 0f;
             instance.PooledECS.removeEntity(entity);
         }
+
+        drawableInfo.sprite.setAlpha(drawableInfo.alpha);
     }
 }

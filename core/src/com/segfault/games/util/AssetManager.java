@@ -1,10 +1,11 @@
 package com.segfault.games.util;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetManager {
 
-    public Texture[] Textures = new Texture[indexT.ROCKET_GUN.ordinal() + 1];
+    public TextureRegion[] Textures = new TextureRegion[indexT.ROCKET_GUN.ordinal() + 1];
 }
 
 

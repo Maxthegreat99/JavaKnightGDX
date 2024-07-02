@@ -6,9 +6,12 @@ import com.badlogic.gdx.utils.Pool;
 public class DamageComponent implements Component, Pool.Poolable {
     public int damage = 0;
     public LifeComponent target = null;
+
+    public CollisionRelationship relationship = null;
     @Override
     public void reset() {
         damage = 0;
         target = null;
+        relationship = null;
     }
 }
