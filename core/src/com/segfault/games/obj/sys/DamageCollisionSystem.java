@@ -13,9 +13,11 @@ public class DamageCollisionSystem extends IteratingSystem {
     private final JavaKnight instance;
     private final Vector2 tmp = new Vector2();
 
-    public DamageCollisionSystem(JavaKnight ins) {
-        super(Family.all(DamageComponent.class).get());
+    public DamageCollisionSystem(JavaKnight ins, int priority) {
+        super(Family.all(DamageComponent.class)
+                    .exclude(PrototypeComp.class).get());
         instance = ins;
+        this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
@@ -29,11 +31,21 @@ public class DamageCollisionSystem extends IteratingSystem {
             CollidesComponent Jcol = instance.EntityManager.Cm.get(entity);
 
             for (Item<Entity> c : Jcol.res.projectedCollisions.others) {
-                if (instance.EntityManager.Cm.get(c.userData).collisionRelationShip != dmgInfo.relationship)
+                if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
                     continue;
+
+                if (instance.EntityManager.Lim.get(c.userData) != null) {
+                    LifeComponent lifeInf = instance.EntityManager.Lim.get(c.userData);
+                    lifeInf.life -= dmgInfo.damage;
+                    lifeInf.life = Math.max(lifeInf.life, 0);
+                    lifeInf.tookHit = true;
+                    return;
+                }
+
                 LifeComponent lifeInf = dmgInfo.target;
                 lifeInf.life -= dmgInfo.damage;
                 lifeInf.life = Math.max(lifeInf.life, 0);
+                lifeInf.tookHit = true;
             }
 
             return;
@@ -51,7 +63,7 @@ public class DamageCollisionSystem extends IteratingSystem {
         LifeComponent lifeInf = dmgInfo.target;
         lifeInf.life -= dmgInfo.damage;
         lifeInf.life = Math.max(lifeInf.life, 0);
-
+        lifeInf.tookHit = true;
 
     }
 }

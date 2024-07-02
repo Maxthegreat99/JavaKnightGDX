@@ -13,9 +13,11 @@ public class DisposeCollisionSystem extends IteratingSystem {
     private final JavaKnight instance;
     private final Vector2 tmp = new Vector2();
 
-    public DisposeCollisionSystem(JavaKnight ins) {
-        super(Family.all(CollisionDisposeComponent.class).get());
+    public DisposeCollisionSystem(JavaKnight ins, int priority) {
+        super(Family.all(CollisionDisposeComponent.class)
+                    .exclude(PrototypeComp.class).get());
         instance = ins;
+        this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
@@ -29,7 +31,7 @@ public class DisposeCollisionSystem extends IteratingSystem {
             CollidesComponent Jcol = instance.EntityManager.Cm.get(entity);
 
             for (Item<Entity> c : Jcol.res.projectedCollisions.others) {
-                if (instance.EntityManager.Cm.get(c.userData).collisionRelationShip != disInfo.relationship)
+                if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(disInfo.relationship))
                     continue;
                 instance.PooledECS.removeEntity(entity);
             }

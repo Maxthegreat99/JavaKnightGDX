@@ -15,6 +15,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dongbat.jbump.World;
+import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityCreator;
+import com.segfault.games.obj.ent.EntityID;
+import com.segfault.games.obj.ent.EntityListener;
+import com.segfault.games.obj.sys.*;
 import com.segfault.games.util.AssetManager;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
@@ -28,7 +33,7 @@ public class JavaKnight extends ApplicationAdapter {
 	public ObjectMap<BitmapFontCache, Float> StaticFonts = new ObjectMap<>();
 	// Game window dimensions
 	private AssetManager assetManager; // asset manager instance, gets passed classes for use of assets
-	public final float WORLD_SCALE = 3f;
+	public EntityCreator entityCreator;
 	public final int SCREEN_WIDTH = 1680;
 	public final int SCREEN_HEIGHT = 1050;
 	public final int FRAME_WIDTH = 616; // Frame buffer width
@@ -65,6 +70,7 @@ public class JavaKnight extends ApplicationAdapter {
 		EntityManager = new EntityManager();
 		PooledECS = new PooledEngine();
 		PhysicWorld = new World<>();
+		entityCreator = new EntityCreator(this);
 
 		batch = new SpriteBatch();
 
@@ -85,6 +91,9 @@ public class JavaKnight extends ApplicationAdapter {
 		camera.update();
 
 		loadAssets();
+		loadEntityEngine();
+		loadEntities();
+		entityCreator.spawnEntity(EntityID.PLAYER);
 	}
 
 	private void loadAssets() {
@@ -116,6 +125,41 @@ public class JavaKnight extends ApplicationAdapter {
 		assetManager.Textures[indexT.ROCKET_GUN.ordinal()] =  atlas.findRegion("rocketGun");
 	}
 
+	private void loadEntityEngine() {
+		PooledECS.addEntityListener(new EntityListener(this));
+
+		PooledECS.addSystem(new LifetimeSystem(this, 1));
+		PooledECS.addSystem(new CooldownSystem(this, 2));
+		PooledECS.addSystem(new SpeedDecreaseSystem(this, 3));
+		PooledECS.addSystem(new MovementInputSystem(this, 4));
+		PooledECS.addSystem(new MovementSystem(this, 5, 0.02f));
+		PooledECS.addSystem(new DamageCollisionSystem(this, 6));
+		PooledECS.addSystem(new BouncingSystem(this, 7));
+		PooledECS.addSystem(new DisposeCollisionSystem(this, 8));
+		PooledECS.addSystem(new AlphaDecreaseSystem(this, 9));
+		PooledECS.addSystem(new TrailingSystem(this, 10));
+		PooledECS.addSystem(new RenderingSystem(this, batch, 11));
+
+	}
+
+	private void loadEntities() {
+		Entity player = PooledECS.createEntity();
+		player.add(PooledECS.createComponent(PrototypeComp.class));
+		DrawableComponent pDrawable = PooledECS.createComponent(DrawableComponent.class);
+
+		pDrawable.order = 3;
+		pDrawable.sprite = new Sprite(assetManager.Textures[indexT.PLAYER.ordinal()]);
+		pDrawable.sprite.setOriginCenter();
+		pDrawable.sprite.setPosition(0,0);
+		player.add(pDrawable);
+
+		player.add(PooledECS.createComponent(MovingComponent.class));
+		MovementInputComponent pMoveInput = PooledECS.createComponent(MovementInputComponent.class);
+		pMoveInput.speed = 70.71f;
+		player.add(pMoveInput);
+		entityCreator.addPrototype(player, EntityID.PLAYER);
+	}
+
 	@Override
 	public void render () {
 		ticks++;
@@ -125,14 +169,15 @@ public class JavaKnight extends ApplicationAdapter {
 		camera.zoom = 1f;
 		camera.update();
 
-		// set batch to render to the screen buffer
+
 		screenBuffer.begin();
 		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
 
 		// clear the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		batch.begin();
+		// update and draw to the frame buffer
+		PooledECS.update(Gdx.graphics.getDeltaTime());
 
 		// Draw text objects
 		batch.setShader(fontShader);
@@ -153,10 +198,6 @@ public class JavaKnight extends ApplicationAdapter {
 		batch.end();
 		screenBuffer.end();
 
-
-
-		// Render the frame buffer to the screen
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// scale the camera up again
 		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -197,6 +238,8 @@ public class JavaKnight extends ApplicationAdapter {
 		StaticFonts.forEach(i -> i.key.clear());
 		StaticFonts.clear();
 		Rectangles.clear();
+
+		PooledECS.clearPools();
 
 	}
 }

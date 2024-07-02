@@ -20,7 +20,7 @@ public class EntityManager {
     public ComponentMapper<CollisionDisposeComponent> Dim = ComponentMapper.getFor(CollisionDisposeComponent.class);
     public ComponentMapper<BounceComponent> Bm = ComponentMapper.getFor(BounceComponent.class);
     public ComponentMapper<TrailComponent> Tm = ComponentMapper.getFor(TrailComponent.class);
-
+    public ComponentMapper<MovementInputComponent> Mim = ComponentMapper.getFor(MovementInputComponent.class);
     public ComponentMapper<PointingComponent> Pm = ComponentMapper.getFor(PointingComponent.class);
 
 }

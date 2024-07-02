@@ -2,24 +2,25 @@ package com.segfault.games.obj.sys;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
-import com.segfault.games.obj.comp.CollidesComponent;
-import com.segfault.games.obj.comp.DrawableComponent;
-import com.segfault.games.obj.comp.MovingComponent;
-import com.segfault.games.obj.comp.RecOwnerComponent;
+import com.segfault.games.obj.comp.*;
 
-public class MovementSystem extends IteratingSystem {
+public class MovementSystem extends IntervalIteratingSystem {
     private final JavaKnight instance;
 
-    public MovementSystem(JavaKnight ins) {
-        super(Family.all(MovingComponent.class, DrawableComponent.class).get());
+    public MovementSystem(JavaKnight ins, int priority, float interval) {
+        super(Family.all(MovingComponent.class, DrawableComponent.class)
+                    .exclude(PrototypeComp.class).get(), interval);
         instance = ins;
+        this.priority = priority;
     }
+
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movement = instance.EntityManager.Mm.get(entity);
@@ -28,8 +29,8 @@ public class MovementSystem extends IteratingSystem {
         float x = drawable.sprite.getX();
         float y = drawable.sprite.getY();
 
-        float dx = movement.dx * deltaTime;
-        float dy = movement.dy * deltaTime;
+        float dx = movement.dx * getInterval();
+        float dy = movement.dy * getInterval();
 
         x += dx;
         y += dy;
@@ -44,7 +45,7 @@ public class MovementSystem extends IteratingSystem {
             Response.Result res = instance.PhysicWorld.move(collisionInfo.physicItem, x, y, collisionInfo.filter);
             collisionInfo.res = res;
 
-            drawable.sprite.setPosition(res.goalX, res.goalY);
+            drawable.sprite.setPosition(res.goalX - collisionInfo.offsetX, res.goalY + collisionInfo.offsetY);
         }
 
         if (entity.getComponent(RecOwnerComponent.class) != null) {

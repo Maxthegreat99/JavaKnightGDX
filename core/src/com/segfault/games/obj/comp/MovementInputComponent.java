@@ -3,15 +3,13 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 
-public class LifeComponent extends Component {
-    public int life = 0;
-    public boolean tookHit = false;
+public class MovementInputComponent extends Component {
+    public float speed = 0f;
+
     @Override
     public void reset() {
-        life = 0;
-        tookHit = false;
+        speed = 0f;
     }
-
 
     @Override
     public void dispose(JavaKnight instance) {
@@ -20,9 +18,8 @@ public class LifeComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        LifeComponent comp = instance.PooledECS.createComponent(this.getClass());
-        comp.tookHit = tookHit;
-        comp.life = life;
+        MovementInputComponent comp = instance.PooledECS.createComponent(this.getClass());
+        comp.speed = speed;
         return comp;
     }
 }

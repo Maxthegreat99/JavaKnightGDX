@@ -1,12 +1,11 @@
 package com.segfault.games.obj.comp;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.utils.Pool;
+
+import com.badlogic.ashley.core.Entity;
+import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 
-import java.util.function.Supplier;
-
-public class RectangleCollisionComponent implements Component, Pool.Poolable {
+public class RectangleCollisionComponent extends Component {
     public Rec targetRectangle = null;
     public float checkRange = 0f;
     @Override
@@ -14,5 +13,18 @@ public class RectangleCollisionComponent implements Component, Pool.Poolable {
         targetRectangle = null;
         checkRange = 0f;
 
+    }
+
+    @Override
+    public void dispose(JavaKnight instance) {
+
+    }
+
+    @Override
+    public Component Clone(JavaKnight instance, Entity ent) {
+        RectangleCollisionComponent comp = instance.PooledECS.createComponent(this.getClass());
+        comp.checkRange = checkRange;
+        comp.targetRectangle = targetRectangle;
+        return comp;
     }
 }

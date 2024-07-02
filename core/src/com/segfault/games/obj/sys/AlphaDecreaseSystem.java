@@ -6,12 +6,15 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.DecreasingAlplaComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
+import com.segfault.games.obj.comp.PrototypeComp;
 
 public class AlphaDecreaseSystem extends IteratingSystem {
     private final JavaKnight instance;
-    public AlphaDecreaseSystem (JavaKnight ins) {
-        super(Family.all(DecreasingAlplaComponent.class, DrawableComponent.class).get());
+    public AlphaDecreaseSystem (JavaKnight ins, int priority) {
+        super(Family.all(DecreasingAlplaComponent.class, DrawableComponent.class)
+                    .exclude(PrototypeComp.class).get());
         instance = ins;
+        this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {

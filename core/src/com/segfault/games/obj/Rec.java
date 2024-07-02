@@ -18,14 +18,12 @@ public class Rec {
     public int X;
     public int Y;
 
-    private Sprite sprite;
-
     public float angle = 0.0f;
 
     private final Vector2 normal = new Vector2();
     private final Matrix3 tr = new Matrix3();
     // Constructor to initialize the rectangle with position, dimensions, and color
-    public Rec(float x, float y, float w, float h, Sprite s) {
+    public Rec(float x, float y, float w, float h) {
         // Define the vertices of the rectangle
         Points[0].set(x - w / 2, y - h / 2); // Bottom-left corner
         Points[1].set(x + w / 2, y - h / 2); // Bottom-right corner
@@ -37,12 +35,6 @@ public class Rec {
         Width = (int) w;   // Set the width of the rectangle
         Height = (int) h;   // Set the height of the rectangle
 
-        this.sprite = s;
-        if (sprite != null) {
-            sprite.setOriginCenter();
-            sprite.setPosition(X, Y);
-            sprite.setSize(Width, Height);
-        }
     }
 
     // Method to rotate the rectangle around a specified origin point
@@ -67,7 +59,7 @@ public class Rec {
         Points[2].set(X + Width / 2f, Y + Height / 2f);
         Points[3].set(X - Width / 2f, Y + Height / 2f);
 
-        if (angle != 0) {
+        if (Float.compare(angle, 0f) != 0) {
             tr.translate(-originX, -originY);
             tr.rotate(angle);
             tr.translate(originX, originY);
@@ -80,7 +72,6 @@ public class Rec {
         this.X = (int) X;
         this.Y = (int) Y;
 
-        if (sprite != null) sprite.setPosition(X, Y);
         this.angle = angle;
     }
     // Method to move the rectangle to a new position
@@ -94,7 +85,6 @@ public class Rec {
         this.X += (int) X; // Update the X coordinate of the rectangle's position
         this.Y += (int) Y; // Update the Y coordinate of the rectangle's position
 
-        sprite.setPosition(this.X, this.Y);
     }
     public boolean IsPolygonsIntersecting(Rec b)
     {
@@ -105,16 +95,16 @@ public class Rec {
             for (int i1 = 0; i1 < rect.Points.length; i1++)
             {
                 int i2 = (i1 + 1) % rect.Points.length;
-                var p1 = rect.Points[i1];
-                var p2 = rect.Points[i2];
+                Vector2 p1 = rect.Points[i1];
+                Vector2 p2 = rect.Points[i2];
 
                 normal.set(p2.y - p1.y, p1.x - p2.x);
 
                 double minA = Double.NaN;
                 double maxA = Double.NaN;
-                for (var p : a.Points)
+                for (Vector2 p : a.Points)
                 {
-                    var projected = normal.x * p.x + normal.y * p.y;
+                    float projected = normal.x * p.x + normal.y * p.y;
                     if (Double.isNaN(minA) || projected < minA)
                         minA = projected;
                     if (Double.isNaN(maxA) || projected > maxA)
@@ -123,9 +113,9 @@ public class Rec {
 
                 double minB = Double.NaN;
                 double maxB = Double.NaN;
-                for (var p : b.Points)
+                for (Vector2 p : b.Points)
                 {
-                    var projected = normal.x * p.x + normal.y * p.y;
+                    float projected = normal.x * p.x + normal.y * p.y;
                     if (Double.isNaN(minB) || projected < minB)
                         minB = projected;
                     if ( Double.isNaN(maxB) || projected > maxB)

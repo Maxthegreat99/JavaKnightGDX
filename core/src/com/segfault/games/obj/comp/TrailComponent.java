@@ -1,9 +1,9 @@
 package com.segfault.games.obj.comp;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.ashley.core.Entity;
+import com.segfault.games.JavaKnight;
 
-public class TrailComponent implements Component, Pool.Poolable {
+public class TrailComponent extends Component {
     public float trailCooldown = 0f;
     public float trailInitialCooldown = 0f;
     public float trailIninitalAlpha = 0f;
@@ -16,5 +16,21 @@ public class TrailComponent implements Component, Pool.Poolable {
         trailIninitalAlpha = 0f;
         trailAlphaDecrease = 0f;
         alphaComparator = 0f;
+    }
+
+    @Override
+    public void dispose(JavaKnight instance) {
+
+    }
+
+    @Override
+    public Component Clone(JavaKnight instance, Entity ent) {
+        TrailComponent comp = instance.PooledECS.createComponent(TrailComponent.class);
+        comp.trailCooldown = trailCooldown;
+        comp.trailInitialCooldown = trailInitialCooldown;
+        comp.trailIninitalAlpha = trailIninitalAlpha;
+        comp.trailAlphaDecrease = trailAlphaDecrease;
+        comp.alphaComparator = alphaComparator;
+        return comp;
     }
 }

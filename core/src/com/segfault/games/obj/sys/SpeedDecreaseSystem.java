@@ -9,15 +9,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.DecelerationComponent;
 import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.PrototypeComp;
 
 public class SpeedDecreaseSystem extends IteratingSystem {
     private final ComponentMapper<DecelerationComponent> speedDecreaseMapper;
     private final ComponentMapper<MovingComponent> movementMapper;
     private final Vector2 speed = new Vector2();
-    public SpeedDecreaseSystem (JavaKnight ins) {
-        super(Family.all(DecelerationComponent.class, MovingComponent.class).get());
+    public SpeedDecreaseSystem (JavaKnight ins, int priority) {
+        super(Family.all(DecelerationComponent.class, MovingComponent.class)
+                    .exclude(PrototypeComp.class).get());
         movementMapper = ins.EntityManager.Mm;
         speedDecreaseMapper = ins.EntityManager.Sm;
+        this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {

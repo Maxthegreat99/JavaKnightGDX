@@ -9,13 +9,16 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.BounceComponent;
 import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.PrototypeComp;
 
 public class BouncingSystem extends IteratingSystem {
     private final JavaKnight instance;
     private final Vector2 tmp = new Vector2();
-    public BouncingSystem(JavaKnight ins) {
-        super(Family.all(BounceComponent.class, CollidesComponent.class, MovingComponent.class).get());
+    public BouncingSystem(JavaKnight ins, int priority) {
+        super(Family.all(BounceComponent.class, CollidesComponent.class, MovingComponent.class)
+                    .exclude(PrototypeComp.class).get());
         instance = ins;
+        this.priority = priority;
     }
 
     @Override

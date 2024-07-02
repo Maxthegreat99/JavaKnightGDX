@@ -9,9 +9,11 @@ import com.segfault.games.obj.comp.*;
 
 public class TrailingSystem extends IteratingSystem {
     private final JavaKnight instance;
-    public TrailingSystem(JavaKnight ins) {
-        super(Family.all(TrailComponent.class, DrawableComponent.class).get());
+    public TrailingSystem(JavaKnight ins, int priority) {
+        super(Family.all(TrailComponent.class, DrawableComponent.class)
+                    .exclude(PrototypeComp.class).get());
         instance = ins;
+        this.priority = priority;
     }
 
     @Override
