@@ -32,26 +32,30 @@ public class MovementSystem extends IntervalIteratingSystem {
         float dx = movement.dx * getInterval();
         float dy = movement.dy * getInterval();
 
-        x += dx;
-        y += dy;
+        float targetX = x + dx;
+        float targetY = y + dy;
 
         boolean hasJBumpCol = entity.getComponent(CollidesComponent.class) != null;
 
         if (!hasJBumpCol)
-            drawable.sprite.setPosition(x, y);
+            drawable.sprite.setPosition(targetX, targetY);
 
         else {
             CollidesComponent collisionInfo = instance.EntityManager.Cm.get(entity);
-            Response.Result res = instance.PhysicWorld.move(collisionInfo.physicItem, x, y, collisionInfo.filter);
+            Response.Result res = instance.PhysicWorld.move(collisionInfo.physicItem, targetX, targetY, collisionInfo.filter);
             collisionInfo.res = res;
 
-            drawable.sprite.setPosition(res.goalX - collisionInfo.offsetX, res.goalY + collisionInfo.offsetY);
+            drawable.sprite.setPosition(res.goalX, res.goalY);
+
+            dx = res.goalX - x;
+            dy = res.goalY - y;
         }
 
         if (entity.getComponent(RecOwnerComponent.class) != null) {
             RecOwnerComponent recInfo = instance.EntityManager.Rm.get(entity);
             Rec r = recInfo.rectangle;
-            r.MoveTo(drawable.sprite.getX(), drawable.sprite.getY(), drawable.sprite.getX(), drawable.sprite.getY(), r.angle);
+            r.Move(dx, dy);
         }
+
     }
 }

@@ -20,7 +20,8 @@ public class CollisionDisposeComponent extends Component {
 
     @Override
     public void dispose(JavaKnight instance) {
-        instance.Rectangles.removeValue(rectangle, true);
+
+
     }
 
     @Override

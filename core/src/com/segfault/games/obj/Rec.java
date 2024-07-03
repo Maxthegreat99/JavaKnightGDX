@@ -1,27 +1,26 @@
 package com.segfault.games.obj;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
-import java.awt.*;
-import java.util.function.Supplier;
-
 public class Rec {
 
-    public Vector2[] Points = new Vector2[4]; // Array to hold the vertices of the rectangle
+    public Vector2[] Points = {new Vector2(), new Vector2(), new Vector2(), new Vector2()}; // Array to hold the vertices of the rectangle
 
-    public int Width;
-    public int Height;
+    public float Width;
+    public float Height;
 
-    public int X;
-    public int Y;
+    public float X;
+    public float Y;
+
+    public float OriginX;
+    public float OriginY;
 
     public float angle = 0.0f;
 
     private final Vector2 normal = new Vector2();
-    private final Matrix3 tr = new Matrix3();
+
     // Constructor to initialize the rectangle with position, dimensions, and color
     public Rec(float x, float y, float w, float h) {
         // Define the vertices of the rectangle
@@ -30,25 +29,31 @@ public class Rec {
         Points[2].set(x + w / 2, y + h / 2); // Top-right corner
         Points[3].set(x - w / 2, y + h / 2); // Top-left corner
 
-        X = (int) x;    // Set the X-coordinate of the rectangle's position
-        Y = (int) y;    // Set the Y-coordinate of the rectangle's position
-        Width = (int) w;   // Set the width of the rectangle
-        Height = (int) h;   // Set the height of the rectangle
+        OriginX = X = x;    // Set the X-coordinate of the rectangle's position
+        OriginY = Y = y;    // Set the Y-coordinate of the rectangle's position
+        Width = w;   // Set the width of the rectangle
+        Height = h;   // Set the height of the rectangle
 
     }
 
     // Method to rotate the rectangle around a specified origin point
     public void Rotate(float angle, float originX, float originY) {
 
-        tr.translate(-originX, -originY);
-        tr.rotate(angle);
-        tr.translate(originX, originY);
-        for (Vector2 point : Points)
-            point.mul(tr); // Update the rotated vertex
+
+        for (Vector2 point : Points) {
+            float tempX = point.x;
+            float tempY = point.y;
+
+            point.x = (tempX - originX) * MathUtils.cos((float) Math.toRadians(angle)) - (tempY - originY) * MathUtils.sin((float) Math.toRadians(angle)) + originX;
+            point.y = (tempX - originX) * MathUtils.sin((float) Math.toRadians(angle)) + (tempY - originY) * MathUtils.cos((float) Math.toRadians(angle)) + originY;
+        }
 
 
-        tr.idt();
-        this.angle = angle;
+        this.angle += angle;
+        this.OriginX = originX;
+        this.OriginY = originY;
+
+
 
     }
 
@@ -60,30 +65,32 @@ public class Rec {
         Points[3].set(X - Width / 2f, Y + Height / 2f);
 
         if (Float.compare(angle, 0f) != 0) {
-            tr.translate(-originX, -originY);
-            tr.rotate(angle);
-            tr.translate(originX, originY);
-            for (Vector2 point : Points)
-                point.mul(tr);
 
-            tr.idt();
+            for (Vector2 point : Points) {
+                float tempX = point.x;
+                float tempY = point.y;
+
+                point.x = (tempX - originX) * MathUtils.cos((float) Math.toRadians(angle)) - (tempY - originY) * MathUtils.sin((float) Math.toRadians(angle)) + originX;
+                point.y = (tempX - originX) * MathUtils.sin((float) Math.toRadians(angle)) + (tempY - originY) * MathUtils.cos((float) Math.toRadians(angle)) + originY;
+            }
+
         }
 
-        this.X = (int) X;
-        this.Y = (int) Y;
+        this.X = X;
+        this.Y = Y;
 
         this.angle = angle;
     }
     // Method to move the rectangle to a new position
-    public void Move(double X, double Y) {
+    public void Move(float X, float Y) {
 
         for (Vector2 point : Points) {
-            point.x += (float) X; // Update X coordinate of each vertex
-            point.y += (float) Y; // Update Y coordinate of each vertex
+            point.x += X; // Update X coordinate of each vertex
+            point.y += Y; // Update Y coordinate of each vertex
         }
 
-        this.X += (int) X; // Update the X coordinate of the rectangle's position
-        this.Y += (int) Y; // Update the Y coordinate of the rectangle's position
+        this.X += X; // Update the X coordinate of the rectangle's position
+        this.Y += Y; // Update the Y coordinate of the rectangle's position
 
     }
     public boolean IsPolygonsIntersecting(Rec b)
@@ -128,6 +135,16 @@ public class Rec {
         }
         return true;
     }
+    public float[] ConvertToFloatArray() {
+        // Each Vector2 has two float values (x and y), so the resulting float array will have twice the length of the Vector2 array
+        float[] floatArray = new float[Points.length * 2];
 
+        for (int i = 0; i < Points.length; i++) {
+            floatArray[i * 2] = Points[i].x;     // Store the x value
+            floatArray[i * 2 + 1] = Points[i].y; // Store the y value
+        }
+
+        return floatArray;
+    }
 
 }

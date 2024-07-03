@@ -4,17 +4,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.dongbat.jbump.World;
+import com.dongbat.jbump.*;
 import com.segfault.games.obj.comp.*;
 import com.segfault.games.obj.ent.EntityCreator;
 import com.segfault.games.obj.ent.EntityID;
@@ -26,6 +25,8 @@ import com.segfault.games.obj.Text;
 import com.segfault.games.obj.ent.EntityManager;
 import com.segfault.games.util.indexT;
 
+import java.util.Arrays;
+
 public class JavaKnight extends ApplicationAdapter {
 
 	private SpriteBatch batch;
@@ -33,7 +34,7 @@ public class JavaKnight extends ApplicationAdapter {
 	public ObjectMap<BitmapFontCache, Float> StaticFonts = new ObjectMap<>();
 	// Game window dimensions
 	private AssetManager assetManager; // asset manager instance, gets passed classes for use of assets
-	public EntityCreator entityCreator;
+	public EntityCreator EntityCreator;
 	public final int SCREEN_WIDTH = 1680;
 	public final int SCREEN_HEIGHT = 1050;
 	public final int FRAME_WIDTH = 616; // Frame buffer width
@@ -53,7 +54,7 @@ public class JavaKnight extends ApplicationAdapter {
 	private ShaderProgram fontShader;
 	// texture used for drawing text
 	private Texture fontTexture;
-	//public final Player Plr;
+	public Entity Plr;
 
 	// Physics world instance
 	public World<Entity> PhysicWorld;
@@ -65,12 +66,14 @@ public class JavaKnight extends ApplicationAdapter {
 	// ECS engine instance, used to store entities, components and systems
 	public PooledEngine PooledECS;
 	public EntityManager EntityManager;
+	private ShapeRenderer shapeRenderer;
 	@Override
 	public void create () {
 		EntityManager = new EntityManager();
 		PooledECS = new PooledEngine();
 		PhysicWorld = new World<>();
-		entityCreator = new EntityCreator(this);
+		EntityCreator = new EntityCreator(this);
+		shapeRenderer = new ShapeRenderer();
 
 		batch = new SpriteBatch();
 
@@ -92,8 +95,9 @@ public class JavaKnight extends ApplicationAdapter {
 
 		loadAssets();
 		loadEntityEngine();
+		loadPlayer();
+		Plr = EntityCreator.spawnEntity(EntityID.PLAYER);
 		loadEntities();
-		entityCreator.spawnEntity(EntityID.PLAYER);
 	}
 
 	private void loadAssets() {
@@ -141,8 +145,41 @@ public class JavaKnight extends ApplicationAdapter {
 		PooledECS.addSystem(new RenderingSystem(this, batch, 11));
 
 	}
-
+	private Rec a;
 	private void loadEntities() {
+
+
+		Entity obs = PooledECS.createEntity();
+		CollidesComponent oComp = PooledECS.createComponent(CollidesComponent.class);
+		oComp.physicItem = new Item<>(obs);
+		oComp.filter = CollisionFilter.defaultFilter;
+		oComp.collisionRelationShip = CollisionRelationship.OBSTACLE;
+		oComp.x = FRAME_WIDTH / 2f;
+		oComp.y = FRAME_HEIGHT / 2f;
+		oComp.width = 75;
+		oComp.height = 75;
+		obs.add(oComp);
+		PhysicWorld.add(oComp.physicItem, FRAME_WIDTH / 2f, FRAME_HEIGHT / 2f, 75, 75);
+		PooledECS.addEntity(obs);
+
+		Entity rObs = PooledECS.createEntity();
+		RecOwnerComponent rOwn = PooledECS.createComponent(RecOwnerComponent.class);
+		rOwn.rectangle = new Rec(FRAME_WIDTH / 4f, FRAME_HEIGHT / 2f, 75, 75);
+		rOwn.rectangle.Rotate(57f, rOwn.rectangle.X, rOwn.rectangle.Y);
+		Rectangles.add(rOwn.rectangle);
+		rObs.add(rOwn);
+
+		a = rOwn.rectangle;
+
+		CollisionDisposeComponent rDis = PooledECS.createComponent(CollisionDisposeComponent.class);
+		rDis.rectangle = Plr.getComponent(RecOwnerComponent.class).rectangle;
+		rDis.checkRange = (float)Math.sqrt(75 * 75 + 75 * 75);
+		rObs.add(rDis);
+
+		PooledECS.addEntity(rObs);
+	}
+
+	private void loadPlayer() {
 		Entity player = PooledECS.createEntity();
 		player.add(PooledECS.createComponent(PrototypeComp.class));
 		DrawableComponent pDrawable = PooledECS.createComponent(DrawableComponent.class);
@@ -157,13 +194,43 @@ public class JavaKnight extends ApplicationAdapter {
 		MovementInputComponent pMoveInput = PooledECS.createComponent(MovementInputComponent.class);
 		pMoveInput.speed = 70.71f;
 		player.add(pMoveInput);
-		entityCreator.addPrototype(player, EntityID.PLAYER);
+
+		TrailComponent pTrail = PooledECS.createComponent(TrailComponent.class);
+		pTrail.alphaComparator = 0.60f;
+		pTrail.trailIninitalAlpha = 0.75f;
+		pTrail.trailCooldown = 0.25f;
+		pTrail.trailInitialCooldown = 0.15f;
+		pTrail.trailAlphaDecrease = 1.5f;
+
+		player.add(pTrail);
+
+		CollidesComponent pCol = PooledECS.createComponent(CollidesComponent.class);
+		pCol.height = 16;
+		pCol.width = 16;
+		pCol.x = -8;
+		pCol.y = -8;
+		pCol.collisionRelationShip = CollisionRelationship.PLAYER;
+		pCol.filter = new CollisionFilter() {
+			@Override
+			public Response filter(Item item, Item other) {
+				if (EntityManager.Cm.get((Entity) other.userData).collisionRelationShip.equals(CollisionRelationship.OBSTACLE))
+					return Response.slide;
+				return null;
+			}
+		};
+		pCol.physicItem = new Item<Entity>(player);
+		player.add(pCol);
+		RecOwnerComponent pRec = PooledECS.createComponent(RecOwnerComponent.class);
+		pRec.rectangle = new Rec(8,8,16, 16);
+		player.add(pRec);
+
+		EntityCreator.addPrototype(player, EntityID.PLAYER);
 	}
 
 	@Override
 	public void render () {
 		ticks++;
-
+		a.Rotate(5f, a.X, a.Y);
 		// Set the viewport to the framebuffer size
 		camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
 		camera.zoom = 1f;
@@ -195,6 +262,9 @@ public class JavaKnight extends ApplicationAdapter {
 		}
 		batch.setShader(null);
 
+		debugBoxes();
+
+
 		batch.end();
 		screenBuffer.end();
 
@@ -223,7 +293,25 @@ public class JavaKnight extends ApplicationAdapter {
 
 
 	}
-	
+
+	private final Color col = new Color(255f, 0,0,0.5f);
+
+	private void debugBoxes() {
+		// Renders collisions
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(col);
+		shapeRenderer.setProjectionMatrix(camera.combined);
+
+		for (Rec r : Rectangles){
+			shapeRenderer.polygon(r.ConvertToFloatArray());
+		}
+		shapeRenderer.end();
+
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		for (Rect i : PhysicWorld.getRects()) shapeRenderer.rect(i.x, i.y, i.w, i.h);
+		shapeRenderer.end();
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();

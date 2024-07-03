@@ -7,8 +7,8 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.PrototypeComp;
 
 public class EntityCreator {
-    private JavaKnight instance;
-    private ObjectMap<EntityID, Entity> prototypes = new ObjectMap<>();
+    private final JavaKnight instance;
+    private final ObjectMap<EntityID, Entity> prototypes = new ObjectMap<>();
     public EntityCreator(JavaKnight ins) {
         instance = ins;
     }
@@ -29,7 +29,5 @@ public class EntityCreator {
 
         return e;
     }
-
-
 
 }

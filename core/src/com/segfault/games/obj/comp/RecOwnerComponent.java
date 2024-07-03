@@ -21,7 +21,7 @@ public class RecOwnerComponent extends Component {
     public Component Clone(JavaKnight instance, Entity ent) {
         RecOwnerComponent comp = instance.PooledECS.createComponent(RecOwnerComponent.class);
         comp.rectangle = new Rec(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-        if (rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.X, rectangle.Y);
+        if (rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.OriginX, rectangle.OriginY);
         instance.Rectangles.add(comp.rectangle);
         return comp;
     }

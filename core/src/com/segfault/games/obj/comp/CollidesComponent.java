@@ -15,8 +15,7 @@ public class CollidesComponent extends Component {
     public float height = 0f;
     public float x = 0f;
     public float y = 0f;
-    public float offsetX = 0f;
-    public float offsetY = 0f;
+
     @Override
     public void reset() {
         filter = CollisionFilter.defaultFilter;
@@ -27,8 +26,7 @@ public class CollidesComponent extends Component {
         height = 0f;
         x = 0f;
         y = 0f;
-        offsetX = 0f;
-        offsetY = 0f;
+
     }
 
     @Override
@@ -46,8 +44,6 @@ public class CollidesComponent extends Component {
         comp.height = height;
         comp.x = x;
         comp.y = y;
-        comp.offsetY = offsetY;
-        comp.offsetX = offsetX;
         comp.res = null;
         comp.filter = filter;
         return comp;
