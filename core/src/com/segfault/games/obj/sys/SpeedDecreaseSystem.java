@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
@@ -31,22 +32,18 @@ public class SpeedDecreaseSystem extends IteratingSystem {
 
         float s2 = speed.len2();
 
-        if (Float.compare(s2, 0f) == 0) return;
+        if (s2 > -decelerationInfo.stopSpeed2 && s2 < decelerationInfo.stopSpeed2) return;
 
-        float comparator = (decelerationInfo.comparator * decelerationInfo.comparator);
-        float cos = MathUtils.cosDeg(speed.angleDeg());
-        float sin = MathUtils.sinDeg(speed.angleDeg());
+        float dx = MathUtils.cosDeg(speed.angleDeg()) * decelerationInfo.decelerationValue * Gdx.graphics.getDeltaTime();
+        float dy = MathUtils.sinDeg(speed.angleDeg()) * decelerationInfo.decelerationValue * Gdx.graphics.getDeltaTime();
 
-        if (s2 > comparator)
-            speed.sub(cos * decelerationInfo.decelerationValue * 2,
-                      sin * decelerationInfo.decelerationValue * 2);
+        if (s2 > decelerationInfo.comparator2)
+            speed.sub(dx * 2, dy * 2);
 
-        else if (s2 > comparator / 2)
-            speed.sub(cos * decelerationInfo.decelerationValue,
-                      sin * decelerationInfo.decelerationValue);
+        else if (s2 > decelerationInfo.comparator2 / 2)
+            speed.sub(dx, dy);
 
-        else speed.sub(cos / 2 * decelerationInfo.decelerationValue,
-             sin / 2 * decelerationInfo.decelerationValue);
+        else speed.sub(dx / 2, dy / 2);
 
         movingInfo.dx = speed.x;
         movingInfo.dy = speed.y;

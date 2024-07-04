@@ -7,7 +7,9 @@ import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
 
 /**
- * Component defining if an object has JBump based collisions
+ * Component defining if an object has JBump based collisions,
+ * also used for specific events on collision depending of
+ * the components the entity has
  */
 
 public class CollidesComponent extends Component {

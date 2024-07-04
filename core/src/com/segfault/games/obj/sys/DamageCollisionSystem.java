@@ -9,9 +9,12 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.comp.*;
 
+/**
+ * System dealing with damage on collision from entities 
+ */
 public class DamageCollisionSystem extends IteratingSystem {
     private final JavaKnight instance;
-    private final Vector2 tmp = new Vector2();
+    private final Vector2 range = new Vector2();
 
     public DamageCollisionSystem(JavaKnight ins, int priority) {
         super(Family.all(DamageComponent.class).get());
@@ -24,45 +27,45 @@ public class DamageCollisionSystem extends IteratingSystem {
 
         DamageComponent dmgInfo = instance.EntityManager.Dgm.get(entity);
 
-        boolean hasJBumpCol = entity.getComponent(CollidesComponent.class) != null;
+        boolean hasJBumpCol = instance.EntityManager.Cm.get(entity) != null;
 
-        if (hasJBumpCol) {
-            CollidesComponent Jcol = instance.EntityManager.Cm.get(entity);
+        if (!hasJBumpCol) {
+            RecOwnerComponent rOwner = instance.EntityManager.Rm.get(entity);
+            RectangleCollisionComponent rcInfo = instance.EntityManager.Rcm.get(entity);
+            Rec r2 = rcInfo.targetRectangle;
 
-            for (Item<Entity> c : Jcol.res.projectedCollisions.others) {
-                if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
-                    continue;
+            range.set(rOwner.rectangle.X, rOwner.rectangle.Y);
 
-                if (instance.EntityManager.Lim.get(c.userData) != null && dmgInfo.target == null) {
-                    LifeComponent lifeInf = instance.EntityManager.Lim.get(c.userData);
-                    lifeInf.life -= dmgInfo.damage;
-                    lifeInf.life = Math.max(lifeInf.life, 0);
-                    lifeInf.tookHit = true;
-                    return;
-                }
+            if (range.dst2(r2.X, r2.Y) > rcInfo.checkRange2
+                || !r2.IsPolygonsIntersecting(rOwner.rectangle)) return;
 
-                LifeComponent lifeInf = dmgInfo.target;
-                lifeInf.life -= dmgInfo.damage;
-                lifeInf.life = Math.max(lifeInf.life, 0);
-                lifeInf.tookHit = true;
-            }
+            takeHit(dmgInfo.target, dmgInfo);
 
             return;
         }
 
-        RecOwnerComponent rOwner = instance.EntityManager.Rm.get(entity);
-        RectangleCollisionComponent rcInfo = instance.EntityManager.Rcm.get(entity);
-        Rec r2 = rcInfo.targetRectangle;
 
-        tmp.set(rOwner.rectangle.X, rOwner.rectangle.Y);
+        CollidesComponent colInfo = instance.EntityManager.Cm.get(entity);
 
-        if (tmp.dst2(r2.X, r2.Y) > rcInfo.checkRange * rcInfo.checkRange
-                || !r2.IsPolygonsIntersecting(rOwner.rectangle)) return;
+        for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
+            // continue if the relationship of the entity is not right
+            if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
+                continue;
 
-        LifeComponent lifeInf = dmgInfo.target;
-        lifeInf.life -= dmgInfo.damage;
-        lifeInf.life = Math.max(lifeInf.life, 0);
-        lifeInf.tookHit = true;
+            // if the component has no target and that the entity has a lifecomponent
+            // hit the entity, else hit the component's target
+            if (dmgInfo.target == null && instance.EntityManager.Lim.get(c.userData) != null) {
+                takeHit(instance.EntityManager.Lim.get(c.userData), dmgInfo);
+                continue;
+            }
 
+            takeHit(dmgInfo.target, dmgInfo);
+        }
+
+    }
+
+    private static void takeHit(LifeComponent target, DamageComponent dmgInfo) {
+        target.life = Math.max(target.life - dmgInfo.damage, 0);
+        target.tookHit = true;
     }
 }

@@ -1,11 +1,18 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.utils.Pool;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 
+/**
+ * component specifying that the entity owns
+ * a rectangle, used for specific events on collisions
+ * depending of the components the entity has
+ */
 public class RecOwnerComponent extends Component {
+    /**
+     * the rectangle of the entity
+     */
     public Rec rectangle = null;
     @Override
     public void reset() {

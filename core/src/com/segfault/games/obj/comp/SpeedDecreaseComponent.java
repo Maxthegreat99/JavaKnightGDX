@@ -4,13 +4,30 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 
+/**
+ * Component defining deceleration in an entity, expects the entity
+ * to have a moving component
+ */
 public class SpeedDecreaseComponent extends Component {
+    /**
+     * the deceleration value, this value is multiplied by deltatime
+     */
     public float decelerationValue = 0.0f;
-    public float comparator = 0f;
+    /**
+     * comparator squared, if the speed of the entity is more than it, the entity will
+     * decelerate twice as fast, if more than half of it, it will decelerate normally, less
+     * than half and it will decelerate twice as slow
+     */
+    public float comparator2 = 0f;
+    /**
+     * speed squared at which the entity should stop
+     */
+    public float stopSpeed2 = 0f;
     @Override
     public void reset() {
         decelerationValue = 0.0f;
-        comparator = 0.0f;
+        comparator2 = 0.0f;
+        stopSpeed2 = 0f;
     }
 
     @Override
@@ -21,8 +38,9 @@ public class SpeedDecreaseComponent extends Component {
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
         SpeedDecreaseComponent comp = instance.PooledECS.createComponent(this.getClass());
-        comp.comparator = comparator;
+        comp.comparator2 = comparator2;
         comp.decelerationValue = decelerationValue;
+        comp.stopSpeed2 = stopSpeed2;
         return comp;
     }
 }

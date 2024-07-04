@@ -6,6 +6,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.CooldownComponent;
 
+/**
+ * System decreasing cooldown of entities based on deltatime
+ */
 public class CooldownSystem extends IteratingSystem {
     private final JavaKnight instance;
     public CooldownSystem(JavaKnight ins, int priority) {
@@ -21,7 +24,7 @@ public class CooldownSystem extends IteratingSystem {
 
         if (!cdInfo.automated && !cdInfo.activate) return;
 
-        if (cdInfo.cd > 0) cdInfo.cd = Math.max(cdInfo.cd - deltaTime, 0);
+        if (cdInfo.cd > 0) cdInfo.cd -= deltaTime;
         else cdInfo.cd = cdInfo.initialCd;
     }
 }

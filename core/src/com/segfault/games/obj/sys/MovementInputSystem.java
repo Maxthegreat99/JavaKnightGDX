@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.*;
 
+/**
+ * System that takes userInput and controls specified entities with them
+ */
 public class MovementInputSystem extends IteratingSystem {
     private final JavaKnight instance;
     private final Vector2 dir = new Vector2();

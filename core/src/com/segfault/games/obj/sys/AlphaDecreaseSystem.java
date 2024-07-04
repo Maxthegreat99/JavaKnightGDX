@@ -7,6 +7,9 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.AlphaDecreaseComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 
+/**
+ * Controls decreasing entities' alphas with deceleration
+ */
 public class AlphaDecreaseSystem extends IteratingSystem {
     private final JavaKnight instance;
     public AlphaDecreaseSystem (JavaKnight ins, int priority) {
@@ -21,6 +24,7 @@ public class AlphaDecreaseSystem extends IteratingSystem {
         DrawableComponent drawableInfo = instance.EntityManager.Dm.get(entity);
         AlphaDecreaseComponent alphaDecInfo = instance.EntityManager.Am.get(entity);
 
+        // decrease depending of the comparator
         if (drawableInfo.alpha > alphaDecInfo.comparator)
             drawableInfo.alpha -= alphaDecInfo.alphaDecrease * 2 * deltaTime;
         else if (drawableInfo.alpha > alphaDecInfo.comparator / 2)
@@ -28,11 +32,13 @@ public class AlphaDecreaseSystem extends IteratingSystem {
         else drawableInfo.alpha -= alphaDecInfo.alphaDecrease / 2 * deltaTime;
 
 
+        // dispose when alpha reaches below 0
         if (drawableInfo.alpha < 0f)  {
             drawableInfo.alpha = 0f;
             instance.PooledECS.removeEntity(entity);
         }
 
+        // you cannot get a sprite's alpha so we need to store them in a variable to control it
         drawableInfo.sprite.setAlpha(drawableInfo.alpha);
     }
 }
