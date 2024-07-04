@@ -1,7 +1,6 @@
 package com.segfault.games.obj;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
 public class Rec {
@@ -93,6 +92,10 @@ public class Rec {
         this.Y += Y; // Update the Y coordinate of the rectangle's position
 
     }
+
+    /**
+     * black box checking if a collision is made with another rectangle
+     */
     public boolean IsPolygonsIntersecting(Rec b)
     {
         Rec a = this;

@@ -10,8 +10,7 @@ import com.segfault.games.obj.comp.PrototypeComp;
 public class LifetimeSystem extends IteratingSystem {
     private final JavaKnight instance;
     public LifetimeSystem(JavaKnight ins, int priority) {
-        super(Family.all(LifetimeComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(LifetimeComponent.class).get());
         instance = ins;
         this.priority = priority;
     }

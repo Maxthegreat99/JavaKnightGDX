@@ -7,17 +7,15 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.DecelerationComponent;
+import com.segfault.games.obj.comp.SpeedDecreaseComponent;
 import com.segfault.games.obj.comp.MovingComponent;
-import com.segfault.games.obj.comp.PrototypeComp;
 
 public class SpeedDecreaseSystem extends IteratingSystem {
-    private final ComponentMapper<DecelerationComponent> speedDecreaseMapper;
+    private final ComponentMapper<SpeedDecreaseComponent> speedDecreaseMapper;
     private final ComponentMapper<MovingComponent> movementMapper;
     private final Vector2 speed = new Vector2();
     public SpeedDecreaseSystem (JavaKnight ins, int priority) {
-        super(Family.all(DecelerationComponent.class, MovingComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(SpeedDecreaseComponent.class, MovingComponent.class).get());
         movementMapper = ins.EntityManager.Mm;
         speedDecreaseMapper = ins.EntityManager.Sm;
         this.priority = priority;
@@ -27,7 +25,7 @@ public class SpeedDecreaseSystem extends IteratingSystem {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movingInfo = movementMapper.get(entity);
-        DecelerationComponent decelerationInfo = speedDecreaseMapper.get(entity);
+        SpeedDecreaseComponent decelerationInfo = speedDecreaseMapper.get(entity);
 
         speed.set(movingInfo.dx, movingInfo.dy);
 

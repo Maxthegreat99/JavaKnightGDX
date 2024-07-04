@@ -4,15 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.DecreasingAlplaComponent;
+import com.segfault.games.obj.comp.AlphaDecreaseComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
-import com.segfault.games.obj.comp.PrototypeComp;
 
 public class AlphaDecreaseSystem extends IteratingSystem {
     private final JavaKnight instance;
     public AlphaDecreaseSystem (JavaKnight ins, int priority) {
-        super(Family.all(DecreasingAlplaComponent.class, DrawableComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(AlphaDecreaseComponent.class, DrawableComponent.class).get());
         instance = ins;
         this.priority = priority;
     }
@@ -21,7 +19,7 @@ public class AlphaDecreaseSystem extends IteratingSystem {
         if (entity.isScheduledForRemoval()) return;
 
         DrawableComponent drawableInfo = instance.EntityManager.Dm.get(entity);
-        DecreasingAlplaComponent alphaDecInfo = instance.EntityManager.Am.get(entity);
+        AlphaDecreaseComponent alphaDecInfo = instance.EntityManager.Am.get(entity);
 
         if (drawableInfo.alpha > alphaDecInfo.comparator)
             drawableInfo.alpha -= alphaDecInfo.alphaDecrease * 2 * deltaTime;

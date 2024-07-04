@@ -6,14 +6,64 @@ import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
 
+/**
+ * Component defining if an object has JBump based collisions
+ */
+
 public class CollidesComponent extends Component {
+    /**
+     * JBump Physic item of the object, the userData refers to the
+     * entity
+     */
     public Item<Entity> physicItem = null;
+    /**
+     * collision relationship, defines what type of collision
+     * this object is. is used by other collisions to define behaviour
+     */
     public CollisionRelationship collisionRelationShip = null;
+    /**
+     * collision filter, set to define if custom interaction, (sliding,
+     * crossing etc..) should happen, whether you want custom interaction
+     * over the default filter depends usually a block collision
+     * (ex. an obstacle) will use a default filter and other collisions
+     * will handle in their own filters whether they should touch/cross/etc..
+     * the coolision.
+     *
+     */
     public CollisionFilter filter = CollisionFilter.defaultFilter;
+    /**
+     * result from last movement, constains overlapping collisions and more
+     * null if the movement logic has not executed yet
+     */
     public Response.Result res = null;
+    /**
+     * width of the collision, modifying this value wont do anything,
+     * if you want to modify the width, use PhysicWorld instance
+     * but make sure to update this field as it is used for cloning the
+     * instance
+     */
     public float width = 0f;
+    /**
+     * height of the collision, modifying this value wont do anything,
+     * if you want to modify the height, use PhysicWorld instance
+     * but make sure to update this field as it is used for cloning the
+     * instance
+     */
     public float height = 0f;
+
+    /**
+     * x position of the collision, modifying this value wont do anything,
+     * if you want to modify the position, use PhysicWorld instance
+     * but make sure to update this field as it is used for cloning the
+     * instance
+     */
     public float x = 0f;
+    /**
+     * y position of the collision, modifying this value wont do anything,
+     * if you want to modify the position, use PhysicWorld instance
+     * but make sure to update this field as it is used for cloning the
+     * instance
+     */
     public float y = 0f;
 
     @Override

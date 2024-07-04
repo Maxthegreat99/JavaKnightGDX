@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -24,8 +23,6 @@ import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
 import com.segfault.games.obj.ent.EntityManager;
 import com.segfault.games.util.indexT;
-
-import java.util.Arrays;
 
 public class JavaKnight extends ApplicationAdapter {
 
@@ -67,6 +64,10 @@ public class JavaKnight extends ApplicationAdapter {
 	public PooledEngine PooledECS;
 	public EntityManager EntityManager;
 	private ShapeRenderer shapeRenderer;
+	private Animation<TextureRegion> background;
+	private final TextureRegion[][] backgrounds = new TextureRegion[3][];
+	public float timeElapsed = 0.0f;
+	private final Text FPS = new Text();
 	@Override
 	public void create () {
 		EntityManager = new EntityManager();
@@ -98,6 +99,12 @@ public class JavaKnight extends ApplicationAdapter {
 		loadPlayer();
 		Plr = EntityCreator.spawnEntity(EntityID.PLAYER);
 		loadEntities();
+		loadBackgrounds();
+		background = new Animation<>(0.045f, backgrounds[0]);
+
+		FPS.X = 30;
+		FPS.Y = FRAME_HEIGHT - 50;
+		Texts.add(FPS);
 	}
 
 	private void loadAssets() {
@@ -127,6 +134,9 @@ public class JavaKnight extends ApplicationAdapter {
 		assetManager.Textures[indexT.PLAYER.ordinal()] =  atlas.findRegion("player");
 		assetManager.Textures[indexT.ROCKET.ordinal()] =  atlas.findRegion("rocket");
 		assetManager.Textures[indexT.ROCKET_GUN.ordinal()] =  atlas.findRegion("rocketGun");
+		assetManager.Textures[indexT.BG_GREEN.ordinal()] = atlas.findRegion("greenBG");
+		assetManager.Textures[indexT.BG_RED.ordinal()] = atlas.findRegion("redBG");
+		assetManager.Textures[indexT.BG_GRAY.ordinal()] = atlas.findRegion("grayBG");
 	}
 
 	private void loadEntityEngine() {
@@ -171,9 +181,9 @@ public class JavaKnight extends ApplicationAdapter {
 
 		a = rOwn.rectangle;
 
-		CollisionDisposeComponent rDis = PooledECS.createComponent(CollisionDisposeComponent.class);
+		DisposeOnCollisionComponent rDis = PooledECS.createComponent(DisposeOnCollisionComponent.class);
 		rDis.rectangle = Plr.getComponent(RecOwnerComponent.class).rectangle;
-		rDis.checkRange = (float)Math.sqrt(75 * 75 + 75 * 75);
+		rDis.checkRange2 = 75 * 75 + 75 * 75;
 		rObs.add(rDis);
 
 		PooledECS.addEntity(rObs);
@@ -192,7 +202,7 @@ public class JavaKnight extends ApplicationAdapter {
 
 		player.add(PooledECS.createComponent(MovingComponent.class));
 		MovementInputComponent pMoveInput = PooledECS.createComponent(MovementInputComponent.class);
-		pMoveInput.speed = 70.71f;
+		pMoveInput.speed2 = 70.71f * 70.71f;
 		player.add(pMoveInput);
 
 		TrailComponent pTrail = PooledECS.createComponent(TrailComponent.class);
@@ -229,7 +239,11 @@ public class JavaKnight extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		if (ticks % 8 == 0)
+			FPS.Str = String.valueOf(Math.round(1f / Gdx.graphics.getDeltaTime()));
 		ticks++;
+		timeElapsed += Gdx.graphics.getDeltaTime();
+
 		a.Rotate(5f, a.X, a.Y);
 		// Set the viewport to the framebuffer size
 		camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
@@ -243,6 +257,11 @@ public class JavaKnight extends ApplicationAdapter {
 
 		// clear the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		batch.disableBlending();
+		batch.draw(background.getKeyFrame(timeElapsed, true), 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		batch.enableBlending();
+
 		// update and draw to the frame buffer
 		PooledECS.update(Gdx.graphics.getDeltaTime());
 
@@ -310,6 +329,33 @@ public class JavaKnight extends ApplicationAdapter {
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		for (Rect i : PhysicWorld.getRects()) shapeRenderer.rect(i.x, i.y, i.w, i.h);
 		shapeRenderer.end();
+	}
+
+	private static final int GREEN_BG = 0;
+
+	private static final int GRAY_BG = 1;
+
+	private static final int RED_BG = 2;
+
+	private void loadBackgrounds() {
+		TextureRegion greenBG = assetManager.Textures[indexT.BG_GREEN.ordinal()];
+		TextureRegion redBG = assetManager.Textures[indexT.BG_RED.ordinal()];
+		TextureRegion grayBG = assetManager.Textures[indexT.BG_GRAY.ordinal()];
+
+		TextureRegion[] greenBgFrames = greenBG.split(1,1050)[0];
+
+
+		TextureRegion[] redBgFrames = redBG.split(1,1050)[0];
+
+
+		TextureRegion[] grayBgFrames = grayBG.split(1, 1050)[0];
+
+
+
+		backgrounds[0] = greenBgFrames;
+		backgrounds[1] = grayBgFrames;
+		backgrounds[2] = redBgFrames;
+
 	}
 
 	@Override

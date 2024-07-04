@@ -4,12 +4,12 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 
-public class DecreasingAlplaComponent extends Component {
-    public float alphaDecrease = 0.0f;
-    public float comparator = 0.0f;
+public class SpeedDecreaseComponent extends Component {
+    public float decelerationValue = 0.0f;
+    public float comparator = 0f;
     @Override
     public void reset() {
-        alphaDecrease = 0.0f;
+        decelerationValue = 0.0f;
         comparator = 0.0f;
     }
 
@@ -20,9 +20,9 @@ public class DecreasingAlplaComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        DecreasingAlplaComponent comp = instance.PooledECS.createComponent(this.getClass());
-        comp.alphaDecrease = alphaDecrease;
+        SpeedDecreaseComponent comp = instance.PooledECS.createComponent(this.getClass());
         comp.comparator = comparator;
+        comp.decelerationValue = decelerationValue;
         return comp;
     }
 }

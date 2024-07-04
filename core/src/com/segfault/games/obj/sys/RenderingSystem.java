@@ -7,7 +7,6 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.DrawableComponent;
-import com.segfault.games.obj.comp.PrototypeComp;
 
 import java.util.Comparator;
 
@@ -16,7 +15,7 @@ public class RenderingSystem extends SortedIteratingSystem {
     private final SpriteBatch batch;
 
     public RenderingSystem(JavaKnight instance, SpriteBatch b, int priority) {
-        super(Family.all(DrawableComponent.class).exclude(PrototypeComp.class).get(),
+        super(Family.all(DrawableComponent.class).get(),
               new OrderComparator(instance));
         this.instance = instance;
         batch = b;

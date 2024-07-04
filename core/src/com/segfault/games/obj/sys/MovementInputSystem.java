@@ -13,8 +13,7 @@ public class MovementInputSystem extends IteratingSystem {
     private final JavaKnight instance;
     private final Vector2 dir = new Vector2();
     public MovementInputSystem(JavaKnight ins, int priority) {
-        super(Family.all(MovementInputComponent.class,MovingComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(MovementInputComponent.class,MovingComponent.class).get());
         instance = ins;
         this.priority = priority;
     }
@@ -31,7 +30,7 @@ public class MovementInputSystem extends IteratingSystem {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) dir.y += 1f;
         if (Gdx.input.isKeyPressed(Input.Keys.S)) dir.y -= 1f;
 
-        dir.setLength2(movementInput.speed * movementInput.speed);
+        dir.setLength2(movementInput.speed2);
 
         movement.dx = dir.x;
         movement.dy = dir.y;

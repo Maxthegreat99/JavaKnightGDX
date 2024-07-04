@@ -4,7 +4,7 @@ package com.segfault.games.obj;
 import java.awt.*;
 
 public class Text {
-    public float Scale;
+    public float Scale = 1f;
     public String Str;  // String content of the text
     public int X;       // X-coordinate of the text position
     public int Y;       // Y-coordinate of the text position

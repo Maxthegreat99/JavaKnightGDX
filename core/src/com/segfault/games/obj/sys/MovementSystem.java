@@ -3,7 +3,6 @@ package com.segfault.games.obj.sys;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
@@ -13,8 +12,7 @@ public class MovementSystem extends IntervalIteratingSystem {
     private final JavaKnight instance;
 
     public MovementSystem(JavaKnight ins, int priority, float interval) {
-        super(Family.all(MovingComponent.class, DrawableComponent.class)
-                    .exclude(PrototypeComp.class).get(), interval);
+        super(Family.all(MovingComponent.class, DrawableComponent.class).get(), interval);
         instance = ins;
         this.priority = priority;
     }
@@ -46,6 +44,9 @@ public class MovementSystem extends IntervalIteratingSystem {
             collisionInfo.res = res;
 
             drawable.sprite.setPosition(res.goalX, res.goalY);
+
+            collisionInfo.x = res.goalX;
+            collisionInfo.y = res.goalY;
 
             dx = res.goalX - x;
             dy = res.goalY - y;

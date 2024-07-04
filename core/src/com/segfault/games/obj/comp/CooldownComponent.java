@@ -4,10 +4,31 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 
+/**
+ * Component for reducing set cooldowns over time
+ */
+
 public class CooldownComponent extends Component {
+    /**
+     * Current cooldown value in seconds, reduces over time
+     * and resets itself after it hits 0, if this value
+     * is less or equal two zero your event should activate.
+     */
     public float cd = 0.0f;
+    /**
+     * The value to reset the cooldown with once it is done, in seconds
+     */
     public float initialCd = 0.0f;
+    /**
+     * if this boolean is true, the cooldown will keep going
+     * and reseting no matter of the activate boolean
+     */
     public boolean automated = false;
+    /**
+     * if the automated boolean is false, this value determines
+     * if the cooldown keeps going.
+     */
+
     public boolean activate = false;
     @Override
     public void reset() {

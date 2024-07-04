@@ -3,8 +3,20 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 
+/**
+ * life component holds life for systems to handle
+ * when it takes damages and when its life reaches 0
+ */
 public class LifeComponent extends Component {
+    /**
+     * life value in int
+     */
     public int life = 0;
+    /**
+     * whether the component took damage during this update
+     * when handled this value should then be set to false
+     * again
+     */
     public boolean tookHit = false;
     @Override
     public void reset() {

@@ -14,8 +14,7 @@ public class DamageCollisionSystem extends IteratingSystem {
     private final Vector2 tmp = new Vector2();
 
     public DamageCollisionSystem(JavaKnight ins, int priority) {
-        super(Family.all(DamageComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(DamageComponent.class).get());
         instance = ins;
         this.priority = priority;
     }
@@ -34,7 +33,7 @@ public class DamageCollisionSystem extends IteratingSystem {
                 if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
                     continue;
 
-                if (instance.EntityManager.Lim.get(c.userData) != null) {
+                if (instance.EntityManager.Lim.get(c.userData) != null && dmgInfo.target == null) {
                     LifeComponent lifeInf = instance.EntityManager.Lim.get(c.userData);
                     lifeInf.life -= dmgInfo.damage;
                     lifeInf.life = Math.max(lifeInf.life, 0);

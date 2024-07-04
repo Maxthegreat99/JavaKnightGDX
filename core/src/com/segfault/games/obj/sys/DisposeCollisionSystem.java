@@ -14,8 +14,7 @@ public class DisposeCollisionSystem extends IteratingSystem {
     private final Vector2 tmp = new Vector2();
 
     public DisposeCollisionSystem(JavaKnight ins, int priority) {
-        super(Family.all(CollisionDisposeComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(DisposeOnCollisionComponent.class).get());
         instance = ins;
         this.priority = priority;
     }
@@ -23,7 +22,7 @@ public class DisposeCollisionSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        CollisionDisposeComponent disInfo = instance.EntityManager.Dim.get(entity);
+        DisposeOnCollisionComponent disInfo = instance.EntityManager.Dim.get(entity);
 
         boolean hasJBumpCol = disInfo.relationship != null;
 
@@ -44,7 +43,7 @@ public class DisposeCollisionSystem extends IteratingSystem {
 
         tmp.set(rOwner.rectangle.X, rOwner.rectangle.Y);
 
-        if (tmp.dst2(r2.X, r2.Y) > disInfo.checkRange * disInfo.checkRange
+        if (tmp.dst2(r2.X, r2.Y) > disInfo.checkRange2
             || !r2.IsPolygonsIntersecting(rOwner.rectangle)) return;
 
         instance.PooledECS.removeEntity(entity);

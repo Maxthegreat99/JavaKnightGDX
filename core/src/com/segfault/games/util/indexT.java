@@ -27,6 +27,10 @@ public enum indexT {
     LAZER_GUN,
     PLAYER,
     ROCKET,
-    ROCKET_GUN
+    BG_GRAY,
+    BG_GREEN,
+    BG_RED,
+    ROCKET_GUN /* please try to keep this the last Enum, thank you */
+
 
 }

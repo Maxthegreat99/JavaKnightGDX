@@ -10,8 +10,7 @@ import com.segfault.games.obj.comp.*;
 public class TrailingSystem extends IteratingSystem {
     private final JavaKnight instance;
     public TrailingSystem(JavaKnight ins, int priority) {
-        super(Family.all(TrailComponent.class, DrawableComponent.class)
-                    .exclude(PrototypeComp.class).get());
+        super(Family.all(TrailComponent.class, DrawableComponent.class).get());
         instance = ins;
         this.priority = priority;
     }
@@ -37,7 +36,7 @@ public class TrailingSystem extends IteratingSystem {
             eDraw.sprite.setPosition(drawable.sprite.getX(), drawable.sprite.getY());
             e.add(eDraw);
 
-            DecreasingAlplaComponent alphaDecreaseComp = instance.PooledECS.createComponent(DecreasingAlplaComponent.class);
+            AlphaDecreaseComponent alphaDecreaseComp = instance.PooledECS.createComponent(AlphaDecreaseComponent.class);
             alphaDecreaseComp.comparator = trailing.alphaComparator;
             alphaDecreaseComp.alphaDecrease = trailing.trailAlphaDecrease;
             e.add(alphaDecreaseComp);
