@@ -32,7 +32,7 @@ public class LifeComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        LifeComponent comp = instance.PooledECS.createComponent(this.getClass());
+        LifeComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.tookHit = tookHit;
         comp.life = life;
         return comp;

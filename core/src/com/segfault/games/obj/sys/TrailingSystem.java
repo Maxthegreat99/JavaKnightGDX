@@ -6,15 +6,16 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * Trailing system, creates copies of the current sprite state of components based on a cooldown
  */
 public class TrailingSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     public TrailingSystem(JavaKnight ins, int priority) {
         super(Family.all(TrailComponent.class, DrawableComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
 
@@ -22,8 +23,8 @@ public class TrailingSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        TrailComponent trailing = instance.EntityManager.Tm.get(entity);
-        DrawableComponent drawable = instance.EntityManager.Dm.get(entity);
+        TrailComponent trailing = manager.GetMappers().Trail.get(entity);
+        DrawableComponent drawable = manager.GetMappers().Drawable.get(entity);
 
 
         if (trailing.trailCooldown > 0f) {
@@ -33,8 +34,8 @@ public class TrailingSystem extends IteratingSystem {
 
         trailing.trailCooldown = trailing.trailInitialCooldown;
 
-        Entity e = instance.PooledECS.createEntity();
-        DrawableComponent eDraw = instance.PooledECS.createComponent(DrawableComponent.class);
+        Entity e = manager.GetEngine().createEntity();
+        DrawableComponent eDraw = manager.GetEngine().createComponent(DrawableComponent.class);
         eDraw.order = 1;
         eDraw.blending = true;
         eDraw.sprite = new Sprite(drawable.sprite);
@@ -43,12 +44,12 @@ public class TrailingSystem extends IteratingSystem {
         eDraw.sprite.setPosition(drawable.sprite.getX(), drawable.sprite.getY());
         e.add(eDraw);
 
-        AlphaDecreaseComponent alphaDecreaseComp = instance.PooledECS.createComponent(AlphaDecreaseComponent.class);
+        AlphaDecreaseComponent alphaDecreaseComp = manager.GetEngine().createComponent(AlphaDecreaseComponent.class);
         alphaDecreaseComp.comparator = trailing.alphaComparator;
         alphaDecreaseComp.alphaDecrease = trailing.trailAlphaDecrease;
         e.add(alphaDecreaseComp);
-        
-        instance.PooledECS.addEntity(e);
+
+        manager.GetEngine().addEntity(e);
 
     }
 

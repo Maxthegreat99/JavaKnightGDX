@@ -8,24 +8,25 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * System that takes userInput and controls specified entities with them
  */
 public class MovementInputSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     private final Vector2 dir = new Vector2();
     public MovementInputSystem(JavaKnight ins, int priority) {
         super(Family.all(MovementInputComponent.class,MovingComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        MovingComponent movement = instance.EntityManager.Mm.get(entity);
-        MovementInputComponent movementInput = instance.EntityManager.Mim.get(entity);
+        MovingComponent movement = manager.GetMappers().Moving.get(entity);
+        MovementInputComponent movementInput = manager.GetMappers().MovementInput.get(entity);
 
         dir.set(0,0);
         if (Gdx.input.isKeyPressed(Input.Keys.A)) dir.x -= 1f;

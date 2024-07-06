@@ -5,22 +5,23 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.CooldownComponent;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * System decreasing cooldown of entities based on deltatime
  */
 public class CooldownSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     public CooldownSystem(JavaKnight ins, int priority) {
         super(Family.all(CooldownComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        CooldownComponent cdInfo = instance.EntityManager.Cdm.get(entity);
+        CooldownComponent cdInfo = manager.GetMappers().Cooldown.get(entity);
 
         if (!cdInfo.automated && !cdInfo.activate) return;
 

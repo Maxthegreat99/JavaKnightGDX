@@ -27,7 +27,7 @@ public class LifetimeComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        LifetimeComponent comp = instance.PooledECS.createComponent(this.getClass());
+        LifetimeComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.lifetime = lifetime;
         return comp;
     }

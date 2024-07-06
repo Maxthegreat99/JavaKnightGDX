@@ -45,7 +45,7 @@ public class CooldownComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        CooldownComponent comp = instance.PooledECS.createComponent(this.getClass());
+        CooldownComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.cd = cd;
         comp.initialCd = initialCd;
         comp.automated = automated;

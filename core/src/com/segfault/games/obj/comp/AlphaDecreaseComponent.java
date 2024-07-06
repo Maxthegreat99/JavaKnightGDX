@@ -36,7 +36,7 @@ public class AlphaDecreaseComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        AlphaDecreaseComponent comp = instance.PooledECS.createComponent(this.getClass());
+        AlphaDecreaseComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.alphaDecrease = alphaDecrease;
         comp.comparator = comparator;
         return comp;

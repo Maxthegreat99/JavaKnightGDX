@@ -46,7 +46,7 @@ public class TrailComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        TrailComponent comp = instance.PooledECS.createComponent(TrailComponent.class);
+        TrailComponent comp = instance.GetEntityManager().GetEngine().createComponent(TrailComponent.class);
         comp.trailCooldown = trailCooldown;
         comp.trailInitialCooldown = trailInitialCooldown;
         comp.trailIninitalAlpha = trailIninitalAlpha;

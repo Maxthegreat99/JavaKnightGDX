@@ -30,7 +30,7 @@ public class MovingComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        MovingComponent comp = instance.PooledECS.createComponent(this.getClass());
+        MovingComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.dy = dy;
         comp.dx = dx;
         return comp;

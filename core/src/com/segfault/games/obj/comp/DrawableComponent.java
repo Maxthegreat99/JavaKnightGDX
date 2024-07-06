@@ -47,7 +47,7 @@ public class DrawableComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        DrawableComponent comp = instance.PooledECS.createComponent(this.getClass());
+        DrawableComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.sprite = new Sprite(sprite);
         comp.order = order;
         comp.alpha = alpha;

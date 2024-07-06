@@ -7,17 +7,18 @@ import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * movement system, controling entities specifying velocity,
  * this system runs at a constant rate.
  */
 public class MovementSystem extends IntervalIteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
 
     public MovementSystem(JavaKnight ins, int priority, float interval) {
         super(Family.all(MovingComponent.class, DrawableComponent.class).get(), interval);
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
 
@@ -25,8 +26,8 @@ public class MovementSystem extends IntervalIteratingSystem {
     protected void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
-        MovingComponent movement = instance.EntityManager.Mm.get(entity);
-        DrawableComponent drawable = instance.EntityManager.Dm.get(entity);
+        MovingComponent movement = manager.GetMappers().Moving.get(entity);
+        DrawableComponent drawable = manager.GetMappers().Drawable.get(entity);
 
         float x = drawable.sprite.getX();
         float y = drawable.sprite.getY();
@@ -40,7 +41,7 @@ public class MovementSystem extends IntervalIteratingSystem {
         float targetX = x + dx;
         float targetY = y + dy;
 
-        boolean hasJBumpCol = instance.EntityManager.Cm.get(entity) != null;
+        boolean hasJBumpCol = manager.GetMappers().Collides.get(entity) != null;
 
 
         if (!hasJBumpCol)
@@ -48,8 +49,8 @@ public class MovementSystem extends IntervalIteratingSystem {
 
         // if JBump collision exists we let JBump handle the movement
         else {
-            CollidesComponent collisionInfo = instance.EntityManager.Cm.get(entity);
-            Response.Result res = instance.PhysicWorld.move(collisionInfo.physicItem, targetX, targetY, collisionInfo.filter);
+            CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
+            Response.Result res = manager.GetPhysicWorld().move(collisionInfo.physicItem, targetX, targetY, collisionInfo.filter);
             collisionInfo.res = res;
 
             drawable.sprite.setPosition(res.goalX, res.goalY);
@@ -65,7 +66,7 @@ public class MovementSystem extends IntervalIteratingSystem {
         // after we handled JBump collision movement
         if (entity.getComponent(RecOwnerComponent.class) == null) return;
 
-        RecOwnerComponent recInfo = instance.EntityManager.Rm.get(entity);
+        RecOwnerComponent recInfo = manager.GetMappers().RecOwner.get(entity);
         Rec r = recInfo.rectangle;
         r.Move(dx, dy);
 

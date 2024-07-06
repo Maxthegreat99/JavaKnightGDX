@@ -3,8 +3,14 @@ package com.segfault.games.obj;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Rectangle object, used for collision detection requiring rotated areas, cannot be used as a solid collision
+ */
 public class Rec {
 
+    /** points of the rectangle, do not rely on the position of the points to know
+     * the which corner each points are as the rectangle can be rotated
+     */
     public Vector2[] Points = {new Vector2(), new Vector2(), new Vector2(), new Vector2()}; // Array to hold the vertices of the rectangle
 
     public float Width;
@@ -16,6 +22,9 @@ public class Rec {
     public float OriginX;
     public float OriginY;
 
+    /**
+     * current angle of the rectangle, modyfying it wont rotate the rectangle
+     */
     public float angle = 0.0f;
 
     private final Vector2 normal = new Vector2();
@@ -35,27 +44,43 @@ public class Rec {
 
     }
 
-    // Method to rotate the rectangle around a specified origin point
+    /**
+     * Method to rotate the rectangle around a specified origin point
+     * note this will add to the current rotation and not set the rotation
+     */
     public void Rotate(float angle, float originX, float originY) {
 
+        if (angle < 0 || angle > 360)
+            angle = (angle % 360);
 
         for (Vector2 point : Points) {
             float tempX = point.x;
             float tempY = point.y;
 
-            point.x = (tempX - originX) * MathUtils.cos((float) Math.toRadians(angle)) - (tempY - originY) * MathUtils.sin((float) Math.toRadians(angle)) + originX;
-            point.y = (tempX - originX) * MathUtils.sin((float) Math.toRadians(angle)) + (tempY - originY) * MathUtils.cos((float) Math.toRadians(angle)) + originY;
+            float cos = MathUtils.cosDeg(angle);
+            float sin = MathUtils.sinDeg(angle);
+
+            point.x = (tempX - originX) * cos - (tempY - originY) * sin + originX;
+            point.y = (tempX - originX) * sin + (tempY - originY) * cos + originY;
         }
 
-
         this.angle += angle;
+        if (this.angle < 0 || this.angle > 360)
+            this.angle = (this.angle % 360);
         this.OriginX = originX;
         this.OriginY = originY;
 
-
-
     }
 
+    /**
+     * This completely reset calculates the rectangle's points around the set positions
+     * and with the set origins for rotation, when possible use Move instead
+     * @param X
+     * @param Y
+     * @param originX
+     * @param originY
+     * @param angle
+     */
     public void MoveTo(float X, float Y, float originX, float originY, float angle) {
 
         Points[0].set(X - Width / 2f, Y - Height / 2f);
@@ -69,18 +94,27 @@ public class Rec {
                 float tempX = point.x;
                 float tempY = point.y;
 
-                point.x = (tempX - originX) * MathUtils.cos((float) Math.toRadians(angle)) - (tempY - originY) * MathUtils.sin((float) Math.toRadians(angle)) + originX;
-                point.y = (tempX - originX) * MathUtils.sin((float) Math.toRadians(angle)) + (tempY - originY) * MathUtils.cos((float) Math.toRadians(angle)) + originY;
+                float cos = MathUtils.cosDeg(angle);
+                float sin = MathUtils.sinDeg(angle);
+
+                point.x = (tempX - originX) * cos - (tempY - originY) * sin + originX;
+                point.y = (tempX - originX) * sin + (tempY - originY) * cos + originY;
             }
 
         }
 
         this.X = X;
         this.Y = Y;
-
+        OriginX = originX;
+        OriginY = originY;
         this.angle = angle;
     }
-    // Method to move the rectangle to a new position
+
+    /**
+     * adds said values to the rectangle's points
+     * @param X
+     * @param Y
+     */
     public void Move(float X, float Y) {
 
         for (Vector2 point : Points) {
@@ -138,9 +172,15 @@ public class Rec {
         }
         return true;
     }
+
+    private final float[] floatArray = new float[Points.length * 2];
+
+    /**
+     * drops the (x,y) components of the rectangle's points into a float array ending looking like this:
+     * {x, y, x, y ... }
+     */
     public float[] ConvertToFloatArray() {
         // Each Vector2 has two float values (x and y), so the resulting float array will have twice the length of the Vector2 array
-        float[] floatArray = new float[Points.length * 2];
 
         for (int i = 0; i < Points.length; i++) {
             floatArray[i * 2] = Points[i].x;     // Store the x value

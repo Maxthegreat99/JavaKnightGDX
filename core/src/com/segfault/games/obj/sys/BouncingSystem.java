@@ -10,23 +10,24 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.BounceComponent;
 import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * System controling bouncing entities
  */
 public class BouncingSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     private final Vector2 tmp = new Vector2();
     public BouncingSystem(JavaKnight ins, int priority) {
         super(Family.all(BounceComponent.class, CollidesComponent.class, MovingComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        BounceComponent BouncingInfo = instance.EntityManager.Bm.get(entity);
-        CollidesComponent colInfo = instance.EntityManager.Cm.get(entity);
+        BounceComponent BouncingInfo = manager.GetMappers().Bounce.get(entity);
+        CollidesComponent colInfo = manager.GetMappers().Collides.get(entity);
 
         // go through the different collisions to find the right one
         boolean found = false;
@@ -36,7 +37,7 @@ public class BouncingSystem extends IteratingSystem {
             c = colInfo.res.projectedCollisions.get(i);
 
             // check for the right relationship
-            if (instance.EntityManager.Cm.get((Entity) c.other.userData).collisionRelationShip != BouncingInfo.relationship)
+            if (manager.GetMappers().Collides.get((Entity) c.other.userData).collisionRelationShip != BouncingInfo.relationship)
                 continue;
 
             found = true;
@@ -47,11 +48,11 @@ public class BouncingSystem extends IteratingSystem {
         BouncingInfo.bounces++;
 
         if (BouncingInfo.bounces > BouncingInfo.maxBounces) {
-            instance.PooledECS.removeEntity(entity);
+            manager.GetEngine().removeEntity(entity);
             return;
         }
 
-        MovingComponent MvInf = instance.EntityManager.Mm.get(entity);
+        MovingComponent MvInf = manager.GetMappers().Moving.get(entity);
 
         // reverse direction based on which side was hit
         if (c.normal.y != 0) {

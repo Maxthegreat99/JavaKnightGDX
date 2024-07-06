@@ -83,14 +83,14 @@ public class CollidesComponent extends Component {
 
     @Override
     public void dispose(JavaKnight instance) {
-        instance.PhysicWorld.remove(physicItem);
+        instance.GetEntityManager().GetPhysicWorld().remove(physicItem);
     }
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        CollidesComponent comp = instance.PooledECS.createComponent(CollidesComponent.class);
+        CollidesComponent comp = instance.GetEntityManager().GetEngine().createComponent(CollidesComponent.class);
         comp.physicItem = new Item<>(ent);
-        instance.PhysicWorld.add(comp.physicItem, x, y, width, height);
+        instance.GetEntityManager().GetPhysicWorld().add(comp.physicItem, x, y, width, height);
         comp.collisionRelationShip = collisionRelationShip;
         comp.width = width;
         comp.height = height;

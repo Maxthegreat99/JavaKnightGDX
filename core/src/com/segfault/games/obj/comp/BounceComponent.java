@@ -38,7 +38,7 @@ public class BounceComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        BounceComponent comp = instance.PooledECS.createComponent(this.getClass());
+        BounceComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.maxBounces = maxBounces;
         comp.bounces = bounces;
         comp.relationship = relationship;

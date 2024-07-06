@@ -38,7 +38,7 @@ public class DamageComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        DamageComponent comp = instance.PooledECS.createComponent(this.getClass());
+        DamageComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.relationship = relationship;
         comp.target = target;
         comp.damage = damage;

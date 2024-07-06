@@ -34,7 +34,7 @@ public class PointingComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        PointingComponent comp = instance.PooledECS.createComponent(PointingComponent.class);
+        PointingComponent comp = instance.GetEntityManager().GetEngine().createComponent(PointingComponent.class);
         comp.cursor = cursor;
         comp.target = target;
         return comp;

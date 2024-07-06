@@ -37,7 +37,7 @@ public class SpeedDecreaseComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        SpeedDecreaseComponent comp = instance.PooledECS.createComponent(this.getClass());
+        SpeedDecreaseComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.comparator2 = comparator2;
         comp.decelerationValue = decelerationValue;
         comp.stopSpeed2 = stopSpeed2;

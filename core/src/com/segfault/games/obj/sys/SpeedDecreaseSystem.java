@@ -17,8 +17,8 @@ public class SpeedDecreaseSystem extends IteratingSystem {
     private final Vector2 speed = new Vector2();
     public SpeedDecreaseSystem (JavaKnight ins, int priority) {
         super(Family.all(SpeedDecreaseComponent.class, MovingComponent.class).get());
-        movementMapper = ins.EntityManager.Mm;
-        speedDecreaseMapper = ins.EntityManager.Sm;
+        movementMapper = ins.GetEntityManager().GetMappers().Moving;
+        speedDecreaseMapper = ins.GetEntityManager().GetMappers().SpeedDecrease;
         this.priority = priority;
     }
     @Override

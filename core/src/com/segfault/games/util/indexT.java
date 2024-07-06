@@ -1,5 +1,8 @@
 package com.segfault.games.util;
 
+/**
+ * an index to most of the game's textures, use ordinal()
+ */
 public enum indexT {
     ONE_PARTICLE_1,
     ONE_PARTICLE_2,

@@ -8,29 +8,30 @@ import com.dongbat.jbump.Item;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * System disposing entities on specific collisions
  */
 public class DisposeCollisionSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     private final Vector2 range = new Vector2();
 
     public DisposeCollisionSystem(JavaKnight ins, int priority) {
         super(Family.all(DisposeOnCollisionComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        DisposeOnCollisionComponent disInfo = instance.EntityManager.Dim.get(entity);
+        DisposeOnCollisionComponent disInfo = manager.GetMappers().DisposeOnCollision.get(entity);
 
         boolean hasJBumpCol = disInfo.relationship != null;
 
         if (!hasJBumpCol) {
-            RecOwnerComponent rOwner = instance.EntityManager.Rm.get(entity);
+            RecOwnerComponent rOwner = manager.GetMappers().RecOwner.get(entity);
             Rec r2 = disInfo.rectangle;
 
             range.set(rOwner.rectangle.X, rOwner.rectangle.Y);
@@ -40,18 +41,18 @@ public class DisposeCollisionSystem extends IteratingSystem {
             if (range.dst2(r2.X, r2.Y) > disInfo.checkRange2
                 || !r2.IsPolygonsIntersecting(rOwner.rectangle)) return;
 
-            instance.PooledECS.removeEntity(entity);
+            manager.GetEngine().removeEntity(entity);
 
             return;
         }
 
-        CollidesComponent colInfo = instance.EntityManager.Cm.get(entity);
+        CollidesComponent colInfo = manager.GetMappers().Collides.get(entity);
 
         // check through each collision if the relationship is the specified one, if so dispose the entity
         for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
-            if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(disInfo.relationship))
+            if (!manager.GetMappers().Collides.get(c.userData).collisionRelationShip.equals(disInfo.relationship))
                 continue;
-            instance.PooledECS.removeEntity(entity);
+            manager.GetEngine().removeEntity(entity);
             return;
         }
 

@@ -47,7 +47,7 @@ public class DisposeOnCollisionComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        DisposeOnCollisionComponent comp = instance.PooledECS.createComponent(this.getClass());
+        DisposeOnCollisionComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.particles = particles;
         comp.rectangle = rectangle;
         comp.checkRange2 = checkRange2;

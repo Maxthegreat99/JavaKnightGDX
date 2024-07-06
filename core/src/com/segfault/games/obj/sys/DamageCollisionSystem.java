@@ -8,30 +8,31 @@ import com.dongbat.jbump.Item;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.ent.EntityManager;
 
 /**
  * System dealing with damage on collision from entities 
  */
 public class DamageCollisionSystem extends IteratingSystem {
-    private final JavaKnight instance;
+    private final EntityManager manager;
     private final Vector2 range = new Vector2();
 
     public DamageCollisionSystem(JavaKnight ins, int priority) {
         super(Family.all(DamageComponent.class).get());
-        instance = ins;
+        manager = ins.GetEntityManager();
         this.priority = priority;
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
-        DamageComponent dmgInfo = instance.EntityManager.Dgm.get(entity);
+        DamageComponent dmgInfo = manager.GetMappers().Damage.get(entity);
 
-        boolean hasJBumpCol = instance.EntityManager.Cm.get(entity) != null;
+        boolean hasJBumpCol = manager.GetMappers().Collides.get(entity) != null;
 
         if (!hasJBumpCol) {
-            RecOwnerComponent rOwner = instance.EntityManager.Rm.get(entity);
-            RectangleCollisionComponent rcInfo = instance.EntityManager.Rcm.get(entity);
+            RecOwnerComponent rOwner = manager.GetMappers().RecOwner.get(entity);
+            RectangleCollisionComponent rcInfo = manager.GetMappers().RecCollision.get(entity);
             Rec r2 = rcInfo.targetRectangle;
 
             range.set(rOwner.rectangle.X, rOwner.rectangle.Y);
@@ -45,17 +46,17 @@ public class DamageCollisionSystem extends IteratingSystem {
         }
 
 
-        CollidesComponent colInfo = instance.EntityManager.Cm.get(entity);
+        CollidesComponent colInfo = manager.GetMappers().Collides.get(entity);
 
         for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
             // continue if the relationship of the entity is not right
-            if (!instance.EntityManager.Cm.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
+            if (manager.GetMappers().Collides.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
                 continue;
 
             // if the component has no target and that the entity has a lifecomponent
             // hit the entity, else hit the component's target
-            if (dmgInfo.target == null && instance.EntityManager.Lim.get(c.userData) != null) {
-                takeHit(instance.EntityManager.Lim.get(c.userData), dmgInfo);
+            if (dmgInfo.target == null && manager.GetMappers().Life.get(c.userData) != null) {
+                takeHit(manager.GetMappers().Life.get(c.userData), dmgInfo);
                 continue;
             }
 

@@ -21,15 +21,15 @@ public class RecOwnerComponent extends Component {
 
     @Override
     public void dispose(JavaKnight instance) {
-        instance.Rectangles.removeValue(rectangle, true);
+        instance.GetRectangles().removeValue(rectangle, true);
     }
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        RecOwnerComponent comp = instance.PooledECS.createComponent(RecOwnerComponent.class);
+        RecOwnerComponent comp = instance.GetEntityManager().GetEngine().createComponent(RecOwnerComponent.class);
         comp.rectangle = new Rec(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         if (rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.OriginX, rectangle.OriginY);
-        instance.Rectangles.add(comp.rectangle);
+        instance.GetRectangles().add(comp.rectangle);
         return comp;
     }
 }

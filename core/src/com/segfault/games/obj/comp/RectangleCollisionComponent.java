@@ -32,7 +32,7 @@ public class RectangleCollisionComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        RectangleCollisionComponent comp = instance.PooledECS.createComponent(this.getClass());
+        RectangleCollisionComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.checkRange2 = checkRange2;
         comp.targetRectangle = targetRectangle;
         return comp;

@@ -28,7 +28,7 @@ public class MovementInputComponent extends Component {
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent) {
-        MovementInputComponent comp = instance.PooledECS.createComponent(this.getClass());
+        MovementInputComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.speed2 = speed2;
         return comp;
     }
