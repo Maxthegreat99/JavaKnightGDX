@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -43,5 +45,17 @@ public class BounceComponent extends Component {
         comp.bounces = bounces;
         comp.relationship = relationship;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        maxBounces = jsonData.getInt("maxBounces");
+        relationship = CollisionRelationship.valueOf(jsonData.getString("relationship"));
+        bounces = jsonData.getInt("bounces");
     }
 }

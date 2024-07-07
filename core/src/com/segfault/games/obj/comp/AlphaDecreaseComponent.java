@@ -2,6 +2,8 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -40,5 +42,16 @@ public class AlphaDecreaseComponent extends Component {
         comp.alphaDecrease = alphaDecrease;
         comp.comparator = comparator;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        alphaDecrease = jsonData.getFloat("alphaDecrease");
+        comparator = jsonData.getFloat("comparator");
     }
 }

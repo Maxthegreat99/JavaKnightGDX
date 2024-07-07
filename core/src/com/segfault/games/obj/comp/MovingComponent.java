@@ -14,7 +14,7 @@ public class MovingComponent extends Component {
      */
     public float dx = 0.0f;
     /**
-     * velicity y, defines velocity in the y axis
+     * velocity y, defines velocity in the y axis
      */
     public float dy = 0.0f;
     @Override

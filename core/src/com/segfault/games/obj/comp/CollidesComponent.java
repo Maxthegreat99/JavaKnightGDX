@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Response;
@@ -99,5 +101,16 @@ public class CollidesComponent extends Component {
         comp.res = null;
         comp.filter = filter;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        collisionRelationShip = CollisionRelationship.valueOf(jsonData.getString("collisionRelationShip"));
+
     }
 }

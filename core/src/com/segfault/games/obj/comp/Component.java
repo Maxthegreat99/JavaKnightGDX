@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Pool;
 import com.segfault.games.JavaKnight;
 
@@ -8,7 +9,7 @@ import com.segfault.games.JavaKnight;
  * a Component, holds data for Systems to manipulate,
  * systems manipulate entities based on which components they have
  */
-public abstract class Component implements com.badlogic.ashley.core.Component, Pool.Poolable {
+public abstract class Component implements com.badlogic.ashley.core.Component, Pool.Poolable, Json.Serializable {
     /**
      *  called when EntityLisner.entityRemoved() is called, dispose and remove the references
      *  of your values from the engine (from the Rectangle array / the PhysicWorld for instance) here
@@ -20,4 +21,6 @@ public abstract class Component implements com.badlogic.ashley.core.Component, P
      * will destroy objects passed by reference, so please make sure to deep clone each value of your components
      */
     public abstract Component Clone(JavaKnight instance, Entity ent);
+
+
 }
