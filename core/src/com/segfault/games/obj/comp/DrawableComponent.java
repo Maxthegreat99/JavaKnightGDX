@@ -22,12 +22,12 @@ public class DrawableComponent extends Component {
     public float alpha = 0.0f;
     /**
      * whether blending should be enabled or disabled when rendering
-     * this objecct, if your object does not need alpha and has no
+     * this object, if your object does not need alpha and has no
      * transparent pixels you should set this to false
      */
     public boolean blending = true;
     /**
-     * the order in which the object should be rendered, the higer the value
+     * the order in which the object should be rendered, the bigger the value
      * the more likely the object wil be the last to be rendered
      */
     public int order = 0;
