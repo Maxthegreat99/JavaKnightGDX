@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -34,5 +36,16 @@ public class MovingComponent extends Component {
         comp.dy = dy;
         comp.dx = dx;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        dx = jsonValue.getFloat("dx");
+        dy = jsonValue.getFloat("dy");
     }
 }

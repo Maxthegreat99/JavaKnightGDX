@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -36,5 +38,16 @@ public class LifeComponent extends Component {
         comp.tookHit = tookHit;
         comp.life = life;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        life = jsonValue.getInt("life");
+        tookHit = jsonValue.getBoolean("tookHit");
     }
 }

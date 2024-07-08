@@ -2,6 +2,8 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -42,5 +44,17 @@ public class SpeedDecreaseComponent extends Component {
         comp.decelerationValue = decelerationValue;
         comp.stopSpeed2 = stopSpeed2;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        decelerationValue = jsonValue.getFloat("decelerationValue");
+        comparator2 = jsonValue.getFloat("comparator2");
+        stopSpeed2 = jsonValue.getFloat("stopSpeed2");
     }
 }

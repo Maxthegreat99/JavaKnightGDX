@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 
@@ -31,5 +33,15 @@ public class RecOwnerComponent extends Component {
         if (rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.OriginX, rectangle.OriginY);
         instance.GetRectangles().add(comp.rectangle);
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+
     }
 }

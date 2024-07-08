@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -43,5 +45,15 @@ public class DamageComponent extends Component {
         comp.target = target;
         comp.damage = damage;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        damage = jsonValue.getInt("damage");
     }
 }

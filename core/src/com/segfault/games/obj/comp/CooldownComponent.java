@@ -2,6 +2,8 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -51,5 +53,18 @@ public class CooldownComponent extends Component {
         comp.automated = automated;
         comp.activate = activate;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        cd = jsonValue.getFloat("cd");
+        initialCd = jsonValue.getFloat("initialCd");
+        automated = jsonValue.getBoolean("automated");
+        activate = jsonValue.getBoolean("activate");
     }
 }

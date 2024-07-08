@@ -2,6 +2,8 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 
@@ -11,7 +13,7 @@ import com.segfault.games.obj.Rec;
  */
 public class RectangleCollisionComponent extends Component {
     /**
-     * the target rectangle trigering the event
+     * the target rectangle triggering the event
      */
     public Rec targetRectangle = null;
     /**
@@ -36,5 +38,15 @@ public class RectangleCollisionComponent extends Component {
         comp.checkRange2 = checkRange2;
         comp.targetRectangle = targetRectangle;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        checkRange2 = jsonValue.getFloat("checkRange2");
     }
 }

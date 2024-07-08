@@ -1,6 +1,8 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
@@ -53,5 +55,19 @@ public class TrailComponent extends Component {
         comp.trailAlphaDecrease = trailAlphaDecrease;
         comp.alphaComparator = alphaComparator;
         return comp;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeFields(this);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonValue) {
+        trailCooldown = jsonValue.getFloat("trailCooldown");
+        trailInitialCooldown = jsonValue.getFloat("trailInitialCooldown");
+        trailIninitalAlpha = jsonValue.getFloat("trailIninitalAlpha");
+        trailAlphaDecrease = jsonValue.getFloat("trailAlphaDecrease");
+        alphaComparator = jsonValue.getFloat("alphaComparator");
     }
 }
