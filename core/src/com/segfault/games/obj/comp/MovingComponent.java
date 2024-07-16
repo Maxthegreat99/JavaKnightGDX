@@ -44,7 +44,7 @@ public class MovingComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         dx = jsonValue.getFloat("dx");
         dy = jsonValue.getFloat("dy");
     }

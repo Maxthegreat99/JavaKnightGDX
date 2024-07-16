@@ -7,6 +7,7 @@ import com.dongbat.jbump.CollisionFilter;
 import com.dongbat.jbump.Item;
 import com.dongbat.jbump.Response;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.obj.ent.CollisionFiltersID;
 
 /**
  * Component defining if an object has JBump based collisions,
@@ -24,7 +25,7 @@ public class CollidesComponent extends Component {
      * collision relationship, defines what type of collision
      * this object is. is used by other collisions to define behaviour
      */
-    public CollisionRelationship collisionRelationShip = null;
+    public CollisionRelationship relationship = null;
     /**
      * collision filter, set to define if custom interaction, (sliding,
      * crossing etc..) should happen, whether you want custom interaction
@@ -35,6 +36,10 @@ public class CollidesComponent extends Component {
      *
      */
     public CollisionFilter filter = CollisionFilter.defaultFilter;
+    /**
+     * ID of the collision filter currently being used, used for serialization
+     */
+    public CollisionFiltersID filterID = null;
     /**
      * result from last movement, constains overlapping collisions and more
      * null if the movement logic has not executed yet
@@ -73,8 +78,9 @@ public class CollidesComponent extends Component {
     @Override
     public void reset() {
         filter = CollisionFilter.defaultFilter;
-        collisionRelationShip = null;
+        relationship = null;
         physicItem = null;
+        filterID = null;
         res = null;
         width = 0f;
         height = 0f;
@@ -93,24 +99,37 @@ public class CollidesComponent extends Component {
         CollidesComponent comp = instance.GetEntityManager().GetEngine().createComponent(CollidesComponent.class);
         comp.physicItem = new Item<>(ent);
         instance.GetEntityManager().GetPhysicWorld().add(comp.physicItem, x, y, width, height);
-        comp.collisionRelationShip = collisionRelationShip;
+        comp.relationship = relationship;
         comp.width = width;
         comp.height = height;
         comp.x = x;
         comp.y = y;
         comp.res = null;
         comp.filter = filter;
+        comp.filterID = filterID;
         return comp;
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(relationship.toString(), "relationship");
+        json.writeField(filterID.toString(), "filter");
+        json.writeField(width, "width");
+        json.writeField(height, "height");
+        json.writeField(x, "x");
+        json.writeField(y, "y");
     }
 
     @Override
-    public void read(Json json, JsonValue jsonData) {
-        collisionRelationShip = CollisionRelationship.valueOf(jsonData.getString("collisionRelationShip"));
-
+    public void read(JsonValue jsonValue, JavaKnight instance) {
+        relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
+        width = jsonValue.getFloat("width");
+        height = jsonValue.getFloat("height");
+        x = jsonValue.getFloat("x");
+        y = jsonValue.getFloat("y");
+        filterID = CollisionFiltersID.valueOf(jsonValue.getString("filter"));
+        filter = instance.GetEntityManager().GetCollisionFilters().Filters.get(filterID);
     }
+
+
 }

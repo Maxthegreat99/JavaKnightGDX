@@ -23,7 +23,11 @@ public class EntityManager {
     private final World<Entity> physicWorld;
     private final EntityCreator entityCreator;
     private final Mappers mappers;
+    private final CollisionFilters filters;
+    private final TargetGetter targetGetter;
+    private final EntityLoader entityLoader;
     private Entity player;
+
 
 
     public EntityManager(JavaKnight instance) {
@@ -31,7 +35,9 @@ public class EntityManager {
         physicWorld = new World<>();
         entityCreator = new EntityCreator(instance);
         mappers = new Mappers();
-
+        filters = new CollisionFilters(mappers);
+        targetGetter = new TargetGetter(this);
+        entityLoader = new EntityLoader();
     }
 
 
@@ -74,7 +80,7 @@ public class EntityManager {
         CollidesComponent oComp = pooledECS.createComponent(CollidesComponent.class);
         oComp.physicItem = new Item<>(obs);
         oComp.filter = CollisionFilter.defaultFilter;
-        oComp.collisionRelationShip = CollisionRelationship.OBSTACLE;
+        oComp.relationship = CollisionRelationship.OBSTACLE;
         oComp.x = FRAME_WIDTH / 2f;
         oComp.y = FRAME_HEIGHT / 2f;
         oComp.width = 75;
@@ -100,7 +106,6 @@ public class EntityManager {
 
     private void loadPlayer(JavaKnight instance) {
         Entity player = pooledECS.createEntity();
-        player.add(pooledECS.createComponent(PrototypeComp.class));
         DrawableComponent pDrawable = pooledECS.createComponent(DrawableComponent.class);
 
         pDrawable.order = 3;
@@ -128,11 +133,11 @@ public class EntityManager {
         pCol.width = 16;
         pCol.x = -8;
         pCol.y = -8;
-        pCol.collisionRelationShip = CollisionRelationship.PLAYER;
+        pCol.relationship = CollisionRelationship.PLAYER;
         pCol.filter = new CollisionFilter() {
             @Override
             public Response filter(Item item, Item other) {
-                if (mappers.Collides.get((Entity) other.userData).collisionRelationShip.equals(CollisionRelationship.OBSTACLE))
+                if (mappers.Collides.get((Entity) other.userData).relationship.equals(CollisionRelationship.OBSTACLE))
                     return Response.slide;
                 return null;
             }
@@ -150,19 +155,30 @@ public class EntityManager {
     public PooledEngine GetEngine() {
         return pooledECS;
     }
-
     public World<Entity> GetPhysicWorld() {
         return physicWorld;
     }
-
     public Mappers GetMappers() {
         return mappers;
     }
-
+    public CollisionFilters GetCollisionFilters() {
+        return filters;
+    }
     public Entity GetPlayer() {
         return player;
     }
-
+    public void SetPlayer(Entity player) {
+        this.player = player;
+    }
+    public TargetGetter GetTargetGetter() {
+        return targetGetter;
+    }
+    public EntityCreator GetEntityCreator() {
+        return entityCreator;
+    }
+    public EntityLoader GetEntityLoader() {
+        return entityLoader;
+    }
     public void Dispose() {
         pooledECS.clearPools();
     }

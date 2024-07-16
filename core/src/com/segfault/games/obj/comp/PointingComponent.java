@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.obj.ent.TargettingMethodID;
 
 /**
  * TODO: IMPLEMENT POINTING SYSTEM
@@ -21,11 +22,15 @@ public class PointingComponent extends Component {
      * if pointing to the cursor
      */
     public DrawableComponent target = null;
-
+    /**
+     * method id to get the target to point
+     */
+    public TargettingMethodID targetMethod = null;
     @Override
     public void reset() {
         cursor = false;
         target = null;
+        targetMethod = null;
     }
 
 
@@ -38,17 +43,20 @@ public class PointingComponent extends Component {
     public Component Clone(JavaKnight instance, Entity ent) {
         PointingComponent comp = instance.GetEntityManager().GetEngine().createComponent(PointingComponent.class);
         comp.cursor = cursor;
-        comp.target = target;
+        comp.target = (DrawableComponent) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, DrawableComponent.class);
+        comp.targetMethod = targetMethod;
         return comp;
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(cursor, "cursor");
+        json.writeField(targetMethod.toString(), "targetMethod");
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         cursor = jsonValue.getBoolean("cursor");
+        targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));
     }
 }

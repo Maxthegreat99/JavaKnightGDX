@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.util.indexT;
 
 /**
  * component for objects with that should be rendered,
@@ -16,6 +17,10 @@ public class DrawableComponent extends Component {
      * sprite of the object, holds position info, alpha rotation etc...
      */
     public Sprite sprite = null;
+    /**
+     * enum id of the sprite in the texture hashmap
+     */
+    public indexT spriteID = null;
     /**
      * alpha value of the component, changing this does nothing,
      * to set the alpha use the sprite field, when changing the
@@ -36,6 +41,7 @@ public class DrawableComponent extends Component {
     @Override
     public void reset() {
         sprite = null;
+        spriteID = null;
         alpha = 0.0f;
         blending = true;
         order = 0;
@@ -53,18 +59,28 @@ public class DrawableComponent extends Component {
         comp.sprite = new Sprite(sprite);
         comp.order = order;
         comp.alpha = alpha;
+        comp.spriteID = spriteID;
         comp.blending = blending;
         return comp;
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+
+        json.writeField(alpha, "alpha");
+        json.writeField(blending, "blending");
+        json.writeField(order, "order");
+        json.writeField(spriteID.toString(), "sprite");
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         alpha = jsonValue.getFloat("alpha");
         blending = jsonValue.getBoolean("blending");
+        order = jsonValue.getInt("order");
+        spriteID = indexT.valueOf(jsonValue.getString("sprite"));
+        sprite = new Sprite(instance.GetAssetManager().GetTextures().get(spriteID));
     }
+
+
 }

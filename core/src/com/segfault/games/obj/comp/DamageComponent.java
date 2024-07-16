@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.obj.ent.TargettingMethodID;
 
 /**
  * Component used for dealing damage to a target life component,
@@ -21,16 +22,20 @@ public class DamageComponent extends Component {
      */
     public LifeComponent target = null;
     /**
+     * the way to get the LifeComponent target
+     */
+    public TargettingMethodID targetMethod = null;
+    /**
      * the collision relationship needed for the life component
      * to be damaged, leave this value null if using a rectangle
      */
-
     public CollisionRelationship relationship = null;
     @Override
     public void reset() {
         damage = 0;
         target = null;
         relationship = null;
+        targetMethod = null;
     }
 
     @Override
@@ -44,16 +49,26 @@ public class DamageComponent extends Component {
         comp.relationship = relationship;
         comp.target = target;
         comp.damage = damage;
+        comp.targetMethod = targetMethod;
+        target = (LifeComponent) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, LifeComponent.class);
         return comp;
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(damage, "damage");
+        if (relationship != null)
+           json.writeField(relationship, "relationship");
+        json.writeField(targetMethod.toString(), "targetMethod");
+
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         damage = jsonValue.getInt("damage");
+        if (jsonValue.has("relationship"))
+            relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
+        targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));
     }
+
 }

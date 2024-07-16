@@ -37,7 +37,7 @@ public class BouncingSystem extends IteratingSystem {
             c = colInfo.res.projectedCollisions.get(i);
 
             // check for the right relationship
-            if (manager.GetMappers().Collides.get((Entity) c.other.userData).collisionRelationShip != BouncingInfo.relationship)
+            if (manager.GetMappers().Collides.get((Entity) c.other.userData).relationship != BouncingInfo.relationship)
                 continue;
 
             found = true;

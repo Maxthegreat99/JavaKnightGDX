@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.Component;
-import com.segfault.games.obj.comp.PrototypeComp;
 
 /**
  * Handles spawning entities and registering protorypes to spawn
@@ -37,7 +36,6 @@ public class EntityCreator {
         for (com.badlogic.ashley.core.Component c : prototypes.get(id).getComponents()) {
             Component comp = (Component) c;
 
-            if (comp.getClass() == PrototypeComp.class) continue;
             e.add(comp.Clone(instance, e));
         }
 

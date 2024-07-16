@@ -52,7 +52,7 @@ public class SpeedDecreaseComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         decelerationValue = jsonValue.getFloat("decelerationValue");
         comparator2 = jsonValue.getFloat("comparator2");
         stopSpeed2 = jsonValue.getFloat("stopSpeed2");

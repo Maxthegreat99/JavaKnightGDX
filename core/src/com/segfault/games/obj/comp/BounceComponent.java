@@ -49,13 +49,15 @@ public class BounceComponent extends Component {
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(relationship.toString(), "relationship");
+        json.writeField(maxBounces, "maxBounces");
+        json.writeField(bounces, "bounces");
     }
 
     @Override
-    public void read(Json json, JsonValue jsonData) {
-        maxBounces = jsonData.getInt("maxBounces");
-        relationship = CollisionRelationship.valueOf(jsonData.getString("relationship"));
-        bounces = jsonData.getInt("bounces");
+    public void read(JsonValue jsonValue, JavaKnight instance) {
+        maxBounces = jsonValue.getInt("maxBounces");
+        relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
+        bounces = jsonValue.getInt("bounces");
     }
 }

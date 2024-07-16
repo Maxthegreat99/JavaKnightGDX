@@ -61,7 +61,7 @@ public class CooldownComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         cd = jsonValue.getFloat("cd");
         initialCd = jsonValue.getFloat("initialCd");
         automated = jsonValue.getBoolean("automated");

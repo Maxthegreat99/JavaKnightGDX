@@ -24,4 +24,5 @@ public class Mappers {
     public final ComponentMapper<TrailComponent> Trail = ComponentMapper.getFor(TrailComponent.class);
     public final ComponentMapper<MovementInputComponent> MovementInput = ComponentMapper.getFor(MovementInputComponent.class);
     public final ComponentMapper<PointingComponent> Pointing = ComponentMapper.getFor(PointingComponent.class);
+
 }

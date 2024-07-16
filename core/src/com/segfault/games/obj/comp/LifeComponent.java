@@ -46,8 +46,9 @@ public class LifeComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         life = jsonValue.getInt("life");
         tookHit = jsonValue.getBoolean("tookHit");
+
     }
 }

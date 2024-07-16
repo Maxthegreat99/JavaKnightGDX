@@ -34,6 +34,7 @@ public class JavaKnight extends ApplicationAdapter {
 
 		entityManager.InitializeSystems(this, renderer.GetSpriteBatch());
 		entityManager.LoadEntities(this, renderer.FRAME_WIDTH, renderer.FRAME_HEIGHT);
+		entityManager.GetEntityLoader().LoadEntities(entityManager, this);
 		FPS.X = 30;
 		FPS.Y = renderer.FRAME_HEIGHT - 50;
 		texts.add(FPS);

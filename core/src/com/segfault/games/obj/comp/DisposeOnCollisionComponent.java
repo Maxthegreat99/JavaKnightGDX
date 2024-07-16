@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.ent.ParticlesCreator;
+import com.segfault.games.obj.ent.TargettingMethodID;
 
 /**
  * component disposing the object whenever they hit
@@ -29,6 +30,11 @@ public class DisposeOnCollisionComponent extends Component {
      */
     public Rec rectangle = null;
     /**
+     * way to get the rectangle component
+     */
+    public TargettingMethodID targetMethod = null;
+
+    /**
      * set this value if using a rectangle,
      * the range to the square to check
      * if the specified rectangle is colliding.
@@ -39,6 +45,7 @@ public class DisposeOnCollisionComponent extends Component {
         particles = null;
         rectangle = null;
         relationship = null;
+        targetMethod = null;
         checkRange2 = 0f;
     }
 
@@ -54,16 +61,29 @@ public class DisposeOnCollisionComponent extends Component {
         comp.rectangle = rectangle;
         comp.checkRange2 = checkRange2;
         comp.relationship = relationship;
+        comp.targetMethod = targetMethod;
+        if (relationship == null)
+            comp.rectangle = (Rec) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, Rec.class);
         return comp;
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(checkRange2, "checkRange2");
+        if (relationship != null)
+            json.writeField(relationship.toString(), "relationship");
+        else json.writeField(targetMethod.toString(), "targetMethod");
+
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         checkRange2 = jsonValue.getFloat("checkRange2");
+
+        if (jsonValue.has("relationship"))
+            relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
+        else targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));
+
     }
+
 }

@@ -50,7 +50,7 @@ public class DisposeCollisionSystem extends IteratingSystem {
 
         // check through each collision if the relationship is the specified one, if so dispose the entity
         for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
-            if (!manager.GetMappers().Collides.get(c.userData).collisionRelationShip.equals(disInfo.relationship))
+            if (!manager.GetMappers().Collides.get(c.userData).relationship.equals(disInfo.relationship))
                 continue;
             manager.GetEngine().removeEntity(entity);
             return;

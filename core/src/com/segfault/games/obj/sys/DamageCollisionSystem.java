@@ -50,7 +50,7 @@ public class DamageCollisionSystem extends IteratingSystem {
 
         for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
             // continue if the relationship of the entity is not right
-            if (manager.GetMappers().Collides.get(c.userData).collisionRelationShip.equals(dmgInfo.relationship))
+            if (manager.GetMappers().Collides.get(c.userData).relationship.equals(dmgInfo.relationship))
                 continue;
 
             // if the component has no target and that the entity has a lifecomponent

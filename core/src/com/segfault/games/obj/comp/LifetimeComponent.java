@@ -40,7 +40,7 @@ public class LifetimeComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         lifetime = jsonValue.getFloat("lifetime");
     }
 }

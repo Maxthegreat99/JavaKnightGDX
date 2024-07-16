@@ -41,7 +41,7 @@ public class MovementInputComponent extends Component {
     }
 
     @Override
-    public void read(Json json, JsonValue jsonValue) {
+    public void read(JsonValue jsonValue, JavaKnight instance) {
         speed2 = jsonValue.getFloat("speed2");
     }
 }
