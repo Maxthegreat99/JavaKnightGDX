@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.gra.Renderer;
+import com.segfault.games.obj.wld.MapLoader;
 import com.segfault.games.util.AssetManager;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
@@ -16,7 +17,7 @@ public class JavaKnight extends ApplicationAdapter {
 	private Renderer renderer;
 	private EntityManager entityManager;
 	private AssetManager assetManager;
-
+	private MapLoader mapLoader;
 	private final Array<Rec> rectangles = new Array<>(); // rectangle array used for debugging
 	private final Array<Text> texts = new Array<>(); // texts array rendered by the renderer's bitmap font
 	private final ObjectMap<BitmapFontCache, Float> staticFonts = new ObjectMap<>(); // static texts on screen to save performance
@@ -24,19 +25,26 @@ public class JavaKnight extends ApplicationAdapter {
 	private long ticks = 0;
 	private float timeElapsed = 0.0f;
 	private final Text FPS = new Text();
+	public static final int SCREEN_WIDTH = 1680;
+	public static final int SCREEN_HEIGHT = 1050;
+	public static final int FRAME_WIDTH = 616;
+	public static final int FRAME_HEIGHT = 385;
+	public static final float ZOOM = 0.90909f;
 
 	@Override
 	public void create () {
 		assetManager = new AssetManager();
 		assetManager.LoadAssets();
-		renderer = new Renderer(assetManager, 1680, 1050, 616, 385, 0.90909f);
+		// with the zoom in consideration, the player see is aprox, 560 : 350 of the buffer
+		renderer = new Renderer(assetManager, SCREEN_WIDTH, SCREEN_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT, ZOOM);
 		entityManager = new EntityManager(this);
+		mapLoader = new MapLoader();
+		mapLoader.CacheMaps();
 
 		entityManager.InitializeSystems(this, renderer.GetSpriteBatch());
-		entityManager.LoadEntities(this, renderer.FRAME_WIDTH, renderer.FRAME_HEIGHT);
-		entityManager.GetEntityLoader().LoadEntities(entityManager, this);
+		entityManager.LoadEntities(this);
 		FPS.X = 30;
-		FPS.Y = renderer.FRAME_HEIGHT - 50;
+		FPS.Y = FRAME_HEIGHT - 50;
 		texts.add(FPS);
 
 		renderer.SetBackground(renderer.GRAY_BG, 0.045f);
@@ -77,6 +85,9 @@ public class JavaKnight extends ApplicationAdapter {
 
 	public EntityManager GetEntityManager() {
 		return entityManager;
+	}
+	public MapLoader GetMapLoader() {
+		return mapLoader;
 	}
 
 	@Override

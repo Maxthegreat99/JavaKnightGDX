@@ -1,9 +1,8 @@
-package com.segfault.games.obj.sys;
+package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -11,18 +10,16 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.SpeedDecreaseComponent;
 import com.segfault.games.obj.comp.MovingComponent;
 
-public class SpeedDecreaseSystem extends IteratingSystem {
+public class SpeedDecreaseSystem {
     private final ComponentMapper<SpeedDecreaseComponent> speedDecreaseMapper;
     private final ComponentMapper<MovingComponent> movementMapper;
     private final Vector2 speed = new Vector2();
-    public SpeedDecreaseSystem (JavaKnight ins, int priority) {
-        super(Family.all(SpeedDecreaseComponent.class, MovingComponent.class).get());
+    public SpeedDecreaseSystem (JavaKnight ins) {
         movementMapper = ins.GetEntityManager().GetMappers().Moving;
         speedDecreaseMapper = ins.GetEntityManager().GetMappers().SpeedDecrease;
-        this.priority = priority;
     }
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+
+    public void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movingInfo = movementMapper.get(entity);

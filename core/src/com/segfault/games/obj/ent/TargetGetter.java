@@ -21,10 +21,10 @@ public class TargetGetter {
      */
     public Object GetTarget(TargettingMethodID methodID, Class c) {
         switch (methodID) {
-            case PLAYER -> {
+            case PLAYER :
                 if (c.isAssignableFrom(Entity.class)) return manager.GetPlayer();
                 else return getEntityComponentOrValue(manager.GetPlayer(), c);
-            }
+
         }
 
         return null;

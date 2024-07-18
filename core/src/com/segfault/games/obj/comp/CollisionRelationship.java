@@ -8,5 +8,7 @@ package com.segfault.games.obj.comp;
  */
 public enum CollisionRelationship {
     PLAYER,
-    OBSTACLE
+    OBSTACLE,
+    OUT_OF_BOUNDS,
+    NULL
 }

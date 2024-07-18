@@ -2,6 +2,7 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -40,7 +41,7 @@ public class PointingComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         PointingComponent comp = instance.GetEntityManager().GetEngine().createComponent(PointingComponent.class);
         comp.cursor = cursor;
         comp.target = (DrawableComponent) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, DrawableComponent.class);

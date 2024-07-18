@@ -42,8 +42,8 @@ public class Renderer {
     private final int SCREEN_WIDTH;
     private final int SCREEN_HEIGHT;
 
-    public final int FRAME_WIDTH;
-    public final int FRAME_HEIGHT;
+    private final int FRAME_WIDTH;
+    private final int FRAME_HEIGHT;
 
     public Renderer(AssetManager assetManager, int screenWidth, int screenHeight, int frameWidth, int frameHeight, float zoom) {
         SCREEN_HEIGHT = screenHeight;
@@ -64,7 +64,9 @@ public class Renderer {
         shapeRenderer = new ShapeRenderer();
 
 
-        camera.position.set(SCREEN_WIDTH / 2f, SCREEN_HEIGHT / 2f, 0);
+        cameraPos.set((float) SCREEN_WIDTH / 2f + ((SCREEN_WIDTH * (1f - cameraZoom)) / 2f),
+                (float) SCREEN_HEIGHT / 2f + (SCREEN_HEIGHT * (1f - cameraZoom)) / 2f, 0 );
+        camera.position.set(cameraPos);
         camera.update();
 
         loadBackgrounds(assetManager);
@@ -76,9 +78,8 @@ public class Renderer {
      */
     public void SetUpFrame(float timeElapsed) {
         // Set the viewport to the framebuffer size
-        camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
         camera.zoom = 1f;
-        camera.update();
+        camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
 
         screenBuffer.begin();
         batch.setProjectionMatrix(camera.combined);
@@ -101,31 +102,34 @@ public class Renderer {
      */
     public void Render(JavaKnight instance, World<Entity> physicWorld) {
 
-        // Draw text objects
-        batch.setShader(fontShader);
-        for (Text t : instance.GetTexts()) {
-            font.getData().setScale(t.Scale);
-            font.draw(batch, t.Str, t.X, t.Y);
-        }
+        if (!instance.GetTexts().isEmpty() || !instance.GetStaticFonts().isEmpty()) {
+            // Draw text objects
+            batch.setShader(fontShader);
+            for (Text t : instance.GetTexts()) {
+                font.getData().setScale(t.Scale);
+                font.draw(batch, t.Str, t.X, t.Y);
+            }
 
-        for (BitmapFontCache k : instance.GetStaticFonts().keys()) {
-            float scale = instance.GetStaticFonts().get(k);
-            k.getFont().getData().setScale(scale);
-            k.draw(batch);
+            for (BitmapFontCache k : instance.GetStaticFonts().keys()) {
+                float scale = instance.GetStaticFonts().get(k);
+                k.getFont().getData().setScale(scale);
+                k.draw(batch);
+            }
+            batch.setShader(null);
         }
-        batch.setShader(null);
-
         debugBoxes(instance.GetRectangles(), physicWorld);
 
         batch.end();
         screenBuffer.end();
 
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         camera.zoom = cameraZoom;
-        cameraPos.set((float) SCREEN_WIDTH / 2f + ((SCREEN_WIDTH * (1f - cameraZoom)) / 2f),
-                (float) SCREEN_HEIGHT / 2f + (SCREEN_HEIGHT * (1f - cameraZoom)) / 2f, 0 );
+
+        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        cameraPos.set((float) SCREEN_WIDTH / 2f,
+                (float) SCREEN_HEIGHT / 2f , 0 );
         camera.position.set(cameraPos);
         camera.update();
+
         batch.setProjectionMatrix(camera.combined);
 
         if (fboTextureRegion == null) {

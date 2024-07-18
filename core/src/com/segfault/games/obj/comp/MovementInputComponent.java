@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -29,7 +30,7 @@ public class MovementInputComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         MovementInputComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.speed2 = speed2;
         return comp;
@@ -42,6 +43,11 @@ public class MovementInputComponent extends Component {
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
-        speed2 = jsonValue.getFloat("speed2");
+        if (jsonValue.has("speed")) {
+            float s = jsonValue.getFloat("speed");
+            speed2 = s * s;
+        }
+        else speed2 = jsonValue.getFloat("speed2");
+
     }
 }

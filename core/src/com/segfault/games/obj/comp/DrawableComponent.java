@@ -2,6 +2,7 @@ package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -54,9 +55,10 @@ public class DrawableComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         DrawableComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.sprite = new Sprite(sprite);
+        comp.sprite.setPosition(pol.x, pol.y);
         comp.order = order;
         comp.alpha = alpha;
         comp.spriteID = spriteID;

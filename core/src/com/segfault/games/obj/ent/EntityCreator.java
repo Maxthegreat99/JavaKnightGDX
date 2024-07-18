@@ -1,6 +1,9 @@
 package com.segfault.games.obj.ent;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector4;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.Component;
@@ -31,12 +34,12 @@ public class EntityCreator {
      * @param id - id of the prototype
      * @return - the cloned entity
      */
-    public Entity SpawnEntity(EntityID id, boolean addToEngine) {
+    public Entity SpawnEntity(EntityID id, boolean addToEngine, Vector4 pol, JsonValue properties) {
         Entity e = instance.GetEntityManager().GetEngine().createEntity();
         for (com.badlogic.ashley.core.Component c : prototypes.get(id).getComponents()) {
             Component comp = (Component) c;
 
-            e.add(comp.Clone(instance, e));
+            e.add(comp.Clone(instance, e, pol, properties));
         }
 
         if (addToEngine)

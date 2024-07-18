@@ -1,0 +1,31 @@
+{
+  "components": {
+    "collides": {
+      "relationship": "PLAYER",
+      "filter": "PLAYER"
+    },
+    "drawable": {
+      "order": 3,
+      "sprite": "PLAYER",
+      "blending": true,
+      "alpha": 1.0
+    },
+    "movementInput": {
+      "speed": 70.71
+    },
+    "moving": {
+      "dx": 0.0,
+      "dy": 0.0
+    },
+    "recOwner": {
+    },
+    "trail": {
+      "alphaComparator": 0.6,
+      "trailInitialAlpha": 0.75,
+      "trailCooldown": 0.25,
+      "trailInitialCooldown": 0.15,
+      "trailAlphaDecrease": 1.5
+    }
+  }
+
+}

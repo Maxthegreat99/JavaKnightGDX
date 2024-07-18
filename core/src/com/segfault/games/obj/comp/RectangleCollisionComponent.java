@@ -2,6 +2,7 @@ package com.segfault.games.obj.comp;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -39,7 +40,7 @@ public class RectangleCollisionComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         RectangleCollisionComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.checkRange2 = checkRange2;
         comp.targetRectangle = (Rec) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, Rec.class);

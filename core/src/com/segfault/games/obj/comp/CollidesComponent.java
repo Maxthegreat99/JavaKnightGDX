@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dongbat.jbump.CollisionFilter;
@@ -95,18 +96,18 @@ public class CollidesComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         CollidesComponent comp = instance.GetEntityManager().GetEngine().createComponent(CollidesComponent.class);
         comp.physicItem = new Item<>(ent);
-        instance.GetEntityManager().GetPhysicWorld().add(comp.physicItem, x, y, width, height);
         comp.relationship = relationship;
-        comp.width = width;
-        comp.height = height;
-        comp.x = x;
-        comp.y = y;
+        comp.width = (Float.isNaN(width)) ? pol.z : width;
+        comp.height = (Float.isNaN(height)) ? pol.w : height;
+        comp.x = (Float.isNaN(x)) ? pol.x : x;
+        comp.y = (Float.isNaN(y)) ? pol.y : y;
         comp.res = null;
         comp.filter = filter;
         comp.filterID = filterID;
+        instance.GetEntityManager().GetPhysicWorld().add(comp.physicItem, comp.x, comp.y, comp.width, comp.height);
         return comp;
     }
 
@@ -123,10 +124,10 @@ public class CollidesComponent extends Component {
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
         relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
-        width = jsonValue.getFloat("width");
-        height = jsonValue.getFloat("height");
-        x = jsonValue.getFloat("x");
-        y = jsonValue.getFloat("y");
+        width = jsonValue.getFloat("width", Float.NaN);
+        height = jsonValue.getFloat("height", Float.NaN);
+        x = jsonValue.getFloat("x", Float.NaN);
+        y = jsonValue.getFloat("y", Float.NaN);
         filterID = CollisionFiltersID.valueOf(jsonValue.getString("filter"));
         filter = instance.GetEntityManager().GetCollisionFilters().Filters.get(filterID);
     }

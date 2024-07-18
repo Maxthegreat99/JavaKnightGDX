@@ -1,4 +1,4 @@
-package com.segfault.games.obj.sys;
+package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -13,17 +13,16 @@ import com.segfault.games.obj.ent.EntityManager;
 /**
  * System disposing entities on specific collisions
  */
-public class DisposeCollisionSystem extends IteratingSystem {
+public class DisposeCollisionSystem {
     private final EntityManager manager;
     private final Vector2 range = new Vector2();
 
-    public DisposeCollisionSystem(JavaKnight ins, int priority) {
-        super(Family.all(DisposeOnCollisionComponent.class).get());
+    public DisposeCollisionSystem(JavaKnight ins) {
         manager = ins.GetEntityManager();
-        this.priority = priority;
+
     }
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+
+    public void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
         DisposeOnCollisionComponent disInfo = manager.GetMappers().DisposeOnCollision.get(entity);

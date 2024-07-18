@@ -7,5 +7,6 @@ package com.segfault.games.obj.ent;
  */
 public enum CollisionFiltersID {
     DEFAULT,
-    PLAYER
+    PLAYER,
+    BOUNCE
 }

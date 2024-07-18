@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -44,13 +45,12 @@ public class DamageComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         DamageComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.relationship = relationship;
-        comp.target = target;
         comp.damage = damage;
         comp.targetMethod = targetMethod;
-        target = (LifeComponent) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, LifeComponent.class);
+        comp.target = (LifeComponent) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, LifeComponent.class);
         return comp;
     }
 

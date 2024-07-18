@@ -14,13 +14,20 @@ public class CollisionFilters {
     public final ObjectMap<CollisionFiltersID, CollisionFilter> Filters = new ObjectMap<>();
 
     public CollisionFilters(Mappers mappers) {
-        Filters.get(CollisionFiltersID.DEFAULT, CollisionFilter.defaultFilter);
+        Filters.put(CollisionFiltersID.DEFAULT, CollisionFilter.defaultFilter);
         Filters.put(CollisionFiltersID.PLAYER, new CollisionFilter() {
             @Override
             public Response filter(Item item, Item other) {
-                if (mappers.Collides.get((Entity) other.userData).relationship.equals(CollisionRelationship.OBSTACLE))
+                CollisionRelationship rel = mappers.Collides.get((Entity) other.userData).relationship;
+                if (rel.equals(CollisionRelationship.OBSTACLE) || rel.equals(CollisionRelationship.OUT_OF_BOUNDS))
                     return Response.slide;
                 return null;
+            }
+        });
+        Filters.put(CollisionFiltersID.BOUNCE, new CollisionFilter() {
+            @Override
+            public Response filter(Item item, Item other) {
+                return Response.bounce;
             }
         });
     }

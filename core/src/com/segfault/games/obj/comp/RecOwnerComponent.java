@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -27,10 +28,10 @@ public class RecOwnerComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent) {
+    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         RecOwnerComponent comp = instance.GetEntityManager().GetEngine().createComponent(RecOwnerComponent.class);
-        comp.rectangle = new Rec(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-        if (rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.OriginX, rectangle.OriginY);
+        comp.rectangle = new Rec(pol.x + pol.z / 2, pol.y + pol.w / 2, pol.z, pol.w);
+        if (rectangle != null && rectangle.angle != 0) comp.rectangle.Rotate(rectangle.angle, rectangle.OriginX, rectangle.OriginY);
         instance.GetRectangles().add(comp.rectangle);
         return comp;
     }
@@ -43,9 +44,8 @@ public class RecOwnerComponent extends Component {
         json.writeField(rectangle.Height, "height");
 
     }
-
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
-        rectangle = new Rec(jsonValue.getFloat("x"), jsonValue.getFloat("y"), jsonValue.getFloat("width"), jsonValue.getFloat("height"));
     }
+
 }

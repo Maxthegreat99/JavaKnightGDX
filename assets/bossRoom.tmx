@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="3" nextobjectid="19">
+ <tileset firstgid="1" source="BaseTileSetJavaKnight.tsx"/>
+ <objectgroup id="2" name="Objects">
+  <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
+   <properties>
+    <property name="properties">{
+   &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="4" name="Col4" x="0" y="367.5" width="616" height="17.5">
+   <properties>
+    <property name="properties">{
+   &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="7" name="Col3" x="0" y="17.5" width="28" height="350">
+   <properties>
+    <property name="properties">{
+   &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="8" name="Col2" x="588" y="17.5" width="28" height="350">
+   <properties>
+    <property name="properties">{
+   &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="11" name="Col1" x="442" y="135.5" width="57.3333" height="53.3333">
+   <properties>
+    <property name="properties">{
+   &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBSTACLE&quot;
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="14" name="Rec" x="116.833" y="74.8333" width="80" height="80">
+   <properties>
+    <property name="properties">{
+    &quot;recOwner&quot; :
+    {
+        &quot;rotation&quot; : 45.0,
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="15" name="Col" x="150.667" y="256.879" width="80" height="80">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBSTACLE&quot;,
+        &quot;filter&quot; : &quot;BOUNCE&quot;
+    },
+    &quot;moving&quot; : {
+        &quot;dx&quot; : 125.0,
+        &quot;dy&quot; : 257.0
+    }
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 3,
+      &quot;sprite&quot;: &quot;ACID_BEAM_BALL&quot;,
+      &quot;blending&quot;: true,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;bounce&quot; : {
+        &quot;maxBounces&quot; : 500,
+        &quot;relationship&quot; : &quot;NULL&quot;,
+         &quot;bounces&quot; : 0
+    }
+}</property>
+   </properties>
+  </object>
+  <object id="17" name="PLAYER" x="305" y="186" width="16" height="16"/>
+ </objectgroup>
+</map>

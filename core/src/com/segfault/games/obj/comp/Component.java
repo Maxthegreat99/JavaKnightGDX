@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Pool;
@@ -21,7 +22,7 @@ public abstract class Component implements com.badlogic.ashley.core.Component, P
      * in most cases, if used on normal enemies (AKA not prototypes) be weary that disposing the parent
      * will destroy objects passed by reference, so please make sure to deep clone each value of your components
      */
-    public abstract Component Clone(JavaKnight instance, Entity ent);
+    public abstract Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties);
 
     /**
      * For JSON reading from file, used by the EntityLoader

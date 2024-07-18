@@ -23,6 +23,12 @@ public class TrailingSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (entity.isScheduledForRemoval()) return;
 
+        if (manager.GetMappers().Moving.get(entity) != null) {
+            MovingComponent comp = manager.GetMappers().Moving.get(entity);
+            if (Float.compare(comp.dx, 0) == 0 && Float.compare(comp.dy, 0) == 0)
+                return;
+        }
+
         TrailComponent trailing = manager.GetMappers().Trail.get(entity);
         DrawableComponent drawable = manager.GetMappers().Drawable.get(entity);
 

@@ -1,4 +1,4 @@
-package com.segfault.games.obj.sys;
+package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -13,16 +13,14 @@ import com.segfault.games.obj.ent.EntityManager;
 /**
  * System that takes userInput and controls specified entities with them
  */
-public class MovementInputSystem extends IteratingSystem {
+public class MovementInputSystem {
     private final EntityManager manager;
     private final Vector2 dir = new Vector2();
-    public MovementInputSystem(JavaKnight ins, int priority) {
-        super(Family.all(MovementInputComponent.class,MovingComponent.class).get());
+    public MovementInputSystem(JavaKnight ins) {
         manager = ins.GetEntityManager();
-        this.priority = priority;
     }
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+
+    public void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movement = manager.GetMappers().Moving.get(entity);

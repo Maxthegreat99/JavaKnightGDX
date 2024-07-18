@@ -1,8 +1,7 @@
-package com.segfault.games.obj.sys;
+package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.dongbat.jbump.Item;
 import com.segfault.games.JavaKnight;
@@ -13,17 +12,15 @@ import com.segfault.games.obj.ent.EntityManager;
 /**
  * System dealing with damage on collision from entities 
  */
-public class DamageCollisionSystem extends IteratingSystem {
+public class DamageCollisionSystem {
     private final EntityManager manager;
     private final Vector2 range = new Vector2();
 
-    public DamageCollisionSystem(JavaKnight ins, int priority) {
-        super(Family.all(DamageComponent.class).get());
+    public DamageCollisionSystem(JavaKnight ins) {
         manager = ins.GetEntityManager();
-        this.priority = priority;
+
     }
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    public void processEntity(Entity entity) {
         if (entity.isScheduledForRemoval()) return;
 
         DamageComponent dmgInfo = manager.GetMappers().Damage.get(entity);
