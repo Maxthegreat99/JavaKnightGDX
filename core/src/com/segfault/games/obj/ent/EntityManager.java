@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dongbat.jbump.World;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.sys.*;
-import com.segfault.games.obj.sys.phy.*;
+import com.segfault.games.obj.sys.phy.PhysicsSystem;
 import com.segfault.games.obj.wld.MapID;
 
 /**

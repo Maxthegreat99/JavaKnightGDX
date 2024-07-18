@@ -5,7 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.comp.AlphaDecreaseComponent;
+import com.segfault.games.obj.comp.DrawableComponent;
+import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.TrailComponent;
 import com.segfault.games.obj.ent.EntityManager;
 
 /**

@@ -1,13 +1,13 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.dongbat.jbump.Item;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
-import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.comp.DisposeOnCollisionComponent;
+import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.EntityManager;
 
 /**

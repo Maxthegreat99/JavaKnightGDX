@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.Mappers;
 
 public class PhysicsSystem extends IntervalIteratingSystem {

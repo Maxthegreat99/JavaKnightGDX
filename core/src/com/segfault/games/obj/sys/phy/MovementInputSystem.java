@@ -1,13 +1,12 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.comp.MovementInputComponent;
+import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.ent.EntityManager;
 
 /**

@@ -2,15 +2,15 @@ package com.segfault.games;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.gra.Renderer;
-import com.segfault.games.obj.wld.MapLoader;
-import com.segfault.games.util.AssetManager;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
 import com.segfault.games.obj.ent.EntityManager;
+import com.segfault.games.obj.wld.MapLoader;
+import com.segfault.games.util.AssetManager;
 
 public class JavaKnight extends ApplicationAdapter {
 

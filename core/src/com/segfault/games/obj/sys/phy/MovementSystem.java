@@ -3,7 +3,10 @@ package com.segfault.games.obj.sys.phy;
 import com.badlogic.ashley.core.Entity;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
-import com.segfault.games.obj.comp.*;
+import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.comp.DrawableComponent;
+import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.EntityManager;
 
 /**

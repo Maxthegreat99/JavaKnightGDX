@@ -2,13 +2,12 @@ package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.SpeedDecreaseComponent;
 import com.segfault.games.obj.comp.MovingComponent;
+import com.segfault.games.obj.comp.SpeedDecreaseComponent;
 
 public class SpeedDecreaseSystem {
     private final ComponentMapper<SpeedDecreaseComponent> speedDecreaseMapper;

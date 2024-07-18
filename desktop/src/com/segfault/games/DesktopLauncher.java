@@ -8,7 +8,6 @@ import com.segfault.games.JavaKnight;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
 		config.setTitle("JavaKnightGDX");
 		config.setWindowedMode(1680, 1050);
 		config.setForegroundFPS(60);

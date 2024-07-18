@@ -1,9 +1,6 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IntervalIteratingSystem;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.dongbat.jbump.Collision;
 import com.segfault.games.JavaKnight;
@@ -18,7 +15,6 @@ import com.segfault.games.obj.ent.EntityManager;
  */
 public class BouncingSystem {
     private final EntityManager manager;
-    private final Vector2 tmp = new Vector2();
     public BouncingSystem(JavaKnight ins) {
         manager = ins.GetEntityManager();
 
