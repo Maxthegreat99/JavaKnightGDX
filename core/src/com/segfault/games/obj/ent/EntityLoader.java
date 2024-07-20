@@ -61,11 +61,9 @@ public class EntityLoader {
             MapObject o = map.getLayers().get("Objects").getObjects().get(i);
             RectangleMapObject po;
 
-            System.out.println(o.getName());
             if (!(o instanceof RectangleMapObject)) continue;
             else po = (RectangleMapObject) o;
 
-            System.out.println(po.getName());
             Vector2 vec = instance.GetMapLoader().tiledPosToGDX(po.getRectangle().x, po.getRectangle().y, po.getRectangle().width, po.getRectangle().height, po.getName());
 
             /**
@@ -148,10 +146,8 @@ public class EntityLoader {
 
             Entity e = instance.GetEntityManager().GetEntityCreator().SpawnEntity(EntityID.valueOf(po.getName()), true, pol, value);
 
-            if (po.getName().startsWith("PLAYER")) {
-                instance.GetEntityManager().SetPlayer(e);
-                System.out.println("What the sigma");
-            }
+            if (po.getName().startsWith("PLAYER")) instance.GetEntityManager().SetPlayer(e);
+
 
 
         }
@@ -167,9 +163,6 @@ public class EntityLoader {
 
             case "collides":
                 return manager.GetEngine().createComponent(CollidesComponent.class);
-
-            case "cooldown":
-                return manager.GetEngine().createComponent(CooldownComponent.class);
 
             case "damage":
                 return manager.GetEngine().createComponent(DamageComponent.class);
@@ -206,6 +199,12 @@ public class EntityLoader {
 
             case "trail":
                 return manager.GetEngine().createComponent(TrailComponent.class);
+
+            case "recoil":
+                return manager.GetEngine().createComponent(AngleRecoilComponent.class);
+
+            case "playerGun":
+                return manager.GetEngine().createComponent(PlayerGunComponent.class);
 
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);

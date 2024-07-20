@@ -1,7 +1,6 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
 import com.dongbat.jbump.Collision;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.BounceComponent;

@@ -1,0 +1,23 @@
+{
+  "components": {
+    "drawable": {
+      "order": 3,
+      "sprite": "GUN",
+      "blending": true,
+      "alpha": 1.0
+    },
+    "pointing": {
+      "cursor": true,
+      "baseTargetMethod": "PLAYER",
+      "rotatingRadius": 28.0
+    },
+    "playerGun": {
+      "initialCd": 0.45
+    },
+    "recoil": {
+      "maxAngle": 20.0,
+      "angleAcceleration": 300.0,
+      "divisor": 2.5
+    }
+  }
+}

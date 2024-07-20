@@ -23,7 +23,6 @@ public class MapLoader {
     /**
      * libgdx uses y up while tiled uses y down, some objects also need to be initialized
      * taking into about that their position is in the middle. the origin of objects in
-     * @return
      */
     public Vector2 tiledPosToGDX(float x, float y, float width, float height, String name) {
         vec.set(x, y);

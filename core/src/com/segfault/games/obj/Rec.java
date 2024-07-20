@@ -128,7 +128,8 @@ public class Rec {
     }
 
     /**
-     * black box checking if a collision is made with another rectangle
+     * I cant tell how the fuck it does it but this check for collision of rotated rectangles
+     * please dont fuck with it
      */
     public boolean IsPolygonsIntersecting(Rec b)
     {

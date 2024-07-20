@@ -46,11 +46,13 @@ public class EntityManager {
         pooledECS.addEntityListener(new EntityListener(instance));
 
         pooledECS.addSystem(new LifetimeSystem(instance, 10));
-        pooledECS.addSystem(new CooldownSystem(instance, 20));
-        pooledECS.addSystem(new PhysicsSystem(instance, 0.02f, 30));
+        pooledECS.addSystem(new PhysicsSystem(instance, 0.02f, 20));
+        pooledECS.addSystem(new PointingSystem(instance, 30));
         pooledECS.addSystem(new AlphaDecreaseSystem(instance, 40));
         pooledECS.addSystem(new TrailingSystem(instance, 50));
-        pooledECS.addSystem(new RenderingSystem(instance, batch, 60));
+        pooledECS.addSystem(new PlayerGunSystem(instance, 60));
+        pooledECS.addSystem(new RecoilSystem(instance, 70));
+        pooledECS.addSystem(new RenderingSystem(instance, batch, 80));
     }
 
     /**

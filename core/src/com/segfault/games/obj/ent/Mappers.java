@@ -18,11 +18,12 @@ public class Mappers {
     public final ComponentMapper<LifeComponent> Life = ComponentMapper.getFor(LifeComponent.class);
     public final ComponentMapper<RectangleCollisionComponent> RecCollision = ComponentMapper.getFor(RectangleCollisionComponent.class);
     public final ComponentMapper<DamageComponent> Damage = ComponentMapper.getFor(DamageComponent.class);
-    public final ComponentMapper<CooldownComponent> Cooldown = ComponentMapper.getFor(CooldownComponent.class);
     public final ComponentMapper<DisposeOnCollisionComponent> DisposeOnCollision = ComponentMapper.getFor(DisposeOnCollisionComponent.class);
     public final ComponentMapper<BounceComponent> Bounce = ComponentMapper.getFor(BounceComponent.class);
     public final ComponentMapper<TrailComponent> Trail = ComponentMapper.getFor(TrailComponent.class);
     public final ComponentMapper<MovementInputComponent> MovementInput = ComponentMapper.getFor(MovementInputComponent.class);
     public final ComponentMapper<PointingComponent> Pointing = ComponentMapper.getFor(PointingComponent.class);
+    public final ComponentMapper<AngleRecoilComponent> Recoil = ComponentMapper.getFor(AngleRecoilComponent.class);
+    public final ComponentMapper<PlayerGunComponent> PlayerGun = ComponentMapper.getFor(PlayerGunComponent.class);
 
 }

@@ -189,7 +189,9 @@ public class Renderer {
     public SpriteBatch GetSpriteBatch() {
         return batch;
     }
-
+    public OrthographicCamera GetCamera() {
+        return camera;
+    }
     public void Dispose() {
         batch.dispose();
         screenBuffer.dispose();
