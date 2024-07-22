@@ -6,10 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.comp.AngleRecoilComponent;
-import com.segfault.games.obj.comp.DrawableComponent;
-import com.segfault.games.obj.comp.PlayerGunComponent;
-import com.segfault.games.obj.comp.PointingComponent;
+import com.segfault.games.obj.comp.*;
 import com.segfault.games.obj.ent.EntityManager;
 
 public class PlayerGunSystem extends IteratingSystem {
@@ -23,15 +20,26 @@ public class PlayerGunSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         PlayerGunComponent comp = manager.GetMappers().PlayerGun.get(entity);
+        AngleRecoilComponent recoil = manager.GetMappers().AngleRecoil.get(entity);
+        ScreenRecoilComponent screenRecoil = manager.GetMappers().ScreenRecoil.get(entity);
+        PositionRecoilComponent posRecoil = manager.GetMappers().PositionRecoil.get(entity);
         PointingComponent pointing = manager.GetMappers().Pointing.get(entity);
-        AngleRecoilComponent recoil = manager.GetMappers().Recoil.get(entity);
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && comp.cooldown <= 0f) {
+
+        if (comp.cooldown <= 0f && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             recoil.trigger = true;
+            posRecoil.trigger = true;
             comp.cooldown = comp.initialCd;
-            recoil.inverseRotation = pointing.flip;
+            screenRecoil.trigger = true;
+            screenRecoil.angle = (pointing.angle + 180) % 360;
         }
 
+        if (posRecoil.dis > 0) {
+            float angle = pointing.angle + 180;
+            angle %= 360;
+            angle = (pointing.flip) ? angle + 20 : angle - 20;
+            posRecoil.angle = angle;
+        }
         comp.cooldown -= deltaTime;
 
     }

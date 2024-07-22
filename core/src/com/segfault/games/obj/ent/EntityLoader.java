@@ -66,7 +66,7 @@ public class EntityLoader {
 
             Vector2 vec = instance.GetMapLoader().tiledPosToGDX(po.getRectangle().x, po.getRectangle().y, po.getRectangle().width, po.getRectangle().height, po.getName());
 
-            /**
+            /*
              * manually create a collision entity, if the entity has more components stored in the properties add them
              */
             if (po.getName().startsWith("Col")) {
@@ -205,6 +205,12 @@ public class EntityLoader {
 
             case "playerGun":
                 return manager.GetEngine().createComponent(PlayerGunComponent.class);
+
+            case "positionRecoil":
+                return manager.GetEngine().createComponent(PositionRecoilComponent.class);
+
+            case "screenRecoil":
+                return manager.GetEngine().createComponent(ScreenRecoilComponent.class);
 
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);

@@ -38,7 +38,7 @@ public class EntityManager {
 
 
     /**
-     * initializes the systems with their priorities and adds the listerner to the engine
+     * initializes the systems with their priorities and adds the listener to the engine
      * @param instance
      * @param batch
      */
@@ -51,8 +51,10 @@ public class EntityManager {
         pooledECS.addSystem(new AlphaDecreaseSystem(instance, 40));
         pooledECS.addSystem(new TrailingSystem(instance, 50));
         pooledECS.addSystem(new PlayerGunSystem(instance, 60));
-        pooledECS.addSystem(new RecoilSystem(instance, 70));
-        pooledECS.addSystem(new RenderingSystem(instance, batch, 80));
+        pooledECS.addSystem(new AngleRecoilSystem(instance, 70));
+        pooledECS.addSystem(new PositionRecoilSystem(instance, 80));
+        pooledECS.addSystem(new ScreenRecoilSystem(instance, 90));
+        pooledECS.addSystem(new RenderingSystem(instance, batch, 100));
     }
 
     /**

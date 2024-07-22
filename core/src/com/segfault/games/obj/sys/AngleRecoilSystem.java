@@ -11,9 +11,9 @@ import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.comp.PointingComponent;
 import com.segfault.games.obj.ent.Mappers;
 
-public class RecoilSystem extends IteratingSystem {
+public class AngleRecoilSystem extends IteratingSystem {
     private final Mappers mappers;
-    public RecoilSystem(JavaKnight instance, int priority) {
+    public AngleRecoilSystem(JavaKnight instance, int priority) {
         super(Family.all(AngleRecoilComponent.class, DrawableComponent.class).get(), priority);
         mappers = instance.GetEntityManager().GetMappers();
     }
@@ -25,18 +25,35 @@ public class RecoilSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         DrawableComponent drawable = mappers.Drawable.get(entity);
-        AngleRecoilComponent recoil = mappers.Recoil.get(entity);
+        AngleRecoilComponent recoil = mappers.AngleRecoil.get(entity);
         PointingComponent pointing = mappers.Pointing.get(entity);
 
-        if(recoil.trigger) {
-            recoil.angle += (recoil.inverseRotation ? -1 : 1) * recoil.angleAcceleration * deltaTime;
-            drawable.sprite.rotate(recoil.angle);
 
-            if (Math.abs(recoil.angle) > recoil.maxAngle) recoil.trigger = false;
+        if (recoil.retainTime > 0) {
+            recoil.retainTime -= deltaTime;
+            recoil.angle += recoil.angleAcceleration / recoil.divisor * deltaTime;
+            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
         }
-        else if ((recoil.inverseRotation ? -1 : 1) * recoil.angle > 0) {
-            recoil.angle += (recoil.inverseRotation ? -1 : 1) * -recoil.angleAcceleration / recoil.divisor * deltaTime;
-            drawable.sprite.rotate(recoil.angle);
+        else if(recoil.trigger) {
+            recoil.angleSpeed += recoil.angleAcceleration;
+            recoil.angle += recoil.angleSpeed * deltaTime;
+            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
+
+            if (Math.abs(recoil.angle) > recoil.maxAngle) {
+                recoil.trigger = false;
+                recoil.retainTime = recoil.initialRetainTime;
+                recoil.angleSpeed = recoil.intialAngleSpeed;
+            }
+        }
+        else if (recoil.angle > 0) {
+            recoil.angleSpeed += recoil.angleAcceleration;
+            recoil.angle -= recoil.angleSpeed / recoil.divisor * deltaTime;
+            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
+
+            if (recoil.angle <= 0) {
+                recoil.angleSpeed = recoil.intialAngleSpeed;
+                recoil.angle = 0;
+            }
         }
         else return;
 

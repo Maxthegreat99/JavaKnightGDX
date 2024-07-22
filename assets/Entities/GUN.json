@@ -12,12 +12,28 @@
       "rotatingRadius": 28.0
     },
     "playerGun": {
-      "initialCd": 0.45
+      "initialCd": 0.35
     },
     "recoil": {
-      "maxAngle": 20.0,
-      "angleAcceleration": 300.0,
-      "divisor": 2.5
+      "maxAngle": 15.0,
+      "angleAcceleration": 65,
+      "angleSpeed" : 650.0,
+      "divisor": 2,
+      "initialRetainTime": 0.15
+    },
+    "positionRecoil": {
+      "maxDis": 4,
+      "divisor": 1.5,
+      "initialRetainTime": 0.15,
+      "initialDistanceSpeed": 65,
+      "distanceAcceleration": 15
+    },
+    "screenRecoil": {
+      "maxDis": 4,
+      "divisor": 1.5,
+      "initialRetainTime": 0.08,
+      "initialDistanceSpeed": 250,
+      "distanceAcceleration": 45
     }
   }
 }

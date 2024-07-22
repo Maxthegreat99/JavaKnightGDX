@@ -25,7 +25,10 @@ public class Renderer {
     public final int GREEN_BG = 0;
     public final int GRAY_BG = 1;
     public final int RED_BG = 2;
+    public float screenTranslationX = 0;
+    public float screenTranslationY = 0;
 
+    private Animation<TextureRegion> background;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
     private final FrameBuffer screenBuffer;
@@ -33,10 +36,8 @@ public class Renderer {
     private final ShaderProgram fontShader;
     private final BitmapFont font;
     private final ShapeRenderer shapeRenderer;
-
     public float cameraZoom;
     private final Vector3 cameraPos = new Vector3();
-    private Animation<TextureRegion> background;
     private final TextureRegion[][] backgrounds = new TextureRegion[3][];
 
     private final int SCREEN_WIDTH;
@@ -64,8 +65,8 @@ public class Renderer {
         shapeRenderer = new ShapeRenderer();
 
 
-        cameraPos.set((float) SCREEN_WIDTH / 2f + ((SCREEN_WIDTH * (1f - cameraZoom)) / 2f),
-                (float) SCREEN_HEIGHT / 2f + (SCREEN_HEIGHT * (1f - cameraZoom)) / 2f, 0 );
+        cameraPos.set((float) SCREEN_WIDTH / 2f,
+                (float) SCREEN_HEIGHT / 2f , 0 );
         camera.position.set(cameraPos);
         camera.update();
 
@@ -125,8 +126,8 @@ public class Renderer {
         camera.zoom = cameraZoom;
 
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-        cameraPos.set((float) SCREEN_WIDTH / 2f,
-                (float) SCREEN_HEIGHT / 2f , 0 );
+        cameraPos.set((float) SCREEN_WIDTH / 2f + screenTranslationX,
+                (float) SCREEN_HEIGHT / 2f + screenTranslationY, 0 );
         camera.position.set(cameraPos);
         camera.update();
 
