@@ -82,6 +82,7 @@ public class DrawableComponent extends Component {
         order = jsonValue.getInt("order");
         spriteID = indexT.valueOf(jsonValue.getString("sprite"));
         sprite = new Sprite(instance.GetAssetManager().GetTextures().get(spriteID));
+        sprite.setAlpha(alpha);
     }
 
 

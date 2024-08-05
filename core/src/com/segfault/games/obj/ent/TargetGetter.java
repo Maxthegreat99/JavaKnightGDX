@@ -25,6 +25,9 @@ public class TargetGetter {
                 if (c.isAssignableFrom(Entity.class)) return manager.GetPlayer();
                 else return getEntityComponentOrValue(manager.GetPlayer(), c);
 
+            case NULL :
+                return null;
+
         }
 
         return null;

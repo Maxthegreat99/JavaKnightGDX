@@ -59,7 +59,7 @@ public class Renderer {
         screenBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameWidth, frameHeight, false);
 
         font = new BitmapFont(Gdx.files.internal("DisposableDroidBB.fnt"), new TextureRegion(assetManager.GetFontTexture()), false);
-        fontShader = new ShaderProgram(Gdx.files.internal("font.vert"), Gdx.files.internal("font.frag"));
+        fontShader = new ShaderProgram(Gdx.files.internal("Shaders/font.vert"), Gdx.files.internal("Shaders/font.frag"));
         if (!fontShader.isCompiled()) Gdx.app.error("fontShader", "compilation failed:\n" + fontShader.getLog());
 
         shapeRenderer = new ShapeRenderer();
@@ -118,7 +118,7 @@ public class Renderer {
             }
             batch.setShader(null);
         }
-        debugBoxes(instance.GetRectangles(), physicWorld);
+        //debugBoxes(instance.GetRectangles(), physicWorld);
 
         batch.end();
         screenBuffer.end();

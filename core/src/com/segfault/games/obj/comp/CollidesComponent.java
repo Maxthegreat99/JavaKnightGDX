@@ -76,6 +76,11 @@ public class CollidesComponent extends Component {
      */
     public float y = 0f;
 
+    /**
+     * Whether or not the collision has a collisionEvent component
+     */
+    public boolean hasCollisionEvent = false;
+
     @Override
     public void reset() {
         filter = CollisionFilter.defaultFilter;
@@ -87,7 +92,7 @@ public class CollidesComponent extends Component {
         height = 0f;
         x = 0f;
         y = 0f;
-
+        hasCollisionEvent = false;
     }
 
     @Override
@@ -107,6 +112,7 @@ public class CollidesComponent extends Component {
         comp.res = null;
         comp.filter = filter;
         comp.filterID = filterID;
+        comp.hasCollisionEvent = false;
         instance.GetEntityManager().GetPhysicWorld().add(comp.physicItem, comp.x, comp.y, comp.width, comp.height);
         return comp;
     }
@@ -119,6 +125,7 @@ public class CollidesComponent extends Component {
         json.writeField(height, "height");
         json.writeField(x, "x");
         json.writeField(y, "y");
+        json.writeField(hasCollisionEvent, "hasCollisionEvent");
     }
 
     @Override
@@ -130,6 +137,7 @@ public class CollidesComponent extends Component {
         y = jsonValue.getFloat("y", Float.NaN);
         filterID = CollisionFiltersID.valueOf(jsonValue.getString("filter"));
         filter = instance.GetEntityManager().GetCollisionFilters().Filters.get(filterID);
+        hasCollisionEvent = jsonValue.getBoolean("hasCollisionEvent");
     }
 
 

@@ -21,6 +21,8 @@ public class ScreenRecoilSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        if (entity.isScheduledForRemoval()) return;
+
         ScreenRecoilComponent screenRecoil = mappers.ScreenRecoil.get(entity);
 
         if (screenRecoil.retainTime > 0) {
@@ -52,13 +54,16 @@ public class ScreenRecoilSystem extends IteratingSystem {
             screenRecoil.dis -= delta;
 
 
-            instance.GetRenderer().screenTranslationX -= delta * MathUtils.cosDeg(screenRecoil.angle);
-            instance.GetRenderer().screenTranslationY -= delta * MathUtils.sinDeg(screenRecoil.angle);
+            float cos = MathUtils.cosDeg(screenRecoil.angle);
+            float sin = MathUtils.sinDeg(screenRecoil.angle);
+
+            instance.GetRenderer().screenTranslationX -= delta * cos;
+            instance.GetRenderer().screenTranslationY -= delta * sin;
 
             if (screenRecoil.dis <= 0) {
                 screenRecoil.distanceSpeed = screenRecoil.initialDistanceSpeed;
-                instance.GetRenderer().screenTranslationX += -screenRecoil.dis * MathUtils.cosDeg(screenRecoil.angle);
-                instance.GetRenderer().screenTranslationY += -screenRecoil.dis * MathUtils.sinDeg(screenRecoil.angle);
+                instance.GetRenderer().screenTranslationX += -screenRecoil.dis * cos;
+                instance.GetRenderer().screenTranslationY += -screenRecoil.dis * sin;
 
                 screenRecoil.dis = 0;
             }

@@ -1,9 +1,13 @@
 package com.segfault.games.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -14,6 +18,7 @@ public class AssetManager {
     private Texture fontTexture;
 
     private final ObjectMap<indexT, TextureRegion> textures = new ObjectMap<>();
+    private final ObjectMap<indexM, Mesh> meshes = new ObjectMap<>();
 
     /**
      * loads all the assets and puts them in the texture objectMap
@@ -53,6 +58,46 @@ public class AssetManager {
         textures.put(indexT.BG_GREEN, atlas.findRegion("greenBG"));
         textures.put(indexT.BG_RED, atlas.findRegion("redBG"));
         textures.put(indexT.BG_GRAY, atlas.findRegion("grayBG"));
+
+        loadMeshes();
+    }
+
+    private void loadMeshes() {
+        float[] verts = new float[45];
+        int i = 0;
+
+        // Central vertex (center of the fan)
+        verts[i++] = 0f;  // x
+        verts[i++] = 0f;  // y
+        verts[i++] = 0f;  // z
+        verts[i++] = 0.5f; // u (center of texture)
+        verts[i++] = 0.5f; // v (center of texture)
+
+        // Angle between vertices
+        float angleIncrement = 45;
+
+        // Surrounding vertices
+        for (int j = 0; j < 8; j++) {
+            float angle = j * angleIncrement;
+            float x = MathUtils.cosDeg(angle); // x coordinate
+            float y = MathUtils.sinDeg(angle); // y coordinate
+            verts[i++] = x;  // x
+            verts[i++] = y;  // y
+            verts[i++] = 0f; // z
+            verts[i++] = (x + 1) / 2; // u (mapping x to [0, 1] range)
+            verts[i++] = (y + 1) / 2; // v (mapping y to [0, 1] range)
+        }
+
+        // Create the mesh
+        Mesh mesh = new Mesh(true, 9, 0,
+                new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position"),
+                new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord"));
+
+        // Set the vertices
+        mesh.setVertices(verts);
+
+        meshes.put(indexM.BULLET, mesh);
+
     }
 
     public TextureAtlas GetAtlas() {
@@ -65,10 +110,13 @@ public class AssetManager {
     public ObjectMap<indexT, TextureRegion> GetTextures() {
         return textures;
     }
-
+    public ObjectMap GetMeshes() {
+        return meshes;
+    }
     public void Dispose() {
         atlas.dispose();
         fontTexture.dispose();
+        meshes.forEach(i -> i.value.dispose());
     }
 }
 

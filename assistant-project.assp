@@ -1,0 +1,11 @@
+{
+"name": "JavaKnightGDX",
+"assetPath": "assets",
+"pluginsData": {
+	"gdx-graph": {
+		"graphs": [
+			{ "name": "WaterBall", "graphType": "Model_Shader", "path": "Shaders/WaterBall.mds" }
+		]
+	}
+}
+}

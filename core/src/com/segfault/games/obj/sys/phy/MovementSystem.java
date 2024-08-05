@@ -8,12 +8,13 @@ import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.EntityManager;
+import com.segfault.games.obj.sys.SubSystem;
 
 /**
  * movement system, controling entities specifying velocity,
  * this system runs at a constant rate.
  */
-public class MovementSystem {
+public class MovementSystem implements SubSystem {
     private final EntityManager manager;
 
     public MovementSystem(JavaKnight ins) {
@@ -41,7 +42,9 @@ public class MovementSystem {
         float targetX = x + dx;
         float targetY = y + dy;
 
-        boolean hasJBumpCol = manager.GetMappers().Collides.get(entity) != null;
+
+        CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
+        boolean hasJBumpCol = collisionInfo != null;
 
 
         if (!hasJBumpCol)
@@ -49,7 +52,7 @@ public class MovementSystem {
 
         // if JBump collision exists we let JBump handle the movement
         else {
-            CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
+
             collisionInfo.res = manager.GetPhysicWorld().move(collisionInfo.physicItem, targetX, targetY, collisionInfo.filter);
 
 
@@ -63,11 +66,12 @@ public class MovementSystem {
 
         }
 
+        RecOwnerComponent recInfo = manager.GetMappers().RecOwner.get(entity);
+
         // some entities have both systems so we do not directly return
         // after we handled JBump collision movement
-        if (manager.GetMappers().RecOwner.get(entity) == null) return;
+        if (recInfo == null) return;
 
-        RecOwnerComponent recInfo = manager.GetMappers().RecOwner.get(entity);
         Rec r = recInfo.rectangle;
         r.Move(dx, dy);
 

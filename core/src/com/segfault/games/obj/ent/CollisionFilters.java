@@ -30,6 +30,18 @@ public class CollisionFilters {
                 return Response.bounce;
             }
         });
+
+        Filters.put(CollisionFiltersID.BULLET, new CollisionFilter() {
+            @Override
+            public Response filter(Item item, Item other) {
+                CollisionRelationship rel = mappers.Collides.get((Entity) other.userData).relationship;
+
+                if (rel.equals(CollisionRelationship.PLAYER) || rel.equals(CollisionRelationship.BULLET))
+                    return Response.cross;
+
+                return Response.slide;
+            }
+        });
     }
 
 }

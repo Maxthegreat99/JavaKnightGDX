@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.comp.SpeedDecreaseComponent;
+import com.segfault.games.obj.sys.SubSystem;
 
-public class SpeedDecreaseSystem {
+public class SpeedDecreaseSystem implements SubSystem {
     private final ComponentMapper<SpeedDecreaseComponent> speedDecreaseMapper;
     private final ComponentMapper<MovingComponent> movementMapper;
     private final Vector2 speed = new Vector2();
@@ -18,11 +19,11 @@ public class SpeedDecreaseSystem {
         speedDecreaseMapper = ins.GetEntityManager().GetMappers().SpeedDecrease;
     }
 
-    public void processEntity(Entity entity) {
+    public void processEntity(Entity entity, float interval) {
         if (entity.isScheduledForRemoval()) return;
 
-        MovingComponent movingInfo = movementMapper.get(entity);
         SpeedDecreaseComponent decelerationInfo = speedDecreaseMapper.get(entity);
+        MovingComponent movingInfo = movementMapper.get(entity);
 
         speed.set(movingInfo.dx, movingInfo.dy);
 

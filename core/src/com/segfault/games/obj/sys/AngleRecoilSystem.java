@@ -24,6 +24,8 @@ public class AngleRecoilSystem extends IteratingSystem {
     private final Vector2 displace = new Vector2();
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        if (entity.isScheduledForRemoval()) return;
+
         DrawableComponent drawable = mappers.Drawable.get(entity);
         AngleRecoilComponent recoil = mappers.AngleRecoil.get(entity);
         PointingComponent pointing = mappers.Pointing.get(entity);

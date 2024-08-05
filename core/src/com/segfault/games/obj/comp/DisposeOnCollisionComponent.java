@@ -2,6 +2,7 @@ package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector4;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -21,10 +22,10 @@ public class DisposeOnCollisionComponent extends Component {
      */
     public ParticlesCreator particles = null;
     /**
-     * CollisionRelationship needed to be collided with to dispose
+     * CollisionRelationships needed to be collided with to dispose
      * the object, kept null if using a rectangle
      */
-    public CollisionRelationship relationship = null;
+    public Array<CollisionRelationship> relationships = new Array<>();
     /**
      * Rectangle to collide with to dispose the object,
      * kept null if using JBump collision
@@ -41,11 +42,12 @@ public class DisposeOnCollisionComponent extends Component {
      * if the specified rectangle is colliding.
      */
     public float checkRange2 = 0f;
+
     @Override
     public void reset() {
         particles = null;
         rectangle = null;
-        relationship = null;
+        relationships.clear();
         targetMethod = null;
         checkRange2 = 0f;
     }
@@ -60,9 +62,9 @@ public class DisposeOnCollisionComponent extends Component {
         DisposeOnCollisionComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.particles = particles;
         comp.checkRange2 = checkRange2;
-        comp.relationship = relationship;
+        comp.relationships.addAll(relationships);
         comp.targetMethod = targetMethod;
-        if (relationship == null)
+        if (relationships == null)
             comp.rectangle = (Rec) instance.GetEntityManager().GetTargetGetter().GetTarget(targetMethod, Rec.class);
         return comp;
     }
@@ -70,19 +72,29 @@ public class DisposeOnCollisionComponent extends Component {
     @Override
     public void write(Json json) {
         json.writeField(checkRange2, "checkRange2");
-        if (relationship != null)
-            json.writeField(relationship.toString(), "relationship");
+        if (relationships != null) {
+            json.writeArrayStart("relationships");
+
+            for (int i = 0; i < relationships.size; i++) json.writeValue(relationships.get(i).toString());
+
+            json.writeArrayEnd();
+        }
         else json.writeField(targetMethod.toString(), "targetMethod");
 
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
-        checkRange2 = jsonValue.getFloat("checkRange2");
 
-        if (jsonValue.has("relationship"))
-            relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
-        else targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));
+        if (jsonValue.has("relationships")) {
+
+            for (int i = 0; i < jsonValue.get("relationships").size; i++)
+                relationships.add( CollisionRelationship.valueOf(jsonValue.get("relationships").getString(i)));
+        }
+        else {
+            targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));
+            checkRange2 = jsonValue.getFloat("checkRange2");
+        }
 
     }
 

@@ -9,6 +9,7 @@ import com.segfault.games.JavaKnight;
 public class PlayerGunComponent extends Component {
     public float cooldown = 0.0f;
     public float initialCd = 0.0f;
+    public float bulletSpeed = 0.0f;
     @Override
     public void dispose(JavaKnight instance) {
 
@@ -20,12 +21,14 @@ public class PlayerGunComponent extends Component {
 
         comp.cooldown = cooldown;
         comp.initialCd = initialCd;
+        comp.bulletSpeed = bulletSpeed;
         return comp;
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
         initialCd = jsonValue.getFloat("initialCd");
+        bulletSpeed = jsonValue.getFloat("bulletSpeed");
     }
 
     @Override
@@ -37,5 +40,6 @@ public class PlayerGunComponent extends Component {
     public void reset() {
         cooldown = 0f;
         initialCd = 0f;
+        bulletSpeed = 0f;
     }
 }

@@ -68,7 +68,7 @@
     <property name="properties">{
     &quot;collides&quot; : {
         &quot;relationship&quot; : &quot;OBSTACLE&quot;,
-        &quot;filter&quot; : &quot;BOUNCE&quot;
+        &quot;filter&quot; : &quot;DEFAULT&quot;
     },
     &quot;moving&quot; : {
         &quot;dx&quot; : 125.0,

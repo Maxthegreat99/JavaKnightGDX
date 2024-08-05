@@ -38,11 +38,6 @@ public class RecOwnerComponent extends Component {
 
     @Override
     public void write(Json json) {
-        json.writeField(rectangle.X, "x");
-        json.writeField(rectangle.Y, "Y");
-        json.writeField(rectangle.Width, "width");
-        json.writeField(rectangle.Height, "height");
-
     }
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {

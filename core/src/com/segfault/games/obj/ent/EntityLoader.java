@@ -212,6 +212,15 @@ public class EntityLoader {
             case "screenRecoil":
                 return manager.GetEngine().createComponent(ScreenRecoilComponent.class);
 
+            case "bulletSpawn":
+                return manager.GetEngine().createComponent(BulletSpawnComponent.class);
+
+            case "physic":
+                return manager.GetEngine().createComponent(PhysicComponent.class);
+
+            case "collisionEvent":
+                return manager.GetEngine().createComponent(CollisionEventComponent.class);
+
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);
 

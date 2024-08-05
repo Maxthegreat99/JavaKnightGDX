@@ -1,0 +1,24 @@
+{
+  "components": {
+    "collides": {
+      "relationship": "BULLET",
+      "filter": "BULLET"
+    },
+    "dispose": {
+      "relationships": [
+        "OBSTACLE",
+        "OUT_OF_BOUNDS"
+      ]
+    },
+    "drawable": {
+      "order": 2,
+      "sprite": "BULLET",
+      "blending": true,
+      "alpha": 0.7
+    },
+    "moving": {
+      "dx": 0.0,
+      "dy": 0.0
+    }
+  }
+}

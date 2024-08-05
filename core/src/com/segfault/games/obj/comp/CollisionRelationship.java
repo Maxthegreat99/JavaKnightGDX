@@ -10,5 +10,6 @@ public enum CollisionRelationship {
     PLAYER,
     OBSTACLE,
     OUT_OF_BOUNDS,
-    NULL
+    NULL,
+    BULLET
 }

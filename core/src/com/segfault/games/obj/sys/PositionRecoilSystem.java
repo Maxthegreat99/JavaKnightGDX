@@ -18,6 +18,8 @@ public class PositionRecoilSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        if (entity.isScheduledForRemoval()) return;
+
         DrawableComponent drawable = mappers.Drawable.get(entity);
         PositionRecoilComponent posRecoil = mappers.PositionRecoil.get(entity);
 

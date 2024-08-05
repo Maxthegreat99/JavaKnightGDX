@@ -8,18 +8,19 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.MovementInputComponent;
 import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.ent.EntityManager;
+import com.segfault.games.obj.sys.SubSystem;
 
 /**
  * System that takes userInput and controls specified entities with them
  */
-public class MovementInputSystem {
+public class MovementInputSystem implements SubSystem {
     private final EntityManager manager;
     private final Vector2 dir = new Vector2();
     public MovementInputSystem(JavaKnight ins) {
         manager = ins.GetEntityManager();
     }
 
-    public void processEntity(Entity entity) {
+    public void processEntity(Entity entity, float interval) {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movement = manager.GetMappers().Moving.get(entity);

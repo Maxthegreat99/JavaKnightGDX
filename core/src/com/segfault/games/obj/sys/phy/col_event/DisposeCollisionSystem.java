@@ -1,11 +1,12 @@
-package com.segfault.games.obj.sys.phy;
+package com.segfault.games.obj.sys.phy.col_event;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
-import com.dongbat.jbump.Item;
+import com.dongbat.jbump.Collision;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.comp.CollisionRelationship;
 import com.segfault.games.obj.comp.DisposeOnCollisionComponent;
 import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.EntityManager;
@@ -13,7 +14,7 @@ import com.segfault.games.obj.ent.EntityManager;
 /**
  * System disposing entities on specific collisions
  */
-public class DisposeCollisionSystem {
+public class DisposeCollisionSystem implements CollisionEventSystem {
     private final EntityManager manager;
     private final Vector2 range = new Vector2();
 
@@ -22,12 +23,11 @@ public class DisposeCollisionSystem {
 
     }
 
-    public void processEntity(Entity entity) {
-        if (entity.isScheduledForRemoval()) return;
+    public void processEntity(Entity entity, float interval) {
 
         DisposeOnCollisionComponent disInfo = manager.GetMappers().DisposeOnCollision.get(entity);
 
-        boolean hasJBumpCol = disInfo.relationship != null;
+        boolean hasJBumpCol = disInfo.relationships != null;
 
         if (!hasJBumpCol) {
             RecOwnerComponent rOwner = manager.GetMappers().RecOwner.get(entity);
@@ -48,12 +48,24 @@ public class DisposeCollisionSystem {
         CollidesComponent colInfo = manager.GetMappers().Collides.get(entity);
 
         // check through each collision if the relationship is the specified one, if so dispose the entity
-        for (Item<Entity> c : colInfo.res.projectedCollisions.others) {
-            if (!manager.GetMappers().Collides.get(c.userData).relationship.equals(disInfo.relationship))
+        for (int i = 0; i < colInfo.res.projectedCollisions.size(); i++) {
+
+            Collision c = colInfo.res.projectedCollisions.get(i);
+
+            CollisionRelationship otherRelationship = manager.GetMappers().Collides.get((Entity) c.other.userData).relationship;
+            if (!disInfo.relationships.contains(otherRelationship,false))
                 continue;
             manager.GetEngine().removeEntity(entity);
             return;
         }
 
+    }
+
+    @Override
+    public void HandleCollision(Entity entity, Collision c) {
+
+        DisposeOnCollisionComponent disInfo = manager.GetMappers().DisposeOnCollision.get(entity);
+
+        manager.GetEngine().removeEntity(entity);
     }
 }

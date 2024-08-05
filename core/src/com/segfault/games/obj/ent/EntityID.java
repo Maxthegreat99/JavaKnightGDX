@@ -5,5 +5,6 @@ package com.segfault.games.obj.ent;
  */
 public enum EntityID {
     PLAYER,
-    GUN
+    GUN,
+    BULLET
 }

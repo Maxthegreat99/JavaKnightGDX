@@ -12,7 +12,8 @@
       "rotatingRadius": 28.0
     },
     "playerGun": {
-      "initialCd": 0.35
+      "initialCd": 0.35,
+      "bulletSpeed": 250
     },
     "recoil": {
       "maxAngle": 15.0,
@@ -33,7 +34,12 @@
       "divisor": 1.5,
       "initialRetainTime": 0.08,
       "initialDistanceSpeed": 250,
-      "distanceAcceleration": 45
+      "distanceAcceleration": 40
+    },
+    "bulletSpawn": {
+      "height": 8,
+      "width": 8,
+      "bulletID": "BULLET"
     }
   }
 }

@@ -28,6 +28,8 @@ public class PointingSystem extends IteratingSystem {
     private final Vector2 basePoint = new Vector2();
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        if (entity.isScheduledForRemoval()) return;
+
         PointingComponent pointing = ins.GetEntityManager().GetMappers().Pointing.get(entity);
         DrawableComponent drawable = ins.GetEntityManager().GetMappers().Drawable.get(entity);
 
