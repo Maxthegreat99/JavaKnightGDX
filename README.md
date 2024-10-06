@@ -8,5 +8,5 @@ Rudimentary, currently the base of the engine itself are being set
 - Maxthegreat99 - programming and design
 - Moneodev - programming and design
 - SpaghettiInABucket - art and design
-- TheTrueMomo - something probably
+- TheTrueMomo - design
 - FlipUp - original programming and original design
