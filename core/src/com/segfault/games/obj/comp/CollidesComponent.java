@@ -21,7 +21,7 @@ public class CollidesComponent extends Component {
      * JBump Physic item of the object, the userData refers to the
      * entity
      */
-    public Item<Entity> physicItem = null;
+    public Item<Entity> physicItem = new Item<>();
     /**
      * collision relationship, defines what type of collision
      * this object is. is used by other collisions to define behaviour
@@ -85,7 +85,6 @@ public class CollidesComponent extends Component {
     public void reset() {
         filter = CollisionFilter.defaultFilter;
         relationship = null;
-        physicItem = null;
         filterID = null;
         res = null;
         width = 0f;
@@ -103,7 +102,7 @@ public class CollidesComponent extends Component {
     @Override
     public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         CollidesComponent comp = instance.GetEntityManager().GetEngine().createComponent(CollidesComponent.class);
-        comp.physicItem = new Item<>(ent);
+        comp.physicItem.userData = ent;
         comp.relationship = relationship;
         comp.width = (Float.isNaN(width)) ? pol.z : width;
         comp.height = (Float.isNaN(height)) ? pol.w : height;

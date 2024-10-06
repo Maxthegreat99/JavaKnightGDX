@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.*;
+import com.segfault.games.obj.CollisionEventHolder;
 
 /**
  * holds and loads most of the game's textures and assets
@@ -16,7 +17,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class AssetManager {
     private TextureAtlas atlas;
     private Texture fontTexture;
-
     private final ObjectMap<indexT, TextureRegion> textures = new ObjectMap<>();
     private final ObjectMap<indexM, Mesh> meshes = new ObjectMap<>();
 
@@ -110,7 +110,7 @@ public class AssetManager {
     public ObjectMap<indexT, TextureRegion> GetTextures() {
         return textures;
     }
-    public ObjectMap GetMeshes() {
+    public ObjectMap<indexM, Mesh> GetMeshes() {
         return meshes;
     }
     public void Dispose() {

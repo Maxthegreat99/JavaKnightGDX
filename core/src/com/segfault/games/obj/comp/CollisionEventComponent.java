@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.Rec;
+import com.segfault.games.obj.CollisionEventHolder;
 import com.segfault.games.obj.ent.indexEntitySystems;
 import com.segfault.games.obj.sys.SubSystem;
 
@@ -16,11 +16,9 @@ import com.segfault.games.obj.sys.SubSystem;
  */
 public class CollisionEventComponent extends Component {
 
-    public ObjectMap<CollisionRelationship, Array<SubSystem>> collisionEvents = new ObjectMap<>();
+    public ObjectMap<CollisionRelationship, CollisionEventHolder> collisionEvents = new ObjectMap<>();
     public Array<String> stringCopyEvents = new Array<>();
-    public ObjectMap<Rec, Array<SubSystem>> recCollisionEvents = new ObjectMap<>();
 
-    public Array<Rec> rectangle
     @Override
     public void reset() {
         collisionEvents.clear();
@@ -29,13 +27,14 @@ public class CollisionEventComponent extends Component {
 
     @Override
     public void dispose(JavaKnight instance) {
-        return;
+
     }
 
     @Override
     public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         CollisionEventComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.collisionEvents.putAll(collisionEvents);
+        comp.stringCopyEvents.addAll(stringCopyEvents);
         return comp;
     }
 
@@ -47,9 +46,6 @@ public class CollisionEventComponent extends Component {
 
         json.writeArrayEnd();
     }
-
-    private String key = null;
-    private final Array<SubSystem> events = new Array<>();
 
     /**
      * keys and values are read like this
@@ -66,6 +62,9 @@ public class CollisionEventComponent extends Component {
      */
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
+        Array<SubSystem> events = new Array<>();
+        String key = null;
+
         for (int i = 0; i < jsonValue.get("collisionEvents").size; i++) {
             String name = jsonValue.get("collisionEvents").getString(i);
             stringCopyEvents.add(name);
@@ -81,7 +80,9 @@ public class CollisionEventComponent extends Component {
 
             if (isKey) {
                 if (key != null) {
-                    collisionEvents.put(CollisionRelationship.valueOf(key), events);
+                    CollisionEventHolder colEventHolder = new CollisionEventHolder();
+                    colEventHolder.event.addAll(events);
+                    collisionEvents.put(CollisionRelationship.valueOf(key), colEventHolder);
                     events.clear();
                 }
 
@@ -93,7 +94,9 @@ public class CollisionEventComponent extends Component {
 
         }
 
-        collisionEvents.put(CollisionRelationship.valueOf(key), events);
+        CollisionEventHolder colEventHolder = new CollisionEventHolder();
+        colEventHolder.event.addAll(events);
+        collisionEvents.put(CollisionRelationship.valueOf(key), colEventHolder);
     }
 
 }

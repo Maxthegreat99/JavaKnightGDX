@@ -45,6 +45,24 @@ public class Rec {
     }
 
     /**
+     * resets the Rectangle's properties
+     */
+    public void set(float x, float y, float w, float h) {
+        // Define the vertices of the rectangle
+        Points[0].set(x - w / 2, y - h / 2); // Bottom-left corner
+        Points[1].set(x + w / 2, y - h / 2); // Bottom-right corner
+        Points[2].set(x + w / 2, y + h / 2); // Top-right corner
+        Points[3].set(x - w / 2, y + h / 2); // Top-left corner
+
+        OriginX = X = x;    // Set the X-coordinate of the rectangle's position
+        OriginY = Y = y;    // Set the Y-coordinate of the rectangle's position
+        Width = w;   // Set the width of the rectangle
+        Height = h;   // Set the height of the rectangle
+
+        angle = 0.0f;
+    }
+
+    /**
      * Method to rotate the rectangle around a specified origin point
      * note this will add to the current rotation and not set the rotation
      */
