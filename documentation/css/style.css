@@ -1,0 +1,30 @@
+:root {
+    --default-background-color: #084C61;
+    --default-text-color: white;
+    --default-link-color: #F71735;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Courier Prime';
+    src: url('../fonts/Courier_Prime/CourierPrime-Regular.ttf');
+}
+
+body {
+    background-color: var(--default-background-color);
+    color: var(--default-text-color);
+    font-family: Montserrat, sans-serif;
+}
+
+a {
+    color: var(--default-link-color);
+    font-family: Montserrat, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
