@@ -2,6 +2,8 @@ package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector4;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dongbat.jbump.CollisionFilter;
@@ -17,11 +19,15 @@ import com.segfault.games.obj.ent.CollisionFiltersID;
  */
 
 public class CollidesComponent extends Component {
-    /**
-     * JBump Physic item of the object, the userData refers to the
-     * entity
+    /*
+     * Box2D physics body, check https://libgdx.com/wiki/extensions/physics/box2d for more info
+     * on Box2D
      */
-    public Item<Entity> physicItem = new Item<>();
+    public Body physicBody = null;
+    /*
+     *  body definition used to create our entity's physic body
+     */
+    public BodyDef bodyDefinition = new BodyDef();
     /**
      * collision relationship, defines what type of collision
      * this object is. is used by other collisions to define behaviour

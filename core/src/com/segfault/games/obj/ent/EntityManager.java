@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectSet;
-import com.dongbat.jbump.World;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.sys.*;
 import com.segfault.games.obj.sys.phy.*;
@@ -18,7 +18,7 @@ import com.segfault.games.obj.wld.MapID;
  */
 public class EntityManager {
     private final PooledEngine pooledECS;
-    private final World<Entity> physicWorld;
+    private final World physicWorld;
     private final EntityCreator entityCreator;
     private final Mappers mappers;
     private final CollisionFilters filters;
@@ -31,7 +31,7 @@ public class EntityManager {
 
     public EntityManager(JavaKnight instance) {
         pooledECS = new PooledEngine();
-        physicWorld = new World<>();
+        physicWorld = new World(new Vector2(0, 0), true);
         entityCreator = new EntityCreator(instance);
         mappers = new Mappers();
         filters = new CollisionFilters(mappers);
@@ -84,7 +84,7 @@ public class EntityManager {
     public PooledEngine GetEngine() {
         return pooledECS;
     }
-    public World<Entity> GetPhysicWorld() {
+    public World GetPhysicWorld() {
         return physicWorld;
     }
     public Mappers GetMappers() {

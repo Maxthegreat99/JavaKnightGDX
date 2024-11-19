@@ -38,11 +38,12 @@ public class EntityLoader {
             JsonValue comps = reader.parse(jsonEntity).get("components");
             Entity entity = manager.GetEngine().createEntity();
 
-            comps.forEach(i -> {
+            for (JsonValue i : comps)
+            {
                 Component comp = getComponentFromName(i.name, manager);
                 comp.read(i, instance);
                 entity.add(comp);
-            });
+            }
 
             String fileName = jsonEntity.file().getName().replace(".json", "");
 
@@ -98,11 +99,12 @@ public class EntityLoader {
                  * more complex components with it
                  */
                 if (jValue.child() != null)
-                    jValue.forEach(j -> {
+                    for (JsonValue j : jValue)
+                    {
                         Component comp = getComponentFromName(j.name, instance.GetEntityManager());
                         comp.read(j, instance);
                         e.add(comp);
-                    });
+                    }
 
                 instance.GetEntityManager().GetEngine().addEntity(e);
                 continue;
@@ -128,11 +130,12 @@ public class EntityLoader {
                  * more complex components with it
                  */
                 if (jValue.child() != null)
-                    jValue.forEach(k -> {
+                    for (JsonValue k : jValue)
+                    {
                         Component comp = getComponentFromName(k.name, instance.GetEntityManager());
                         comp.read(k, instance);
                         e.add(comp);
-                    });
+                    }
 
                 instance.GetEntityManager().GetEngine().addEntity(e);
                 continue;

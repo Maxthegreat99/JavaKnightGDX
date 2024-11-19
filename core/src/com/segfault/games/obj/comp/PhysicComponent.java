@@ -10,8 +10,6 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.ent.indexEntitySystems;
 import com.segfault.games.obj.sys.SubSystem;
 
-import java.util.Comparator;
-
 /**
  * Defines the physic systems an entity is tied to
  * for the physic system to execute
@@ -22,6 +20,7 @@ public class PhysicComponent extends Component {
      * Subsystems the engine needs to execute for the entity
      */
     public Array<SubSystem> physicSystems = new Array<>();
+
     /**
      * String array copy referencing the systems used
      */
@@ -66,5 +65,6 @@ public class PhysicComponent extends Component {
         stringCopySystems.sort((o1, o2) -> Integer.compare(indexEntitySystems.valueOf(o1).ordinal(), indexEntitySystems.valueOf(o1).ordinal()));
 
         for (String s : stringCopySystems) physicSystems.add((SubSystem) instance.GetEntityManager().GetSystems().get(indexEntitySystems.valueOf(s)));
+
     }
 }

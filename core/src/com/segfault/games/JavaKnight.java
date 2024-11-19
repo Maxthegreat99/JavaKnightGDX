@@ -3,6 +3,7 @@ package com.segfault.games;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.gra.Renderer;
@@ -33,10 +34,12 @@ public class JavaKnight extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+
 		assetManager = new AssetManager();
 		assetManager.LoadAssets();
 		// with the zoom in consideration, the player see is aprox, 560 : 350 of the buffer
 		renderer = new Renderer(assetManager, SCREEN_WIDTH, SCREEN_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT, ZOOM);
+		Box2D.init();
 		entityManager = new EntityManager(this);
 		mapLoader = new MapLoader();
 		mapLoader.CacheMaps();
@@ -97,7 +100,9 @@ public class JavaKnight extends ApplicationAdapter {
 		entityManager.Dispose();
 
 		texts.clear();
-		staticFonts.forEach(i -> i.key.clear());
+		for (ObjectMap.Entry<BitmapFontCache, Float> i : staticFonts)
+			i.key.clear();
+
 		staticFonts.clear();
 		rectangles.clear();
 

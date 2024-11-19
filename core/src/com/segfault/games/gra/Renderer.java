@@ -8,11 +8,9 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.dongbat.jbump.Rect;
-import com.dongbat.jbump.World;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
 import com.segfault.games.util.AssetManager;
 import com.segfault.games.util.indexT;
@@ -35,7 +33,7 @@ public class Renderer {
 
     private final ShaderProgram fontShader;
     private final BitmapFont font;
-    private final ShapeRenderer shapeRenderer;
+    private final Box2DDebugRenderer debugRenderer;
     public float cameraZoom;
     private final Vector3 cameraPos = new Vector3();
     private final TextureRegion[][] backgrounds = new TextureRegion[3][];
@@ -62,7 +60,7 @@ public class Renderer {
         fontShader = new ShaderProgram(Gdx.files.internal("Shaders/font.vert"), Gdx.files.internal("Shaders/font.frag"));
         if (!fontShader.isCompiled()) Gdx.app.error("fontShader", "compilation failed:\n" + fontShader.getLog());
 
-        shapeRenderer = new ShapeRenderer();
+        debugRenderer = new Box2DDebugRenderer();
 
 
         cameraPos.set((float) SCREEN_WIDTH / 2f,
@@ -101,7 +99,7 @@ public class Renderer {
      * @param instance
      * @param physicWorld
      */
-    public void Render(JavaKnight instance, World<Entity> physicWorld) {
+    public void Render(JavaKnight instance, World physicWorld) {
 
         if (!instance.GetTexts().isEmpty() || !instance.GetStaticFonts().isEmpty()) {
             // Draw text objects
@@ -118,7 +116,8 @@ public class Renderer {
             }
             batch.setShader(null);
         }
-        //debugBoxes(instance.GetRectangles(), physicWorld);
+
+        debugRenderer.render(physicWorld, camera.combined);
 
         batch.end();
         screenBuffer.end();
@@ -146,22 +145,6 @@ public class Renderer {
     }
 
     private final Color col = new Color(255f, 0,0,0.5f);
-    private void debugBoxes(Array<Rec> rectangles, World<Entity> physicWorld) {
-        // Renders collisions
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(col);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-
-        for (Rec r : rectangles){
-            shapeRenderer.polygon(r.ConvertToFloatArray());
-        }
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (Rect i : physicWorld.getRects()) shapeRenderer.rect(i.x, i.y, i.w, i.h);
-        shapeRenderer.end();
-    }
-
 
     private void loadBackgrounds(AssetManager assetManager) {
         TextureRegion greenBG = assetManager.GetTextures().get(indexT.BG_GREEN);

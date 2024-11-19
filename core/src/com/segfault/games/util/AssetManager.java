@@ -116,7 +116,8 @@ public class AssetManager {
     public void Dispose() {
         atlas.dispose();
         fontTexture.dispose();
-        meshes.forEach(i -> i.value.dispose());
+        for (ObjectMap.Entry<indexM, Mesh> i : meshes)
+            i.value.dispose();
     }
 }
 
