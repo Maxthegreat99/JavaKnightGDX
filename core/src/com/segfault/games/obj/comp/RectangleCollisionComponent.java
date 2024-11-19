@@ -5,9 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.obj.CollisionEventHolder;
 import com.segfault.games.obj.Rec;
-import com.segfault.games.obj.ent.TargettingMethodID;
 
 /**
  * component defining that the entity's rectangle may
@@ -19,6 +20,11 @@ public class RectangleCollisionComponent extends Component {
      * range squared that the target rectangle should be in before checking for collision
      */
     public float checkRange2 = 0f;
+
+    /**
+     * map of different target and their corresponding behavior system
+     */
+    public ObjectMap<Rec, CollisionEventHolder> collisionEvents = new ObjectMap<>();
     @Override
     public void reset() {
         checkRange2 = 0f;
