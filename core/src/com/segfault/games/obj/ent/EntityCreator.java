@@ -38,7 +38,7 @@ public class EntityCreator {
         for (com.badlogic.ashley.core.Component c : prototypes.get(id).getComponents()) {
             Component comp = (Component) c;
 
-            e.add(comp.Clone(instance, e, pol, properties));
+            e.add(comp.clone(instance, e, pol, properties));
         }
 
         if (addToEngine)

@@ -54,7 +54,7 @@ public class DrawableComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         DrawableComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.sprite.set(sprite);
         comp.sprite.setPosition(pol.x, pol.y);

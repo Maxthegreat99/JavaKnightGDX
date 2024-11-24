@@ -29,7 +29,7 @@ public class LifetimeComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         LifetimeComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.lifetime = lifetime;
         return comp;

@@ -8,12 +8,13 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
-import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.dongbat.jbump.Item;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.Rec;
+import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.comp.*;
 import com.segfault.games.obj.wld.MapID;
 
@@ -22,7 +23,6 @@ import com.segfault.games.obj.wld.MapID;
  */
 public class EntityLoader {
     public final JsonReader reader = new JsonReader();
-    private final Json json = new Json();
 
     /**
      * loads entities stored in assets/Entities from json
@@ -78,16 +78,48 @@ public class EntityLoader {
                 JsonValue collides = jValue.get("collides");
                 col.relationship = CollisionRelationship.valueOf(collides.getString("relationship"));
 
-                if (collides.has("filter")) col.filterID = CollisionFiltersID.valueOf(collides.getString("filter"));
-                else col.filterID = CollisionFiltersID.DEFAULT;
+                String shape = "POLYGONE";
+                col.shape = EntityManager.Shapes.valueOf(shape);
 
-                col.filter = instance.GetEntityManager().GetCollisionFilters().Filters.get(col.filterID);
-                col.physicItem = new Item<>(e);
-                instance.GetEntityManager().GetPhysicWorld().add(col.physicItem, vec.x, vec.y, po.getRectangle().width, po.getRectangle().height);
-                col.x = vec.x;
-                col.y = vec.y;
-                col.width = po.getRectangle().width;
-                col.height = po.getRectangle().height;
+                col.restitution = collides.getFloat("restitution");
+                col.friction = collides.getFloat("friction");
+                col.density = collides.getFloat("density");
+
+                col.bodyType = BodyDef.BodyType.valueOf(collides.getString("bodyType"));
+                col.hasCollisionEvent = collides.getBoolean("hasCollisionEvent");
+                col.linearDamping = collides.getFloat("linearDamping", 5f);
+                col.rotationFixed = collides.getBoolean("rotationFixed", true);
+
+                col.x = vec.x / Renderer.PIXEL_TO_METERS + (po.getRectangle().width / Renderer.PIXEL_TO_METERS) / 2;
+                col.y = vec.y / Renderer.PIXEL_TO_METERS + (po.getRectangle().height / Renderer.PIXEL_TO_METERS) / 2;
+                col.width = po.getRectangle().width / Renderer.PIXEL_TO_METERS;
+                col.height = po.getRectangle().height / Renderer.PIXEL_TO_METERS;
+
+                BodyDef bdyDef = instance.GetEntityManager().GetBodyDef();
+                FixtureDef fixDef = instance.GetEntityManager().GetFixtureDef();
+
+                bdyDef.position.set(col.x, col.y);
+                bdyDef.type = col.bodyType;
+                bdyDef.linearDamping = col.linearDamping;
+                bdyDef.fixedRotation = col.rotationFixed;
+
+                fixDef.friction = col.friction;
+                fixDef.density = col.density;
+                fixDef.restitution = col.restitution;
+
+                fixDef.shape = instance.GetEntityManager().GetShape(col.shape.ordinal());
+
+
+                ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
+
+                col.physicBody = instance.GetEntityManager().GetPhysicWorld().createBody(bdyDef);
+                col.fixture = col.physicBody.createFixture(fixDef);
+
+                instance.GetEntityManager().ResetDefinitions();
+
+                col.physicBody.setUserData(col);
+                col.fixture.setUserData(col);
+                col.entity = e;
 
                 e.add(col);
 
@@ -103,37 +135,6 @@ public class EntityLoader {
                     {
                         Component comp = getComponentFromName(j.name, instance.GetEntityManager());
                         comp.read(j, instance);
-                        e.add(comp);
-                    }
-
-                instance.GetEntityManager().GetEngine().addEntity(e);
-                continue;
-            }
-            else if (po.getName().startsWith("Rec")) {
-                Entity e = instance.GetEntityManager().GetEngine().createEntity();
-                RecOwnerComponent rec = instance.GetEntityManager().GetEngine().createComponent(RecOwnerComponent.class);
-                JsonValue jValue = reader.parse(po.getProperties().get("properties", String.class));
-
-                rec.rectangle = new Rec(vec.x, vec.y, po.getRectangle().width, po.getRectangle().height);
-                instance.GetRectangles().add(rec.rectangle);
-
-                if (jValue.has("recOwner")) {
-                    rec.rectangle.Rotate(jValue.get("recOwner").getFloat("rotation"), vec.x, vec.y);
-                    jValue.remove("recOwner");
-                }
-
-                e.add(rec);
-
-                /*
-                 * This adds components from the properties, this doesnt mean the properties json file
-                 * can be used as entity editor exclusively, this method breaks once you try to create
-                 * more complex components with it
-                 */
-                if (jValue.child() != null)
-                    for (JsonValue k : jValue)
-                    {
-                        Component comp = getComponentFromName(k.name, instance.GetEntityManager());
-                        comp.read(k, instance);
                         e.add(comp);
                     }
 
@@ -167,17 +168,8 @@ public class EntityLoader {
             case "collides":
                 return manager.GetEngine().createComponent(CollidesComponent.class);
 
-            case "damage":
-                return manager.GetEngine().createComponent(DamageComponent.class);
-
-            case "dispose":
-                return manager.GetEngine().createComponent(DisposeOnCollisionComponent.class);
-
             case "drawable":
                 return manager.GetEngine().createComponent(DrawableComponent.class);
-
-            case "life":
-                return manager.GetEngine().createComponent(LifeComponent.class);
 
             case "lifetime":
                 return manager.GetEngine().createComponent(LifetimeComponent.class);
@@ -190,12 +182,6 @@ public class EntityLoader {
 
             case "pointing":
                 return manager.GetEngine().createComponent(PointingComponent.class);
-
-            case "recOwner":
-                return manager.GetEngine().createComponent(RecOwnerComponent.class);
-
-            case "rectangleCollision":
-                return manager.GetEngine().createComponent(RectangleCollisionComponent.class);
 
             case "speedDecrease":
                 return manager.GetEngine().createComponent(SpeedDecreaseComponent.class);

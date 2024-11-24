@@ -59,7 +59,7 @@ public class BulletSpawnComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         BulletSpawnComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.spawnPosY = spawnPosY;
         comp.spawnPosX = spawnPosX;

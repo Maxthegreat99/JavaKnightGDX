@@ -61,7 +61,7 @@ public class ScreenRecoilComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         ScreenRecoilComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.maxDis = maxDis;
         comp.divisor = divisor;

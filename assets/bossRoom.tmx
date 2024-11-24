@@ -5,8 +5,13 @@
   <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
    <properties>
     <property name="properties">{
-   &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;
     }
 
 }</property>
@@ -15,8 +20,13 @@
   <object id="4" name="Col4" x="0" y="367.5" width="616" height="17.5">
    <properties>
     <property name="properties">{
-   &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
     }
 
 }</property>
@@ -25,8 +35,13 @@
   <object id="7" name="Col3" x="0" y="17.5" width="28" height="350">
    <properties>
     <property name="properties">{
-   &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
     }
 
 }</property>
@@ -35,8 +50,13 @@
   <object id="8" name="Col2" x="588" y="17.5" width="28" height="350">
    <properties>
     <property name="properties">{
-   &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
     }
 
 }</property>
@@ -45,19 +65,13 @@
   <object id="11" name="Col1" x="442" y="135.5" width="57.3333" height="53.3333">
    <properties>
     <property name="properties">{
-   &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OBSTACLE&quot;
-    }
-
-}</property>
-   </properties>
-  </object>
-  <object id="14" name="Rec" x="116.833" y="74.8333" width="80" height="80">
-   <properties>
-    <property name="properties">{
-    &quot;recOwner&quot; :
-    {
-        &quot;rotation&quot; : 45.0,
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBSTACLE&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
     }
 
 }</property>
@@ -68,12 +82,38 @@
     <property name="properties">{
     &quot;collides&quot; : {
         &quot;relationship&quot; : &quot;OBSTACLE&quot;,
-        &quot;filter&quot; : &quot;DEFAULT&quot;
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0
+    },
+    &quot;collisionEvent&quot;:{
+        &quot;collisionEvents&quot;: [
+            &quot;PLAYER&quot;,
+            &quot;BOUNCING&quot;,
+            &quot;OBSTACLE&quot;,
+            &quot;BOUNCING&quot;,
+            &quot;OUT_OF_BOUNDS&quot;,
+            &quot;BOUNCING&quot;,
+            &quot;NULL&quot;,
+            &quot;BOUNCING&quot;,
+            &quot;BULLET&quot;
+            &quot;BOUNCING&quot;,
+        ]
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;MOVEMENT_SYSTEM&quot;
+        ]
     },
     &quot;moving&quot; : {
-        &quot;dx&quot; : 125.0,
-        &quot;dy&quot; : 107.0
-    }
+        &quot;dx&quot; : 122.50,
+        &quot;dy&quot; : 100.70,
+        &quot;maxVel&quot;: 150.0
+    },
     &quot;drawable&quot;: {
       &quot;order&quot;: 3,
       &quot;sprite&quot;: &quot;ACID_BEAM_BALL&quot;,
@@ -83,7 +123,7 @@
     &quot;bounce&quot; : {
         &quot;maxBounces&quot; : 500,
         &quot;relationship&quot; : &quot;NULL&quot;,
-         &quot;bounces&quot; : 0
+        &quot;bounces&quot; : 0
     }
 }</property>
    </properties>

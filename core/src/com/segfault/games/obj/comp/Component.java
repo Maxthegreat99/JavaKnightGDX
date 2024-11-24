@@ -22,7 +22,7 @@ public abstract class Component implements com.badlogic.ashley.core.Component, P
      * in most cases, if used on normal enemies (AKA not prototypes) be weary that disposing the parent
      * will destroy objects passed by reference, so please make sure to deep clone each value of your components
      */
-    public abstract Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties);
+    public abstract Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties);
 
     /**
      * For JSON reading from file, used by the EntityLoader

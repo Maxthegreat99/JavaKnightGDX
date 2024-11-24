@@ -2,12 +2,21 @@
   "components": {
     "collides": {
       "relationship": "BULLET",
-      "filter": "BULLET"
+      "hasCollisionEvent": true,
+      "shape": "CIRCLE",
+      "bodyType": "DynamicBody",
+      "restitution": 0.0,
+      "friction": 0.0,
+      "density": 0.3,
+      "rotationFixed": true,
+      "linearDamping": 0.3
     },
-    "dispose": {
-      "relationships": [
+    "collisionEvent": {
+      "collisionEvents": [
         "OBSTACLE",
-        "OUT_OF_BOUNDS"
+        "DISPOSE",
+        "OUT_OF_BOUNDS",
+        "DISPOSE"
       ]
     },
     "drawable": {
@@ -18,7 +27,14 @@
     },
     "moving": {
       "dx": 0.0,
-      "dy": 0.0
+      "dy": 0.0,
+      "maxVel": 20.0
+    },
+    "physic": {
+      "physicSystems": [
+        "MOVEMENT_SYSTEM"
+      ]
     }
+
   }
 }

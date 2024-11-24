@@ -1,12 +1,10 @@
 package com.segfault.games.gra;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -43,6 +41,8 @@ public class Renderer {
 
     private final int FRAME_WIDTH;
     private final int FRAME_HEIGHT;
+
+    public static final float PIXEL_TO_METERS = 60f;
 
     public Renderer(AssetManager assetManager, int screenWidth, int screenHeight, int frameWidth, int frameHeight, float zoom) {
         SCREEN_HEIGHT = screenHeight;
@@ -117,7 +117,7 @@ public class Renderer {
             batch.setShader(null);
         }
 
-        debugRenderer.render(physicWorld, camera.combined);
+        renderShapes(camera, debugRenderer, physicWorld);
 
         batch.end();
         screenBuffer.end();
@@ -144,6 +144,16 @@ public class Renderer {
         batch.end();
     }
 
+
+    private void renderShapes(OrthographicCamera camera, Box2DDebugRenderer debugRenderer, World physicWorld) {
+        camera.setToOrtho(false, FRAME_WIDTH / PIXEL_TO_METERS, FRAME_HEIGHT / PIXEL_TO_METERS);
+        cameraPos.set((FRAME_WIDTH / PIXEL_TO_METERS) / 2f ,
+                      (FRAME_HEIGHT / PIXEL_TO_METERS) / 2f, 0 );
+        camera.position.set(cameraPos);
+        camera.update();
+
+        debugRenderer.render(physicWorld, camera.combined);
+    }
     private final Color col = new Color(255f, 0,0,0.5f);
 
     private void loadBackgrounds(AssetManager assetManager) {
@@ -181,6 +191,6 @@ public class Renderer {
         screenBuffer.dispose();
         font.dispose();
         fontShader.dispose();
-        shapeRenderer.dispose();
+        debugRenderer.dispose();
     }
 }

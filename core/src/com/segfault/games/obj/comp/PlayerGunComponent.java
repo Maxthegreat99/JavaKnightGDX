@@ -16,7 +16,7 @@ public class PlayerGunComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         PlayerGunComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
 
         comp.cooldown = cooldown;

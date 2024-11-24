@@ -1,8 +1,8 @@
 package com.segfault.games.obj.sys.phy.col_event;
 
 import com.badlogic.ashley.core.Entity;
-import com.dongbat.jbump.Collision;
+import com.badlogic.gdx.physics.box2d.Contact;
 
 public interface CollisionEventSystem {
-    void HandleCollision(Entity entity, Entity target, Collision collision);
+    void HandleCollision(Entity entity, Entity target, Contact collision);
 }

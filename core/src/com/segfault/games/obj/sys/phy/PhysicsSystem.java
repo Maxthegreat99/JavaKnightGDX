@@ -1,12 +1,10 @@
 package com.segfault.games.obj.sys.phy;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IntervalIteratingSystem;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.PhysicComponent;
 import com.segfault.games.obj.ent.EntityManager;
@@ -20,13 +18,18 @@ public class PhysicsSystem extends EntitySystem {
     private final float interval;
     private float accumulator = 0f;
     private final EntityManager entityManager;
+
     public PhysicsSystem(JavaKnight instance, float interval, int priority) {
         super(priority);
 
-        entities = getEngine().getEntitiesFor(Family.all(PhysicComponent.class).get());
         this.interval = interval;
         mappers = instance.GetEntityManager().GetMappers();
         entityManager = instance.GetEntityManager();
+    }
+
+    @Override
+    public void addedToEngine (Engine engine) {
+        entities = engine.getEntitiesFor(Family.all(PhysicComponent.class).get());
     }
 
     @Override

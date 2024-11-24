@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.*;
-import com.segfault.games.obj.CollisionEventHolder;
 
 /**
  * holds and loads most of the game's textures and assets

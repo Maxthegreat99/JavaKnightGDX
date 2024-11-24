@@ -5,11 +5,15 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.obj.comp.CollisionEvents;
 import com.segfault.games.obj.sys.*;
 import com.segfault.games.obj.sys.phy.*;
+import com.segfault.games.obj.sys.phy.col_event.BouncingCollisionSystem;
+import com.segfault.games.obj.sys.phy.col_event.CollisionEventSystem;
+import com.segfault.games.obj.sys.phy.col_event.DisposeCollisionSystem;
 import com.segfault.games.obj.wld.MapID;
 
 /**
@@ -21,12 +25,38 @@ public class EntityManager {
     private final World physicWorld;
     private final EntityCreator entityCreator;
     private final Mappers mappers;
-    private final CollisionFilters filters;
     private final TargetGetter targetGetter;
     private final EntityLoader entityLoader;
-    private final ObjectMap<indexEntitySystems, Object> systems = new ObjectMap();
+    private final ObjectMap<indexEntitySystems, Object> systems = new ObjectMap<>();
+    private final CollisionEventSystem[] collisionEvents = new CollisionEventSystem[32];
     private Entity player;
 
+    /**
+     *  Shapes used for creating new entity collisions
+     */
+    private final Shape[] shapes = {
+            new CircleShape(),
+            new PolygonShape()
+    };
+
+    /**
+     * used for ease of access to our shapes
+     */
+    public enum Shapes {
+        CIRCLE,
+        POLYGONE
+    }
+
+    /**
+     * Fixture definition of our body, sets initial physical properties
+     * of entities
+     */
+    private final FixtureDef fixtureDefinition = new FixtureDef();
+
+    /**
+     *  body definition used to set inital properties our entities' physic body
+     */
+    private final BodyDef bodyDefinition = new BodyDef();
 
 
     public EntityManager(JavaKnight instance) {
@@ -34,7 +64,6 @@ public class EntityManager {
         physicWorld = new World(new Vector2(0, 0), true);
         entityCreator = new EntityCreator(instance);
         mappers = new Mappers();
-        filters = new CollisionFilters(mappers);
         targetGetter = new TargetGetter(this);
         entityLoader = new EntityLoader();
 
@@ -69,6 +98,11 @@ public class EntityManager {
         systems.put(indexEntitySystems.MOVEMENT_INPUT_SYSTEM, new MovementInputSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_SYSTEM, new MovementSystem(instance));
 
+        collisionEvents[CollisionEvents.DISPOSE.ordinal()] = new DisposeCollisionSystem(instance);
+        collisionEvents[CollisionEvents.BOUNCING.ordinal()] = new BouncingCollisionSystem(instance);
+
+        physicWorld.setContactListener(new CollisionListener(this));
+
     }
 
     /**
@@ -80,6 +114,29 @@ public class EntityManager {
         entityLoader.LoadMapEntities(MapID.BOSS_ROOM, instance);
     }
 
+    public Shape GetShape(int i) {
+        return shapes[i];
+    }
+
+    public FixtureDef GetFixtureDef() {
+        return fixtureDefinition;
+    }
+
+    public BodyDef GetBodyDef() {
+        return bodyDefinition;
+    }
+
+    public void ResetDefinitions() {
+        bodyDefinition.type = BodyDef.BodyType.StaticBody;
+        bodyDefinition.position.set(0,0);
+        bodyDefinition.fixedRotation = true;
+        bodyDefinition.linearDamping = 0f;
+
+        fixtureDefinition.shape = null;
+        fixtureDefinition.density = 0f;
+        fixtureDefinition.restitution = 0f;
+        fixtureDefinition.friction = 0f;
+    }
 
     public PooledEngine GetEngine() {
         return pooledECS;
@@ -89,9 +146,6 @@ public class EntityManager {
     }
     public Mappers GetMappers() {
         return mappers;
-    }
-    public CollisionFilters GetCollisionFilters() {
-        return filters;
     }
     public Entity GetPlayer() {
         return player;
@@ -112,8 +166,14 @@ public class EntityManager {
     public ObjectMap<indexEntitySystems, Object> GetSystems() {
         return systems;
     }
+
+    public CollisionEventSystem[] GetCollisionEvents() {
+        return collisionEvents;
+    }
+
     public void Dispose() {
         pooledECS.clearPools();
+        for (Shape shape : shapes) shape.dispose();
     }
 
 }

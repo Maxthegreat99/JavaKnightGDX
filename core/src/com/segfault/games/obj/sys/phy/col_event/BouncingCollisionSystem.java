@@ -1,7 +1,8 @@
 package com.segfault.games.obj.sys.phy.col_event;
 
 import com.badlogic.ashley.core.Entity;
-import com.dongbat.jbump.Collision;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.BounceComponent;
 import com.segfault.games.obj.comp.MovingComponent;
@@ -18,7 +19,7 @@ public class BouncingCollisionSystem implements CollisionEventSystem {
     }
 
     @Override
-    public void HandleCollision(Entity entity, Collision c) {
+    public void HandleCollision(Entity entity, Entity target, Contact collision) {
         BounceComponent BouncingInfo = manager.GetMappers().Bounce.get(entity);
 
         BouncingInfo.bounces++;
@@ -30,12 +31,13 @@ public class BouncingCollisionSystem implements CollisionEventSystem {
 
         MovingComponent MvInf = manager.GetMappers().Moving.get(entity);
 
+        Vector2 normal = collision.getWorldManifold().getNormal();
+
         // reverse direction based on which side was hit
-        if (c.normal.y != 0)
+        if (normal.y != 0)
             MvInf.dy = -MvInf.dy;
 
-        if (c.normal.x != 0)
+        if (normal.x != 0)
             MvInf.dx = -MvInf.dx;
-
     }
 }

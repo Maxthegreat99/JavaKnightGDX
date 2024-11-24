@@ -1,12 +1,12 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
-import com.segfault.games.obj.Rec;
+import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.comp.MovingComponent;
-import com.segfault.games.obj.comp.RecOwnerComponent;
 import com.segfault.games.obj.ent.EntityManager;
 import com.segfault.games.obj.sys.SubSystem;
 
@@ -25,10 +25,21 @@ public class MovementSystem implements SubSystem {
     public void processEntity(Entity entity, float interval) {
         if (entity.isScheduledForRemoval()) return;
 
-        MovingComponent movement = manager.GetMappers().Moving.get(entity);
 
-        if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
+        MovingComponent movement = manager.GetMappers().Moving.get(entity);
         DrawableComponent drawable = manager.GetMappers().Drawable.get(entity);
+
+        CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
+        boolean hasBox2DCol = collisionInfo != null;
+
+        Vector2 pos = null;
+        if (hasBox2DCol) {
+            pos = collisionInfo.physicBody.getPosition();
+            collisionInfo.x = pos.x;
+            collisionInfo.y = pos.y;
+            drawable.sprite.setPosition(pos.x * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, pos.y * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
+        }
+        if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
 
         float x = drawable.sprite.getX();
         float y = drawable.sprite.getY();
@@ -43,37 +54,21 @@ public class MovementSystem implements SubSystem {
         float targetY = y + dy;
 
 
-        CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
-        boolean hasJBumpCol = collisionInfo != null;
 
 
-        if (!hasJBumpCol)
+        if (!hasBox2DCol)
             drawable.sprite.setPosition(targetX, targetY);
 
-        // if JBump collision exists we let JBump handle the movement
+        // if box2d collision exists we let it handle the movement
         else {
 
-            collisionInfo.res = manager.GetPhysicWorld().move(collisionInfo.physicItem, targetX, targetY, collisionInfo.filter);
+            collisionInfo.physicBody.applyLinearImpulse(dx, dy, collisionInfo.physicBody.getWorldCenter().x, collisionInfo.physicBody.getWorldCenter().y, true);
+            Vector2 vel = collisionInfo.physicBody.getLinearVelocity();
 
-
-            drawable.sprite.setPosition(collisionInfo.res.goalX, collisionInfo.res.goalY);
-
-            collisionInfo.x = collisionInfo.res.goalX;
-            collisionInfo.y = collisionInfo.res.goalY;
-
-            dx = collisionInfo.res.goalX - x;
-            dy = collisionInfo.res.goalY - y;
-
+            if (vel.len2() > movement.maxVel * movement.maxVel)
+                collisionInfo.physicBody.setLinearVelocity(vel.nor().scl(movement.maxVel));
         }
 
-        RecOwnerComponent recInfo = manager.GetMappers().RecOwner.get(entity);
-
-        // some entities have both systems so we do not directly return
-        // after we handled JBump collision movement
-        if (recInfo == null) return;
-
-        Rec r = recInfo.rectangle;
-        r.Move(dx, dy);
 
     }
 }

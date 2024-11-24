@@ -10,6 +10,8 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.ent.indexEntitySystems;
 import com.segfault.games.obj.sys.SubSystem;
 
+import java.util.Comparator;
+
 /**
  * Defines the physic systems an entity is tied to
  * for the physic system to execute
@@ -19,12 +21,12 @@ public class PhysicComponent extends Component {
     /**
      * Subsystems the engine needs to execute for the entity
      */
-    public Array<SubSystem> physicSystems = new Array<>();
+    public final Array<SubSystem> physicSystems = new Array<>();
 
     /**
      * String array copy referencing the systems used
      */
-    public Array<String> stringCopySystems = new Array<>();
+    public final Array<String> stringCopySystems = new Array<>();
 
     @Override
     public void reset() {
@@ -34,11 +36,10 @@ public class PhysicComponent extends Component {
 
     @Override
     public void dispose(JavaKnight instance) {
-        return;
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         PhysicComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.physicSystems.addAll(physicSystems);
         comp.stringCopySystems.addAll(stringCopySystems);
@@ -62,7 +63,7 @@ public class PhysicComponent extends Component {
             stringCopySystems.add(name);
         }
 
-        stringCopySystems.sort((o1, o2) -> Integer.compare(indexEntitySystems.valueOf(o1).ordinal(), indexEntitySystems.valueOf(o1).ordinal()));
+        stringCopySystems.sort(Comparator.comparingInt(o -> indexEntitySystems.valueOf(o).ordinal()));
 
         for (String s : stringCopySystems) physicSystems.add((SubSystem) instance.GetEntityManager().GetSystems().get(indexEntitySystems.valueOf(s)));
 

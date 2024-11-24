@@ -70,7 +70,7 @@ public class PointingComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         PointingComponent comp = instance.GetEntityManager().GetEngine().createComponent(PointingComponent.class);
         comp.cursor = cursor;
         if (targetMethod != null)

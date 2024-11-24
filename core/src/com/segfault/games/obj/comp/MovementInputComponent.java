@@ -30,7 +30,7 @@ public class MovementInputComponent extends Component {
     }
 
     @Override
-    public Component Clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
+    public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         MovementInputComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.speed2 = speed2;
         return comp;

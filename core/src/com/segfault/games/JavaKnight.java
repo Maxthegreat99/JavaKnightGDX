@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.gra.Renderer;
-import com.segfault.games.obj.Rec;
 import com.segfault.games.obj.Text;
 import com.segfault.games.obj.ent.EntityManager;
 import com.segfault.games.obj.wld.MapLoader;
@@ -19,7 +18,6 @@ public class JavaKnight extends ApplicationAdapter {
 	private EntityManager entityManager;
 	private AssetManager assetManager;
 	private MapLoader mapLoader;
-	private final Array<Rec> rectangles = new Array<>(); // rectangle array used for debugging
 	private final Array<Text> texts = new Array<>(); // texts array rendered by the renderer's bitmap font
 	private final ObjectMap<BitmapFontCache, Float> staticFonts = new ObjectMap<>(); // static texts on screen to save performance
 
@@ -66,10 +64,6 @@ public class JavaKnight extends ApplicationAdapter {
 
 	}
 
-	public Array<Rec> GetRectangles() {
-		return rectangles;
-	}
-
 	public Array<Text> GetTexts() {
 		return texts;
 	}
@@ -104,7 +98,6 @@ public class JavaKnight extends ApplicationAdapter {
 			i.key.clear();
 
 		staticFonts.clear();
-		rectangles.clear();
 
 	}
 }
