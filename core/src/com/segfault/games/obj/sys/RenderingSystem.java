@@ -30,9 +30,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         DrawableComponent drawableComp = manager.GetMappers().Drawable.get(entity);
 
-        if (!drawableComp.blending) batch.disableBlending();
         drawableComp.sprite.draw(batch);
-        if (!drawableComp.blending) batch.enableBlending();
     }
 
 

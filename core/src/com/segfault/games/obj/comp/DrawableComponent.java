@@ -29,12 +29,6 @@ public class DrawableComponent extends Component {
      */
     public float alpha = 0.0f;
     /**
-     * whether blending should be enabled or disabled when rendering
-     * this object, if your object does not need alpha and has no
-     * transparent pixels you should set this to false
-     */
-    public boolean blending = true;
-    /**
      * the order in which the object should be rendered, the bigger the value
      * the more likely the object wil be the last to be rendered
      */
@@ -43,7 +37,6 @@ public class DrawableComponent extends Component {
     public void reset() {
         spriteID = null;
         alpha = 0.0f;
-        blending = true;
         order = 0;
     }
 
@@ -61,7 +54,6 @@ public class DrawableComponent extends Component {
         comp.order = order;
         comp.alpha = alpha;
         comp.spriteID = spriteID;
-        comp.blending = blending;
         return comp;
     }
 
@@ -69,7 +61,6 @@ public class DrawableComponent extends Component {
     public void write(Json json) {
 
         json.writeField(alpha, "alpha");
-        json.writeField(blending, "blending");
         json.writeField(order, "order");
         json.writeField(spriteID.toString(), "sprite");
     }
@@ -77,7 +68,6 @@ public class DrawableComponent extends Component {
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
         alpha = jsonValue.getFloat("alpha");
-        blending = jsonValue.getBoolean("blending");
         order = jsonValue.getInt("order");
         spriteID = indexT.valueOf(jsonValue.getString("sprite"));
         sprite = new Sprite(instance.GetAssetManager().GetTextures().get(spriteID));

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.Text;
 import com.segfault.games.util.AssetManager;
@@ -21,18 +22,20 @@ public class Renderer {
     public final int GREEN_BG = 0;
     public final int GRAY_BG = 1;
     public final int RED_BG = 2;
-    public float screenTranslationX = 0;
-    public float screenTranslationY = 0;
+    public float ScreenTranslationX = 0;
+    public float ScreenTranslationY = 0;
 
     private Animation<TextureRegion> background;
     private final SpriteBatch batch;
-    private final OrthographicCamera camera;
+    private final OrthographicCamera worldCamera;
+    private final OrthographicCamera screenCamera;
+    private final OrthographicCamera physicsCamera;
     private final FrameBuffer screenBuffer;
 
     private final ShaderProgram fontShader;
     private final BitmapFont font;
     private final Box2DDebugRenderer debugRenderer;
-    public float cameraZoom;
+    public float CameraZoom;
     private final Vector3 cameraPos = new Vector3();
     private final TextureRegion[][] backgrounds = new TextureRegion[3][];
 
@@ -42,6 +45,8 @@ public class Renderer {
     private final int FRAME_WIDTH;
     private final int FRAME_HEIGHT;
 
+    public boolean UpdateCamera = false;
+
     public static final float PIXEL_TO_METERS = 60f;
 
     public Renderer(AssetManager assetManager, int screenWidth, int screenHeight, int frameWidth, int frameHeight, float zoom) {
@@ -50,10 +55,13 @@ public class Renderer {
         FRAME_HEIGHT = frameHeight;
         FRAME_WIDTH = frameWidth;
 
-        cameraZoom = zoom;
+        CameraZoom = zoom;
 
         batch = new SpriteBatch();
-        camera = new OrthographicCamera(screenWidth, screenHeight);
+        screenCamera = new OrthographicCamera(screenWidth, screenHeight);
+        worldCamera = new OrthographicCamera(frameWidth, frameHeight);
+        physicsCamera = new OrthographicCamera(FRAME_WIDTH / PIXEL_TO_METERS, FRAME_HEIGHT / PIXEL_TO_METERS);
+
         screenBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameWidth, frameHeight, false);
 
         font = new BitmapFont(Gdx.files.internal("DisposableDroidBB.fnt"), new TextureRegion(assetManager.GetFontTexture()), false);
@@ -64,11 +72,30 @@ public class Renderer {
 
 
         cameraPos.set((float) SCREEN_WIDTH / 2f,
-                (float) SCREEN_HEIGHT / 2f , 0 );
-        camera.position.set(cameraPos);
-        camera.update();
+                (float) SCREEN_HEIGHT / 2f, 0);
+        screenCamera.position.set(cameraPos);
+
+        worldCamera.zoom = 1f;
+        worldCamera.setToOrtho(false, frameWidth, frameHeight);
+
+        physicsCamera.setToOrtho(false, FRAME_WIDTH / PIXEL_TO_METERS, FRAME_HEIGHT / PIXEL_TO_METERS);
+        physicsCamera.position.set((FRAME_WIDTH / PIXEL_TO_METERS) / 2f ,
+                (FRAME_HEIGHT / PIXEL_TO_METERS) / 2f, 0 );
+        physicsCamera.update();
+
+        screenCamera.update();
+        worldCamera.update();
+        physicsCamera.update();
+
 
         loadBackgrounds(assetManager);
+
+
+        Texture sboTexture = screenBuffer.getColorBufferTexture();
+        sboTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
+        fboTextureRegion = new TextureRegion(sboTexture);
+        fboTextureRegion.flip(false, true);
+
     }
 
     /**
@@ -76,23 +103,18 @@ public class Renderer {
      * @param timeElapsed, begins the buffers, sets up camera and draws the background
      */
     public void SetUpFrame(float timeElapsed) {
-        // Set the viewport to the framebuffer size
-        camera.zoom = 1f;
-        camera.setToOrtho(false, FRAME_WIDTH, FRAME_HEIGHT);
 
         screenBuffer.begin();
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
 
         // clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.disableBlending();
         batch.draw(background.getKeyFrame(timeElapsed, true), 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-        batch.enableBlending();
 
     }
-    private TextureRegion fboTextureRegion;
+    private final TextureRegion fboTextureRegion;
 
     /**
      * deals with the rendering of text, debug boxes and renders the main texture from the framebuffer
@@ -101,57 +123,48 @@ public class Renderer {
      */
     public void Render(JavaKnight instance, World physicWorld) {
 
+
         if (!instance.GetTexts().isEmpty() || !instance.GetStaticFonts().isEmpty()) {
             // Draw text objects
             batch.setShader(fontShader);
-            for (Text t : instance.GetTexts()) {
-                font.getData().setScale(t.Scale);
+            for (Text t : instance.GetTexts().iterator()) {
+                if (Float.compare(font.getData().scaleX, t.Scale) != 0)
+                    font.getData().setScale(t.Scale);
                 font.draw(batch, t.Str, t.X, t.Y);
             }
 
-            for (BitmapFontCache k : instance.GetStaticFonts().keys()) {
-                float scale = instance.GetStaticFonts().get(k);
-                k.getFont().getData().setScale(scale);
+            for (BitmapFontCache k : instance.GetStaticFonts().iterator())
                 k.draw(batch);
-            }
+
             batch.setShader(null);
         }
 
-        renderShapes(camera, debugRenderer, physicWorld);
+
+        renderShapes(physicsCamera, debugRenderer, physicWorld);
 
         batch.end();
         screenBuffer.end();
 
-        camera.zoom = cameraZoom;
-
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-        cameraPos.set((float) SCREEN_WIDTH / 2f + screenTranslationX,
-                (float) SCREEN_HEIGHT / 2f + screenTranslationY, 0 );
-        camera.position.set(cameraPos);
-        camera.update();
-
-        batch.setProjectionMatrix(camera.combined);
-
-        if (fboTextureRegion == null) {
-            Texture sboTexture = screenBuffer.getColorBufferTexture();
-            sboTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
-            fboTextureRegion = new TextureRegion(sboTexture);
-            fboTextureRegion.flip(false, true);
+        if (Float.compare(CameraZoom, screenCamera.zoom) != 0 || UpdateCamera) {
+            screenCamera.zoom = CameraZoom;
+            screenCamera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+            cameraPos.set((float) SCREEN_WIDTH / 2f + ScreenTranslationX,
+                    (float) SCREEN_HEIGHT / 2f + ScreenTranslationY, 0);
+            screenCamera.position.set(cameraPos);
+            screenCamera.update();
+            UpdateCamera = false;
         }
+
+        batch.setProjectionMatrix(screenCamera.combined);
 
         batch.begin();
         batch.draw(fboTextureRegion.getTexture(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 1, 1);
         batch.end();
+
     }
 
 
     private void renderShapes(OrthographicCamera camera, Box2DDebugRenderer debugRenderer, World physicWorld) {
-        camera.setToOrtho(false, FRAME_WIDTH / PIXEL_TO_METERS, FRAME_HEIGHT / PIXEL_TO_METERS);
-        cameraPos.set((FRAME_WIDTH / PIXEL_TO_METERS) / 2f ,
-                      (FRAME_HEIGHT / PIXEL_TO_METERS) / 2f, 0 );
-        camera.position.set(cameraPos);
-        camera.update();
-
         debugRenderer.render(physicWorld, camera.combined);
     }
     private final Color col = new Color(255f, 0,0,0.5f);
@@ -184,7 +197,7 @@ public class Renderer {
         return batch;
     }
     public OrthographicCamera GetCamera() {
-        return camera;
+        return worldCamera;
     }
     public void Dispose() {
         batch.dispose();

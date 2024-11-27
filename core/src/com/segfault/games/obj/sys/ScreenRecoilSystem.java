@@ -30,17 +30,18 @@ public class ScreenRecoilSystem extends IteratingSystem {
             float delta = screenRecoil.distanceAcceleration / screenRecoil.divisor * deltaTime;
             screenRecoil.dis += delta;
 
-            instance.GetRenderer().screenTranslationX += delta * MathUtils.cosDeg(screenRecoil.angle);
-            instance.GetRenderer().screenTranslationY += delta * MathUtils.sinDeg(screenRecoil.angle);
-
+            instance.GetRenderer().ScreenTranslationX += delta * MathUtils.cosDeg(screenRecoil.angle);
+            instance.GetRenderer().ScreenTranslationY += delta * MathUtils.sinDeg(screenRecoil.angle);
+            instance.GetRenderer().UpdateCamera = true;
         }
         else if(screenRecoil.trigger) {
             screenRecoil.distanceSpeed += screenRecoil.distanceAcceleration;
             float delta = screenRecoil.distanceSpeed * deltaTime;
             screenRecoil.dis += delta;
 
-            instance.GetRenderer().screenTranslationX += delta * MathUtils.cosDeg(screenRecoil.angle);
-            instance.GetRenderer().screenTranslationY += delta * MathUtils.sinDeg(screenRecoil.angle);
+            instance.GetRenderer().ScreenTranslationX += delta * MathUtils.cosDeg(screenRecoil.angle);
+            instance.GetRenderer().ScreenTranslationY += delta * MathUtils.sinDeg(screenRecoil.angle);
+            instance.GetRenderer().UpdateCamera = true;
 
             if (screenRecoil.dis > screenRecoil.maxDis) {
                 screenRecoil.trigger = false;
@@ -57,16 +58,20 @@ public class ScreenRecoilSystem extends IteratingSystem {
             float cos = MathUtils.cosDeg(screenRecoil.angle);
             float sin = MathUtils.sinDeg(screenRecoil.angle);
 
-            instance.GetRenderer().screenTranslationX -= delta * cos;
-            instance.GetRenderer().screenTranslationY -= delta * sin;
+            instance.GetRenderer().ScreenTranslationX -= delta * cos;
+            instance.GetRenderer().ScreenTranslationY -= delta * sin;
+
 
             if (screenRecoil.dis <= 0) {
                 screenRecoil.distanceSpeed = screenRecoil.initialDistanceSpeed;
-                instance.GetRenderer().screenTranslationX += -screenRecoil.dis * cos;
-                instance.GetRenderer().screenTranslationY += -screenRecoil.dis * sin;
+                instance.GetRenderer().ScreenTranslationX += -screenRecoil.dis * cos;
+                instance.GetRenderer().ScreenTranslationY += -screenRecoil.dis * sin;
 
                 screenRecoil.dis = 0;
             }
+
+            instance.GetRenderer().UpdateCamera = true;
+
         }
 
     }

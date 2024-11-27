@@ -45,8 +45,7 @@ public class TrailingSystem extends IteratingSystem {
         Entity e = manager.GetEngine().createEntity();
         DrawableComponent eDraw = manager.GetEngine().createComponent(DrawableComponent.class);
         eDraw.order = 1;
-        eDraw.blending = true;
-        eDraw.sprite = new Sprite(drawable.sprite);
+        eDraw.sprite.set(drawable.sprite);
         eDraw.alpha = trailing.trailIninitalAlpha;
         eDraw.sprite.setAlpha(trailing.trailIninitalAlpha);
         eDraw.sprite.setPosition(drawable.sprite.getX(), drawable.sprite.getY());

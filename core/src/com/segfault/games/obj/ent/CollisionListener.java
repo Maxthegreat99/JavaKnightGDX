@@ -29,7 +29,7 @@ public class CollisionListener implements ContactListener {
         CollisionEventSystem[] events = manager.GetCollisionEvents();
 
         if (colEventA != null && colEventA.collisionEvents.containsKey(collidesComponentB.relationship)) {
-            long flags = colEventA.collisionEvents.get(collidesComponentB.relationship);
+            Long flags = colEventA.collisionEvents.get(collidesComponentB.relationship);
             while (flags != 0) {
                 long flag = flags & -flags; // Isolate the lowest set bit (get the first flag)
                 int index = Long.numberOfTrailingZeros(flag); // Get the index of the flag (0001 is 0, 0010 is 1 etc...)
@@ -43,7 +43,7 @@ public class CollisionListener implements ContactListener {
         }
 
         if (colEventB != null && colEventB.collisionEvents.containsKey(collidesComponentA.relationship)) {
-            long flags = colEventB.collisionEvents.get(collidesComponentA.relationship);
+            Long flags = colEventB.collisionEvents.get(collidesComponentA.relationship);
             while (flags != 0) {
                 long flag = flags & -flags; // Isolate the lowest set bit (get the first flag)
                 int index = Long.numberOfTrailingZeros(flag); // Get the index of the flag (0001 is 0, 0010 is 1 etc...)
@@ -55,6 +55,8 @@ public class CollisionListener implements ContactListener {
                 flags &= ~flag;
             }
         }
+
+
 
     }
 

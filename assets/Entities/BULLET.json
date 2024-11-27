@@ -22,7 +22,6 @@
     "drawable": {
       "order": 2,
       "sprite": "BULLET",
-      "blending": true,
       "alpha": 0.7
     },
     "moving": {

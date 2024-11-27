@@ -3,7 +3,6 @@
     "drawable": {
       "order": 3,
       "sprite": "GUN",
-      "blending": true,
       "alpha": 1.0
     },
     "pointing": {

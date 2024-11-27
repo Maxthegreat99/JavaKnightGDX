@@ -20,7 +20,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "JavaKnightGDX"
-        gdxVersion = '1.12.1'
+        gdxVersion = '1.13.0'
         roboVMVersion = '2.3.21'
         box2DLightsVersion = '1.5'
         ashleyVersion = '1.7.4'
@@ -48,7 +48,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.ashley:ashley:1.7.3"
+        implementation "com.badlogicgames.ashley:ashley:1.7.4"
         implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
 
@@ -61,7 +61,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.ashley:ashley:1.7.3"
+        implementation "com.badlogicgames.ashley:ashley:1.7.4"
 
     }
 }

@@ -32,7 +32,7 @@ public class MovementSystem implements SubSystem {
         CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
         boolean hasBox2DCol = collisionInfo != null;
 
-        Vector2 pos = null;
+        Vector2 pos;
         if (hasBox2DCol) {
             pos = collisionInfo.physicBody.getPosition();
             collisionInfo.x = pos.x;
@@ -61,8 +61,8 @@ public class MovementSystem implements SubSystem {
 
         // if box2d collision exists we let it handle the movement
         else {
-
-            collisionInfo.physicBody.applyLinearImpulse(dx, dy, collisionInfo.physicBody.getWorldCenter().x, collisionInfo.physicBody.getWorldCenter().y, true);
+            Vector2 vec = collisionInfo.physicBody.getWorldCenter();
+            collisionInfo.physicBody.applyLinearImpulse(dx, dy, vec.x, vec.y, true);
             Vector2 vel = collisionInfo.physicBody.getLinearVelocity();
 
             if (vel.len2() > movement.maxVel * movement.maxVel)

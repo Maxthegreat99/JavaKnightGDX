@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.Text;
 import com.segfault.games.obj.ent.EntityManager;
@@ -19,7 +18,7 @@ public class JavaKnight extends ApplicationAdapter {
 	private AssetManager assetManager;
 	private MapLoader mapLoader;
 	private final Array<Text> texts = new Array<>(); // texts array rendered by the renderer's bitmap font
-	private final ObjectMap<BitmapFontCache, Float> staticFonts = new ObjectMap<>(); // static texts on screen to save performance
+	private final Array<BitmapFontCache> staticFonts = new Array<>(); // static texts on screen to save performance
 
 	private long ticks = 0;
 	private float timeElapsed = 0.0f;
@@ -46,15 +45,21 @@ public class JavaKnight extends ApplicationAdapter {
 		entityManager.LoadEntities(this);
 		FPS.X = 30;
 		FPS.Y = FRAME_HEIGHT - 50;
+		FPS.Str = "";
 		texts.add(FPS);
 
 		renderer.SetBackground(renderer.GRAY_BG, 0.045f);
 	}
 
+	private final StringBuffer sb = new StringBuffer();
 	@Override
 	public void render () {
-		if (ticks % 8 == 0)
-			FPS.Str = String.valueOf(Math.round(1f / Gdx.graphics.getDeltaTime()));
+		if (ticks % 16 == 0) {
+			sb.setLength(0);
+			sb.append(Math.round(1f / Gdx.graphics.getDeltaTime()));
+
+			FPS.Str = sb.toString();
+		}
 		ticks++;
 		timeElapsed += Gdx.graphics.getDeltaTime();
 
@@ -68,7 +73,7 @@ public class JavaKnight extends ApplicationAdapter {
 		return texts;
 	}
 
-	public ObjectMap<BitmapFontCache, Float> GetStaticFonts() {
+	public Array<BitmapFontCache> GetStaticFonts() {
 		return staticFonts;
 	}
 
@@ -94,8 +99,8 @@ public class JavaKnight extends ApplicationAdapter {
 		entityManager.Dispose();
 
 		texts.clear();
-		for (ObjectMap.Entry<BitmapFontCache, Float> i : staticFonts)
-			i.key.clear();
+		for (BitmapFontCache i : staticFonts)
+			i.clear();
 
 		staticFonts.clear();
 

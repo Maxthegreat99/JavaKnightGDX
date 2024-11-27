@@ -117,7 +117,6 @@
     &quot;drawable&quot;: {
       &quot;order&quot;: 3,
       &quot;sprite&quot;: &quot;ACID_BEAM_BALL&quot;,
-      &quot;blending&quot;: true,
       &quot;alpha&quot;: 1.0
     },
     &quot;bounce&quot; : {
