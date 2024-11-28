@@ -185,7 +185,7 @@ public class CollidesComponent extends Component {
 
         fixDef.shape = instance.GetEntityManager().GetShape(shape.ordinal());
 
-        if (shape == EntityManager.Shapes.CIRCLE)
+        if (shape.equals(EntityManager.Shapes.CIRCLE))
             fixDef.shape.setRadius(comp.width / 2);
         else
             ((PolygonShape)fixDef.shape).setAsBox(comp.width / 2, comp.height / 2);

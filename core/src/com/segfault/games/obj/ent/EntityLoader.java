@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +19,7 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.comp.*;
 import com.segfault.games.obj.wld.MapID;
+import com.sun.org.apache.xpath.internal.operations.Equals;
 
 /**
  * Handles loading entities from the JSON
@@ -60,25 +63,39 @@ public class EntityLoader {
         int count = map.getLayers().get("Objects").getObjects().getCount();
         for (int i = 0; i < count; i++) {
             MapObject o = map.getLayers().get("Objects").getObjects().get(i);
-            RectangleMapObject po;
 
-            if (!(o instanceof RectangleMapObject)) continue;
-            else po = (RectangleMapObject) o;
+            float x;
+            float y;
+            float w;
+            float h;
+            if (o instanceof RectangleMapObject){
+                x = ((RectangleMapObject)o).getRectangle().x;
+                y = ((RectangleMapObject)o).getRectangle().y;
+                w = ((RectangleMapObject)o).getRectangle().width;
+                h = ((RectangleMapObject)o).getRectangle().height;
 
-            Vector2 vec = instance.GetMapLoader().tiledPosToGDX(po.getRectangle().x, po.getRectangle().y, po.getRectangle().width, po.getRectangle().height, po.getName());
 
+            }
+            else if (o instanceof EllipseMapObject){
+                x = ((EllipseMapObject) o).getEllipse().x;
+                y = ((EllipseMapObject) o).getEllipse().y;
+                w = ((EllipseMapObject) o).getEllipse().width;
+                h = ((EllipseMapObject) o).getEllipse().height;
+
+            }
+            else continue;
             /*
              * manually create a collision entity, if the entity has more components stored in the properties add them
              */
-            if (po.getName().startsWith("Col")) {
+            if (o.getName().startsWith("Col")) {
                 Entity e = instance.GetEntityManager().GetEngine().createEntity();
                 CollidesComponent col = instance.GetEntityManager().GetEngine().createComponent(CollidesComponent.class);
-                JsonValue jValue = reader.parse(po.getProperties().get("properties", String.class));
+                JsonValue jValue = reader.parse(o.getProperties().get("properties", String.class));
 
                 JsonValue collides = jValue.get("collides");
                 col.relationship = CollisionRelationship.valueOf(collides.getString("relationship"));
 
-                String shape = "POLYGONE";
+                String shape = collides.getString("shape", "POLYGONE");
                 col.shape = EntityManager.Shapes.valueOf(shape);
 
                 col.restitution = collides.getFloat("restitution");
@@ -90,10 +107,10 @@ public class EntityLoader {
                 col.linearDamping = collides.getFloat("linearDamping", 5f);
                 col.rotationFixed = collides.getBoolean("rotationFixed", true);
 
-                col.x = vec.x / Renderer.PIXEL_TO_METERS + (po.getRectangle().width / Renderer.PIXEL_TO_METERS) / 2;
-                col.y = vec.y / Renderer.PIXEL_TO_METERS + (po.getRectangle().height / Renderer.PIXEL_TO_METERS) / 2;
-                col.width = po.getRectangle().width / Renderer.PIXEL_TO_METERS;
-                col.height = po.getRectangle().height / Renderer.PIXEL_TO_METERS;
+                col.x = x / Renderer.PIXEL_TO_METERS + (w / Renderer.PIXEL_TO_METERS) / 2;
+                col.y = y / Renderer.PIXEL_TO_METERS + (h / Renderer.PIXEL_TO_METERS) / 2;
+                col.width = w / Renderer.PIXEL_TO_METERS;
+                col.height = h / Renderer.PIXEL_TO_METERS;
 
                 BodyDef bdyDef = instance.GetEntityManager().GetBodyDef();
                 FixtureDef fixDef = instance.GetEntityManager().GetFixtureDef();
@@ -109,8 +126,8 @@ public class EntityLoader {
 
                 fixDef.shape = instance.GetEntityManager().GetShape(col.shape.ordinal());
 
-
-                ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
+                if (col.shape.equals(EntityManager.Shapes.CIRCLE)) fixDef.shape.setRadius(col.width / 2);
+                else ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
 
                 col.physicBody = instance.GetEntityManager().GetPhysicWorld().createBody(bdyDef);
                 col.fixture = col.physicBody.createFixture(fixDef);
@@ -142,15 +159,15 @@ public class EntityLoader {
                 continue;
             }
 
-            pol.set(vec.x, vec.y, po.getRectangle().width, po.getRectangle().height);
+            pol.set(x, y, w, h);
 
             JsonValue value = null;
-            if (po.getProperties().containsKey("properties")) value = reader.parse(po.getProperties().get("properties", String.class));
+            if (o.getProperties().containsKey("properties")) value = reader.parse(o.getProperties().get("properties", String.class));
 
 
-            Entity e = instance.GetEntityManager().GetEntityCreator().SpawnEntity(EntityID.valueOf(po.getName()), true, pol, value);
+            Entity e = instance.GetEntityManager().GetEntityCreator().SpawnEntity(EntityID.valueOf(o.getName()), true, pol, value);
 
-            if (po.getName().startsWith("PLAYER")) instance.GetEntityManager().SetPlayer(e);
+            if (o.getName().startsWith("PLAYER")) instance.GetEntityManager().SetPlayer(e);
 
 
 

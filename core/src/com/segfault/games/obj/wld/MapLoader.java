@@ -18,21 +18,6 @@ public class MapLoader {
         maps.put(MapID.BOSS_ROOM, mapLoader.load("bossRoom.tmx"));
     }
 
-    private final Vector2 vec = new Vector2();
 
-    /**
-     * libgdx uses y up while tiled uses y down, some objects also need to be initialized
-     * taking into about that their position is in the middle. the origin of objects in
-     */
-    public Vector2 tiledPosToGDX(float x, float y, float width, float height, String name) {
-        vec.set(x, y);
 
-        if (name.startsWith("Rec")) {
-            vec.y = vec.y + height / 2;
-            vec.x = vec.x + width / 2;
-        }
-
-        return vec;
-
-    }
 }

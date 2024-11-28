@@ -54,6 +54,8 @@ public class JavaKnight extends ApplicationAdapter {
 	private final StringBuffer sb = new StringBuffer();
 	@Override
 	public void render () {
+
+
 		if (ticks % 16 == 0) {
 			sb.setLength(0);
 			sb.append(Math.round(1f / Gdx.graphics.getDeltaTime()));
@@ -66,6 +68,7 @@ public class JavaKnight extends ApplicationAdapter {
 		renderer.SetUpFrame(timeElapsed);
 		entityManager.GetEngine().update(Gdx.graphics.getDeltaTime());
 		renderer.Render(this, entityManager.GetPhysicWorld());
+
 
 	}
 
