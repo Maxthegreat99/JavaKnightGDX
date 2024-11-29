@@ -113,7 +113,7 @@
     &quot;moving&quot; : {
         &quot;dx&quot; : 40.50,
         &quot;dy&quot; : 60.70,
-        &quot;maxVel&quot;: 100.0
+        &quot;maxVel&quot;: 20.0
     },
     &quot;drawable&quot;: {
       &quot;order&quot;: 3,
@@ -121,7 +121,7 @@
       &quot;alpha&quot;: 1.0
     },
     &quot;bounce&quot; : {
-        &quot;maxBounces&quot; : 100,
+        &quot;maxBounces&quot; : 5000,
         &quot;relationship&quot; : &quot;NULL&quot;,
         &quot;bounces&quot; : 0
     }

@@ -79,7 +79,7 @@ public class EntityManager {
         pooledECS.addEntityListener(new EntityListener(instance));
 
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
-        systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.02f, 20));
+        systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
         systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 30));
         systems.put(indexEntitySystems.ALPHA_DECREASE_SYSTEM, new AlphaDecreaseSystem(instance, 40));
         systems.put(indexEntitySystems.TRAILING_SYSTEM, new TrailingSystem(instance, 50));

@@ -23,6 +23,8 @@ public class MovementSystem implements SubSystem {
 
     }
 
+    private final Vector2 vec = new Vector2();
+
     public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
@@ -40,12 +42,13 @@ public class MovementSystem implements SubSystem {
 
             float interpolation = accumulator / interval;
 
-            float interpolatedX = collisionInfo.x + (pos.x - collisionInfo.x) * interpolation;
-            float interpolatedY = collisionInfo.y + (pos.y - collisionInfo.y) * interpolation;
+            vec.set(collisionInfo.x, collisionInfo.y);
+            vec.lerp(pos, interpolation);
+
 
             collisionInfo.x = pos.x;
             collisionInfo.y = pos.y;
-            drawable.sprite.setPosition(interpolatedX * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, interpolatedY * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
+            drawable.sprite.setPosition(vec.x * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, vec.y * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
         }
         if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
 
