@@ -56,6 +56,7 @@ public class EntityLoader {
     }
 
     private final Vector4 pol = new Vector4();
+    private final String[] defaultFilter = new String[]{"PLAYER", "OUT_OF_BOUNDS", "OBSTACLE", "BULLET"};
     public void LoadMapEntities(MapID id, JavaKnight instance) {
         TiledMap map = instance.GetMapLoader().maps.get(id);
         JsonReader reader = instance.GetEntityManager().GetEntityLoader().reader;
@@ -107,6 +108,15 @@ public class EntityLoader {
                 col.linearDamping = collides.getFloat("linearDamping", 5f);
                 col.rotationFixed = collides.getBoolean("rotationFixed", true);
 
+                String[] filter;
+                if (collides.get("filter") == null) filter = defaultFilter;
+                else filter = collides.get("filter").asStringArray();
+
+                for (String s : filter)
+                    col.collisionFilter |= (short) CollisionRelationship.valueOf(s).flag;
+
+                col.collisionFilterStrings.addAll(filter);
+
                 col.x = x / Renderer.PIXEL_TO_METERS + (w / Renderer.PIXEL_TO_METERS) / 2;
                 col.y = y / Renderer.PIXEL_TO_METERS + (h / Renderer.PIXEL_TO_METERS) / 2;
                 col.width = w / Renderer.PIXEL_TO_METERS;
@@ -128,6 +138,9 @@ public class EntityLoader {
 
                 if (col.shape.equals(EntityManager.Shapes.CIRCLE)) fixDef.shape.setRadius(col.width / 2);
                 else ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
+
+                fixDef.filter.maskBits = col.collisionFilter;
+                fixDef.filter.categoryBits = (short) col.relationship.flag;
 
                 col.physicBody = instance.GetEntityManager().GetPhysicWorld().createBody(bdyDef);
                 col.fixture = col.physicBody.createFixture(fixDef);

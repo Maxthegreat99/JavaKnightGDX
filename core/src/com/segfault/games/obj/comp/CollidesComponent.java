@@ -3,6 +3,7 @@ package com.segfault.games.obj.comp;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -130,6 +131,16 @@ public class CollidesComponent extends Component {
      */
     public float linearDamping = 0f;
 
+    /**
+     * defines which collisions the fixture is allowed to collide with
+     */
+    public short collisionFilter = 0;
+
+    /**
+     * string array copy of the collisionFilters for easier writing to json
+     */
+    public Array<String> collisionFilterStrings = new Array<>();
+
     @Override
     public void reset() {
 
@@ -142,6 +153,8 @@ public class CollidesComponent extends Component {
         entity = null;
         linearDamping = 0f;
         rotationFixed = true;
+        collisionFilter = 0;
+        collisionFilterStrings.clear();
 
         relationship = null;
         width = 0f;
@@ -170,6 +183,10 @@ public class CollidesComponent extends Component {
         comp.friction = friction;
         comp.density = density;
         comp.bodyType = bodyType;
+        comp.rotationFixed = rotationFixed;
+        comp.linearDamping = linearDamping;
+        comp.collisionFilter = collisionFilter;
+        comp.collisionFilterStrings.addAll(collisionFilterStrings);
 
         BodyDef bdyDef = instance.GetEntityManager().GetBodyDef();
         FixtureDef fixDef = instance.GetEntityManager().GetFixtureDef();
@@ -189,6 +206,9 @@ public class CollidesComponent extends Component {
             fixDef.shape.setRadius(comp.width / 2);
         else
             ((PolygonShape)fixDef.shape).setAsBox(comp.width / 2, comp.height / 2);
+
+        fixDef.filter.categoryBits = (short) relationship.flag;
+        fixDef.filter.maskBits = collisionFilter;
 
         comp.physicBody = instance.GetEntityManager().GetPhysicWorld().createBody(bdyDef);
         comp.fixture = comp.physicBody.createFixture(fixDef);
@@ -217,6 +237,15 @@ public class CollidesComponent extends Component {
         json.writeField(friction, "friction");
 
         json.writeField(bodyType.toString(), "bodyType");
+        json.writeField(rotationFixed, "rotationFixed");
+        json.writeField(linearDamping, "linearDamping");
+
+        json.writeArrayStart("filter");
+
+        for (String s : collisionFilterStrings) json.writeValue(s);
+
+        json.writeArrayEnd();
+
     }
 
     @Override
@@ -238,6 +267,13 @@ public class CollidesComponent extends Component {
         hasCollisionEvent = jsonValue.getBoolean("hasCollisionEvent");
         rotationFixed = jsonValue.getBoolean("rotationFixed", true);
         linearDamping = jsonValue.getFloat("linearDamping", 5f);
+
+        String[] filters = jsonValue.get("filter").asStringArray();
+
+        for (String f : filters) {
+            collisionFilter |= (short) CollisionRelationship.valueOf(f).flag;
+            collisionFilterStrings.add(f);
+        }
     }
 
 

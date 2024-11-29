@@ -7,9 +7,15 @@ package com.segfault.games.obj.comp;
  * if a specific one, == will compare by reference.
  */
 public enum CollisionRelationship {
-    PLAYER,
-    OBSTACLE,
-    OUT_OF_BOUNDS,
-    NULL,
-    BULLET
+    PLAYER(0),
+    OBSTACLE(1),
+    OUT_OF_BOUNDS(2),
+    BULLET(3 );
+
+
+    public final int flag;
+
+    CollisionRelationship(int id) {
+        this.flag = 1 << id;
+    }
 }

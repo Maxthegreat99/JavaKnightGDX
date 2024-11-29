@@ -132,6 +132,8 @@ public class EntityManager {
         bodyDefinition.fixedRotation = true;
         bodyDefinition.linearDamping = 0f;
 
+        fixtureDefinition.filter.categoryBits = 0;
+        fixtureDefinition.filter.maskBits = 0;
         fixtureDefinition.shape = null;
         fixtureDefinition.density = 0f;
         fixtureDefinition.restitution = 0f;

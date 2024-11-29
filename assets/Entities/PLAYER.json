@@ -9,7 +9,11 @@
       "friction": 0.35,
       "bodyType": "DynamicBody",
       "rotationFixed": true,
-      "linearDamping": 6.0
+      "linearDamping": 6.0,
+      "filter": [
+        "OBSTACLE",
+        "OUT_OF_BOUNDS"
+      ]
     },
     "drawable": {
       "order": 3,
