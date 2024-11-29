@@ -13,10 +13,10 @@ import com.segfault.games.obj.sys.SubSystem;
 
 public class PhysicsSystem extends EntitySystem {
 
+    private float accumulator = 0f;
     private ImmutableArray<Entity> entities;
     private final Mappers mappers;
     private final float interval;
-    private float accumulator = 0f;
     private final EntityManager entityManager;
 
     public PhysicsSystem(JavaKnight instance, float interval, int priority) {
@@ -48,7 +48,7 @@ public class PhysicsSystem extends EntitySystem {
                 PhysicComponent comp = mappers.Physic.get(entity);
 
                 for (SubSystem k : comp.physicSystems)
-                    k.processEntity(entity, interval);
+                    k.processEntity(entity, interval, accumulator);
 
             }
 

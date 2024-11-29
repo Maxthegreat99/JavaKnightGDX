@@ -8,6 +8,7 @@ import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.ent.EntityManager;
+import com.segfault.games.obj.ent.indexEntitySystems;
 import com.segfault.games.obj.sys.SubSystem;
 
 /**
@@ -22,7 +23,7 @@ public class MovementSystem implements SubSystem {
 
     }
 
-    public void processEntity(Entity entity, float interval) {
+    public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
 
@@ -34,10 +35,17 @@ public class MovementSystem implements SubSystem {
 
         Vector2 pos;
         if (hasBox2DCol) {
+
             pos = collisionInfo.physicBody.getPosition();
+
+            float interpolation = accumulator / interval;
+
+            float interpolatedX = collisionInfo.x + (pos.x - collisionInfo.x) * interpolation;
+            float interpolatedY = collisionInfo.y + (pos.y - collisionInfo.y) * interpolation;
+
             collisionInfo.x = pos.x;
             collisionInfo.y = pos.y;
-            drawable.sprite.setPosition(pos.x * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, pos.y * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
+            drawable.sprite.setPosition(interpolatedX * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, interpolatedY * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
         }
         if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
 
@@ -52,8 +60,6 @@ public class MovementSystem implements SubSystem {
 
         float targetX = x + dx;
         float targetY = y + dy;
-
-
 
 
         if (!hasBox2DCol)

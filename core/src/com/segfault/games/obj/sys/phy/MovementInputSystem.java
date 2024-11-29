@@ -20,7 +20,7 @@ public class MovementInputSystem implements SubSystem {
         manager = ins.GetEntityManager();
     }
 
-    public void processEntity(Entity entity, float interval) {
+    public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
         MovingComponent movement = manager.GetMappers().Moving.get(entity);

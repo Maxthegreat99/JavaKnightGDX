@@ -7,5 +7,5 @@ import com.badlogic.ashley.core.Entity;
  */
 public interface SubSystem {
 
-    void processEntity(Entity entity, float v);
+    void processEntity(Entity entity, float v, float a);
 }

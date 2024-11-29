@@ -19,7 +19,7 @@ public class SpeedDecreaseSystem implements SubSystem {
         speedDecreaseMapper = ins.GetEntityManager().GetMappers().SpeedDecrease;
     }
 
-    public void processEntity(Entity entity, float interval) {
+    public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
         SpeedDecreaseComponent decelerationInfo = speedDecreaseMapper.get(entity);
