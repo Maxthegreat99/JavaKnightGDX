@@ -9,7 +9,7 @@
       "friction": 0.35,
       "bodyType": "DynamicBody",
       "rotationFixed": true,
-      "linearDamping": 6.0,
+      "linearDamping": 7.0,
       "filter": [
         "OBSTACLE",
         "OUT_OF_BOUNDS"
@@ -21,12 +21,11 @@
       "alpha": 1.0
     },
     "movementInput": {
-      "speed": 0.46065
+      "speed": 2.46065
     },
     "moving": {
       "dx": 0.0,
-      "dy": 0.0,
-      "maxVel": 2.4142
+      "dy": 0.0
     },
     "trail": {
       "alphaComparator": 0.6,

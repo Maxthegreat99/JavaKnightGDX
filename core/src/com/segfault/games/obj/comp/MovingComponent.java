@@ -21,16 +21,11 @@ public class MovingComponent extends Component {
      */
     public float dy = 0.0f;
 
-    /**
-     * maximum velocity beyond which velocity wont be applied when using box2d movement
-     */
-    public float maxVel = 0f;
 
     @Override
     public void reset() {
         dx = 0.0f;
         dy = 0.0f;
-        maxVel = 0f;
     }
 
     @Override
@@ -43,7 +38,6 @@ public class MovingComponent extends Component {
         MovingComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.dy = dy;
         comp.dx = dx;
-        comp.maxVel = maxVel;
         return comp;
     }
 
@@ -56,6 +50,5 @@ public class MovingComponent extends Component {
     public void read(JsonValue jsonValue, JavaKnight instance) {
         dx = jsonValue.getFloat("dx");
         dy = jsonValue.getFloat("dy");
-        maxVel = jsonValue.getFloat("maxVel");
     }
 }

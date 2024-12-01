@@ -30,8 +30,7 @@
     },
     "moving": {
       "dx": 0.0,
-      "dy": 0.0,
-      "maxVel": 13.0
+      "dy": 0.0
     },
     "physic": {
       "physicSystems": [

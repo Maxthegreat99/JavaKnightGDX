@@ -8,7 +8,6 @@ import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.comp.MovingComponent;
 import com.segfault.games.obj.ent.EntityManager;
-import com.segfault.games.obj.ent.indexEntitySystems;
 import com.segfault.games.obj.sys.SubSystem;
 
 /**
@@ -24,7 +23,7 @@ public class MovementSystem implements SubSystem {
     }
 
     private final Vector2 vec = new Vector2();
-
+    private final Vector2 velToApply = new Vector2();
     public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
@@ -71,11 +70,15 @@ public class MovementSystem implements SubSystem {
         // if box2d collision exists we let it handle the movement
         else {
             Vector2 vec = collisionInfo.physicBody.getWorldCenter();
-            collisionInfo.physicBody.applyLinearImpulse(dx, dy, vec.x, vec.y, true);
             Vector2 vel = collisionInfo.physicBody.getLinearVelocity();
 
-            if (vel.len2() > movement.maxVel * movement.maxVel)
-                collisionInfo.physicBody.setLinearVelocity(vel.nor().scl(movement.maxVel));
+            velToApply.set(dx, dy);
+
+            if (Math.abs(vel.x) > Math.abs(dx / interval) && Math.signum(vel.x) == Math.signum(dx / interval) ) velToApply.x = 0;
+            if (Math.abs(vel.y) > Math.abs(dy / interval) && Math.signum(vel.y) == Math.signum(dy / interval)) velToApply.y = 0;
+            if (velToApply.len2() > 0)
+                collisionInfo.physicBody.applyLinearImpulse(velToApply, vec, true);
+
         }
 
 

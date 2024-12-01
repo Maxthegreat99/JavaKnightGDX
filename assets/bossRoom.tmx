@@ -111,9 +111,8 @@
         ]
     },
     &quot;moving&quot; : {
-        &quot;dx&quot; : 40.50,
-        &quot;dy&quot; : 60.70,
-        &quot;maxVel&quot;: 20.0
+        &quot;dx&quot; : 4.50,
+        &quot;dy&quot; : 6.70
     },
     &quot;drawable&quot;: {
       &quot;order&quot;: 3,
