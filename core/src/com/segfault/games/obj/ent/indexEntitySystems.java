@@ -3,6 +3,7 @@ package com.segfault.games.obj.ent;
 public enum indexEntitySystems {
     LIFETIME_SYSTEM,
     PHYSICS_SYSTEM,
+    SPRITE_POSITIONING_SYSTEM,
     POINTING_SYSTEM,
     ALPHA_DECREASE_SYSTEM,
     TRAILING_SYSTEM,

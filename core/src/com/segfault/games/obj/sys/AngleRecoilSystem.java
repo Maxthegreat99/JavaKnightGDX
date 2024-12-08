@@ -31,31 +31,25 @@ public class AngleRecoilSystem extends IteratingSystem {
         PointingComponent pointing = mappers.Pointing.get(entity);
 
 
-        if (recoil.retainTime > 0) {
-            recoil.retainTime -= deltaTime;
-            recoil.angle += recoil.angleAcceleration / recoil.divisor * deltaTime;
-            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
-        }
-        else if(recoil.trigger) {
-            recoil.angleSpeed += recoil.angleAcceleration;
-            recoil.angle += recoil.angleSpeed * deltaTime;
-            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
 
-            if (Math.abs(recoil.angle) > recoil.maxAngle) {
-                recoil.trigger = false;
-                recoil.retainTime = recoil.initialRetainTime;
-                recoil.angleSpeed = recoil.intialAngleSpeed;
-            }
+        if (recoil.trigger) {
+            recoil.angle += recoil.angleSpeed * deltaTime;
+            recoil.trigger = false;
         }
         else if (recoil.angle > 0) {
-            recoil.angleSpeed += recoil.angleAcceleration;
-            recoil.angle -= recoil.angleSpeed / recoil.divisor * deltaTime;
-            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
 
+            recoil.angleSpeed -= recoil.angleDecceleration;
+            recoil.angle += recoil.angleSpeed * deltaTime;
             if (recoil.angle <= 0) {
                 recoil.angleSpeed = recoil.intialAngleSpeed;
                 recoil.angle = 0;
             }
+            else if (recoil.angle > recoil.maxAngle) {
+                recoil.angle = recoil.maxAngle;
+            }
+
+            drawable.sprite.rotate((pointing.flip ? -1 : 1) * recoil.angle);
+
         }
         else return;
 

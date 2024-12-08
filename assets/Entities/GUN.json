@@ -15,18 +15,14 @@
       "bulletSpeed": 3.5
     },
     "recoil": {
-      "maxAngle": 15.0,
-      "angleAcceleration": 65,
-      "angleSpeed" : 650.0,
-      "divisor": 2,
-      "initialRetainTime": 0.15
+      "maxAngle": 30.0,
+      "angleDecceleration": 55,
+      "angleSpeed" : 650.0
     },
     "positionRecoil": {
       "maxDis": 4,
-      "divisor": 1.5,
-      "initialRetainTime": 0.15,
-      "initialDistanceSpeed": 65,
-      "distanceAcceleration": 15
+      "initialDistanceSpeed": 150,
+      "distanceDecceleration": 15
     },
     "screenRecoil": {
       "maxDis": 4,

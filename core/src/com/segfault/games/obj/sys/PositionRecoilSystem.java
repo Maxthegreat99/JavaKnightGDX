@@ -23,33 +23,22 @@ public class PositionRecoilSystem extends IteratingSystem {
         DrawableComponent drawable = mappers.Drawable.get(entity);
         PositionRecoilComponent posRecoil = mappers.PositionRecoil.get(entity);
 
-
-        if (posRecoil.retainTime > 0) {
-            posRecoil.retainTime -= deltaTime;
-            posRecoil.dis += posRecoil.distanceAcceleration / posRecoil.divisor * deltaTime;
-            drawable.sprite.translate(posRecoil.dis * MathUtils.cosDeg(posRecoil.angle), posRecoil.dis * MathUtils.sinDeg(posRecoil.angle));
-
-        }
-        else if(posRecoil.trigger) {
-            posRecoil.distanceSpeed += posRecoil.distanceAcceleration;
+        if(posRecoil.trigger) {
             posRecoil.dis += posRecoil.distanceSpeed * deltaTime;
-            drawable.sprite.translate(posRecoil.dis * MathUtils.cosDeg(posRecoil.angle), posRecoil.dis * MathUtils.sinDeg(posRecoil.angle));
+            posRecoil.trigger = false;
 
-            if (posRecoil.dis > posRecoil.maxDis) {
-                posRecoil.trigger = false;
-                posRecoil.retainTime = posRecoil.initialRetainTime;
-                posRecoil.distanceSpeed = posRecoil.initialDistanceSpeed;
-            }
-        }
-          else if (posRecoil.dis > 0) {
-            posRecoil.distanceSpeed += posRecoil.distanceAcceleration;
-            posRecoil.dis -= posRecoil.distanceSpeed / posRecoil.divisor * deltaTime;
+        } else if (posRecoil.dis > 0) {
+            posRecoil.distanceSpeed -= posRecoil.distanceDecceleration;
+            posRecoil.dis += posRecoil.distanceSpeed * deltaTime;
             drawable.sprite.translate(posRecoil.dis * MathUtils.cosDeg(posRecoil.angle), posRecoil.dis * MathUtils.sinDeg(posRecoil.angle));
 
             if (posRecoil.dis <= 0) {
                 posRecoil.distanceSpeed = posRecoil.initialDistanceSpeed;
                 posRecoil.dis = 0;
             }
+            else if (posRecoil.dis > posRecoil.maxDis)
+                posRecoil.dis = posRecoil.maxDis;
+
         }
 
     }

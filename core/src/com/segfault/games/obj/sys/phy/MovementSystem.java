@@ -27,28 +27,12 @@ public class MovementSystem implements SubSystem {
     public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
 
-
         MovingComponent movement = manager.GetMappers().Moving.get(entity);
         DrawableComponent drawable = manager.GetMappers().Drawable.get(entity);
 
         CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
         boolean hasBox2DCol = collisionInfo != null;
 
-        Vector2 pos;
-        if (hasBox2DCol) {
-
-            pos = collisionInfo.physicBody.getPosition();
-
-            float interpolation = accumulator / interval;
-
-            vec.set(collisionInfo.x, collisionInfo.y);
-            vec.lerp(pos, interpolation);
-
-
-            collisionInfo.x = pos.x;
-            collisionInfo.y = pos.y;
-            drawable.sprite.setPosition(vec.x * Renderer.PIXEL_TO_METERS - collisionInfo.width * Renderer.PIXEL_TO_METERS / 2, vec.y * Renderer.PIXEL_TO_METERS - collisionInfo.height * Renderer.PIXEL_TO_METERS / 2);
-        }
         if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
 
         float x = drawable.sprite.getX();
@@ -74,8 +58,8 @@ public class MovementSystem implements SubSystem {
 
             velToApply.set(dx, dy);
 
-            if (Math.abs(vel.x) > Math.abs(dx / interval) && Math.signum(vel.x) == Math.signum(dx / interval) ) velToApply.x = 0;
-            if (Math.abs(vel.y) > Math.abs(dy / interval) && Math.signum(vel.y) == Math.signum(dy / interval)) velToApply.y = 0;
+            if (Math.abs(vel.x) > Math.abs(movement.dx) && Math.signum(vel.x) == Math.signum(movement.dx)) velToApply.x = 0;
+            if (Math.abs(vel.y) > Math.abs(movement.dy) && Math.signum(vel.y) == Math.signum(movement.dy)) velToApply.y = 0;
             if (velToApply.len2() > 0)
                 collisionInfo.physicBody.applyLinearImpulse(velToApply, vec, true);
 

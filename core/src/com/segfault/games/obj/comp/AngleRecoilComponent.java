@@ -12,10 +12,6 @@ import com.segfault.games.JavaKnight;
  */
 public class AngleRecoilComponent extends Component{
     /**
-     * the value the recoil should reach before starting to go back down
-     */
-    public float maxAngle = 0.0f;
-    /**
      * current speed value to increase the angle, note this value is multiplied by deltaTime
      */
     public float angleSpeed = 0.0f;
@@ -27,11 +23,7 @@ public class AngleRecoilComponent extends Component{
     /**
      * the acceleration at which to increase the speed
      */
-    public float angleAcceleration = 0.0f;
-    /**
-     * value to devide the acceleration when going back to its original angle
-     */
-    public float divisor = 0.0f;
+    public float angleDecceleration = 0.0f;
 
     /**
      * the currently added angle
@@ -44,27 +36,19 @@ public class AngleRecoilComponent extends Component{
     public boolean trigger = false;
 
     /**
-     * current time the object stays up before going back down
+     * Max angle the object can reach
      */
-    public float retainTime = 0f;
-
-    /**
-     * initial retain time
-     */
-    public float initialRetainTime = 0f;
+    public float maxAngle = 0f;
 
 
     @Override
     public void reset() {
-        maxAngle = 0.0f;
-        divisor = 0.0f;
         angleSpeed = 0.0f;
         angle = 0.0f;
         trigger = false;
-        retainTime = 0f;
-        initialRetainTime = 0f;
-        angleAcceleration = 0f;
+        angleDecceleration = 0f;
         intialAngleSpeed = 0f;
+        maxAngle = 0f;
     }
 
     @Override
@@ -76,14 +60,11 @@ public class AngleRecoilComponent extends Component{
     public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         AngleRecoilComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.angle = angle;
-        comp.maxAngle = maxAngle;
         comp.angleSpeed = angleSpeed;
-        comp.divisor = divisor;
         comp.trigger = trigger;
-        comp.retainTime = retainTime;
-        comp.initialRetainTime = initialRetainTime;
-        comp.angleAcceleration = angleAcceleration;
+        comp.angleDecceleration = angleDecceleration;
         comp.intialAngleSpeed = intialAngleSpeed;
+        comp.maxAngle = maxAngle;
         return comp;
     }
 
@@ -94,10 +75,8 @@ public class AngleRecoilComponent extends Component{
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
-        maxAngle = jsonValue.getFloat("maxAngle");
         intialAngleSpeed = angleSpeed = jsonValue.getFloat("angleSpeed");
-        divisor = jsonValue.getFloat("divisor");
-        initialRetainTime = jsonValue.getFloat("initialRetainTime");
-        angleAcceleration = jsonValue.getFloat("angleAcceleration");
+        angleDecceleration = jsonValue.getFloat("angleDecceleration");
+        maxAngle = jsonValue.getFloat("maxAngle");
     }
 }

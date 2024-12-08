@@ -80,15 +80,16 @@ public class EntityManager {
 
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
         systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
-        systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 30));
-        systems.put(indexEntitySystems.ALPHA_DECREASE_SYSTEM, new AlphaDecreaseSystem(instance, 40));
-        systems.put(indexEntitySystems.TRAILING_SYSTEM, new TrailingSystem(instance, 50));
-        systems.put(indexEntitySystems.PLAYER_GUN_SYSTEM, new PlayerGunSystem(instance, 60));
-        systems.put(indexEntitySystems.ANGLE_RECOIL_SYSTEM, new AngleRecoilSystem(instance, 70));
-        systems.put(indexEntitySystems.POSITION_RECOIL_SYSTEM, new PositionRecoilSystem(instance, 80));
-        systems.put(indexEntitySystems.SCREEN_RECOIL_SYSTEM, new ScreenRecoilSystem(instance, 90));
-        systems.put(indexEntitySystems.BULLET_SPAWN_SYSTEM, new BulletSpawnSystem(instance, 100));
-        systems.put(indexEntitySystems.RENDERING_SYSTEM, new RenderingSystem(instance, batch, 110));
+        systems.put(indexEntitySystems.SPRITE_POSITIONING_SYSTEM, new SpritePositioningSystem(instance, 30));
+        systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 40));
+        systems.put(indexEntitySystems.ALPHA_DECREASE_SYSTEM, new AlphaDecreaseSystem(instance, 50));
+        systems.put(indexEntitySystems.TRAILING_SYSTEM, new TrailingSystem(instance, 60));
+        systems.put(indexEntitySystems.PLAYER_GUN_SYSTEM, new PlayerGunSystem(instance, 70));
+        systems.put(indexEntitySystems.ANGLE_RECOIL_SYSTEM, new AngleRecoilSystem(instance, 80));
+        systems.put(indexEntitySystems.POSITION_RECOIL_SYSTEM, new PositionRecoilSystem(instance, 90));
+        systems.put(indexEntitySystems.SCREEN_RECOIL_SYSTEM, new ScreenRecoilSystem(instance, 100));
+        systems.put(indexEntitySystems.BULLET_SPAWN_SYSTEM, new BulletSpawnSystem(instance, 110));
+        systems.put(indexEntitySystems.RENDERING_SYSTEM, new RenderingSystem(instance, batch, 120));
 
         for (Object system : systems.values())
             pooledECS.addSystem( (EntitySystem) system);

@@ -123,7 +123,6 @@ public class Renderer {
      */
     public void Render(JavaKnight instance, World physicWorld) {
 
-
         if (!instance.GetTexts().isEmpty() || !instance.GetStaticFonts().isEmpty()) {
             // Draw text objects
             batch.setShader(fontShader);

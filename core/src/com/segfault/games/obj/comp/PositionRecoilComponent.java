@@ -23,15 +23,6 @@ public class PositionRecoilComponent extends Component{
     public float angle = 0f;
 
     /**
-     * cyrrent seconds to wait before the recoil goes back to its original
-     */
-    public float retainTime = 0f;
-    /**
-     * initial value of retain time
-     */
-    public float initialRetainTime = 0f;
-
-    /**
      * speed at which the distance should move, is multiplied by deltatime
      */
     public float distanceSpeed = 0f;
@@ -39,17 +30,12 @@ public class PositionRecoilComponent extends Component{
     /**
      * acceleration at which to increase the distance speed
      */
-    public float distanceAcceleration = 0f;
+    public float distanceDecceleration = 0f;
 
     /**
      * initial distance speed
      */
     public float initialDistanceSpeed = 0f;
-
-    /**
-     * divisor determining the deceleration
-     */
-    public float divisor = 0f;
 
     /**
      * whether the recoil is currently triggered
@@ -63,24 +49,19 @@ public class PositionRecoilComponent extends Component{
     public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
         PositionRecoilComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.maxDis = maxDis;
-        comp.divisor = divisor;
         comp.angle = angle;
-        comp.retainTime = retainTime;
         comp.distanceSpeed = distanceSpeed;
-        comp.distanceAcceleration = distanceAcceleration;
         comp.initialDistanceSpeed = initialDistanceSpeed;
         comp.trigger = trigger;
-        comp.initialRetainTime = initialRetainTime;
+        comp.distanceDecceleration = distanceDecceleration;
         return comp;
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
         maxDis = jsonValue.getFloat("maxDis");
-        divisor = jsonValue.getFloat("divisor");
-        initialRetainTime = jsonValue.getFloat("initialRetainTime");
         initialDistanceSpeed = distanceSpeed = jsonValue.getFloat("initialDistanceSpeed");
-        distanceAcceleration = jsonValue.getFloat("distanceAcceleration");
+        distanceDecceleration = jsonValue.getFloat("distanceDecceleration");
     }
 
     @Override
@@ -93,12 +74,9 @@ public class PositionRecoilComponent extends Component{
         maxDis = 0f;
         dis = 0f;
         angle = 0f;
-        retainTime = 0f;
         distanceSpeed = 0f;
-        distanceAcceleration = 0f;
         initialDistanceSpeed = 0f;
-        divisor = 0f;
-        initialRetainTime = 0f;
+        distanceDecceleration = 0f;
         trigger = false;
     }
 }
