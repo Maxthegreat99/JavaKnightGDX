@@ -16,9 +16,9 @@
       ]
     },
     "drawable": {
-      "order": 3,
       "sprite": "PLAYER",
-      "alpha": 1.0
+      "alpha": 1.0,
+      "order": 3
     },
     "movementInput": {
       "speed": 2.46065

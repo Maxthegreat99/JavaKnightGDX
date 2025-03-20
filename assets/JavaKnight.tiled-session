@@ -5,6 +5,7 @@
     },
     "activeFile": "bossRoom.tmx",
     "expandedProjectPaths": [
+        "Entities",
         "."
     ],
     "fileStates": {
@@ -13,12 +14,16 @@
             "scaleInDock": 1,
             "scaleInEditor": 32
         },
+        "TestTileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "bossRoom.tmx": {
-            "scale": 2,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 431.25,
-                "y": 200
+                "x": 382.66666666666663,
+                "y": 367.3333333333333
             }
         }
     },
@@ -30,13 +35,14 @@
     "map.width": 616,
     "openFiles": [
         "bossRoom.tmx",
-        "BaseTileSetJavaKnight.tsx"
+        "TestTileset.tsx"
     ],
     "project": "JavaKnight.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "BaseTileSetJavaKnight.tsx",
-        "bossRoom.tmx"
+        "TestTileset.tsx",
+        "bossRoom.tmx",
+        "BaseTileSetJavaKnight.tsx"
     ],
     "textEdit.monospace": true,
     "tileset.lastUsedFormat": "tsx",

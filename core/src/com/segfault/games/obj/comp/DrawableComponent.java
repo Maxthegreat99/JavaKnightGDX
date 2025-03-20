@@ -28,16 +28,26 @@ public class DrawableComponent extends Component {
      * sprite field make sure to change this afterwards
      */
     public float alpha = 0.0f;
+
     /**
      * the order in which the object should be rendered, the bigger the value
      * the more likely the object wil be the last to be rendered
      */
     public int order = 0;
+
+    /**
+     * the shader the drawable is currently using, used to indentify which shader
+     * the drawable should apply and order each drawable correctly to save having to
+     * over flush the buffer
+     */
+    public Shaders shader = Shaders.NORMAL;
+
     @Override
     public void reset() {
         spriteID = null;
-        alpha = 0.0f;
         order = 0;
+        alpha = 0.0f;
+        shader = Shaders.NORMAL;
     }
 
 
@@ -54,6 +64,7 @@ public class DrawableComponent extends Component {
         comp.order = order;
         comp.alpha = alpha;
         comp.spriteID = spriteID;
+        comp.shader = shader;
         return comp;
     }
 
@@ -61,17 +72,19 @@ public class DrawableComponent extends Component {
     public void write(Json json) {
 
         json.writeField(alpha, "alpha");
-        json.writeField(order, "order");
         json.writeField(spriteID.toString(), "sprite");
+        json.writeField(order, "order");
+        json.writeField(shader.toString(), "shader");
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance) {
         alpha = jsonValue.getFloat("alpha");
-        order = jsonValue.getInt("order");
         spriteID = indexT.valueOf(jsonValue.getString("sprite"));
         sprite = new Sprite(instance.GetAssetManager().GetTextures().get(spriteID));
+        order = jsonValue.getInt("order");
         sprite.setAlpha(alpha);
+        shader = Shaders.valueOf(jsonValue.getString("shader", "NORMAL"));
     }
 
 

@@ -24,9 +24,9 @@
       ]
     },
     "drawable": {
-      "order": 2,
       "sprite": "BULLET",
-      "alpha": 0.7
+      "alpha": 0.7,
+      "order": 2
     },
     "moving": {
       "dx": 0.0,

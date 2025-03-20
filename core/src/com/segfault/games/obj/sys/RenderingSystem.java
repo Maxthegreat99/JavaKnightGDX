@@ -46,6 +46,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     @Override
     public int compare(Entity e1, Entity e2) {
-        return (int) Math.signum(drawableMapper.get(e1).order - drawableMapper.get(e2).order);
+        return (drawableMapper.get(e1).order - drawableMapper.get(e2).order) * 1_000_000
+                + (drawableMapper.get(e1).shader.ordinal() - drawableMapper.get(e2).shader.ordinal());
     }
 }

@@ -1,9 +1,9 @@
 {
   "components": {
     "drawable": {
-      "order": 3,
       "sprite": "GUN",
-      "alpha": 1.0
+      "alpha": 1.0,
+      "order": 3
     },
     "pointing": {
       "cursor": true,

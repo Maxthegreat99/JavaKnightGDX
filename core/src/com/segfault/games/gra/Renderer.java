@@ -139,7 +139,7 @@ public class Renderer {
         }
 
 
-        //renderShapes(physicsCamera, debugRenderer, physicWorld);
+        renderShapes(physicsCamera, debugRenderer, physicWorld);
 
         batch.end();
         screenBuffer.end();

@@ -42,6 +42,8 @@ public class PlayerGunSystem extends IteratingSystem {
             recoil.trigger = true;
 
             posRecoil.trigger = true;
+            posRecoil.distanceSpeed = posRecoil.initialDistanceSpeed;
+            recoil.angleSpeed = recoil.intialAngleSpeed;
 
             comp.cooldown = comp.initialCd;
 

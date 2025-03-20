@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
 /**
- * Component to give entities a 'recoil' effect where where we rotate their sprite at
+ * Component to give entities a 'recoil' effect where we rotate their sprite at
  * a certain speed then get back to it slower when specified
  */
 public class AngleRecoilComponent extends Component{
