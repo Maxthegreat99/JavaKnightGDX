@@ -51,7 +51,7 @@ public class AlphaDecreaseComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         alphaDecrease = jsonValue.getFloat("alphaDecrease");
         comparator = jsonValue.getFloat("comparator");
     }

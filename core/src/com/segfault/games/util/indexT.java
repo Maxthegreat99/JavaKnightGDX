@@ -33,6 +33,8 @@ public enum indexT {
     BG_GRAY,
     BG_GREEN,
     BG_RED,
+    TEST_N,
+    TEST,
     ROCKET_GUN /* please try to keep this the last Enum, thank you */
 
 

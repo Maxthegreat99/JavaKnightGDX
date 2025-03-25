@@ -64,7 +64,7 @@ public class TrailComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         trailCooldown = jsonValue.getFloat("trailCooldown");
         trailInitialCooldown = jsonValue.getFloat("trailInitialCooldown");
         trailIninitalAlpha = jsonValue.getFloat("trailInitialAlpha");

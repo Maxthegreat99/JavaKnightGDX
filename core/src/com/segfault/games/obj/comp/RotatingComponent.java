@@ -6,10 +6,17 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
 
-public class PlayerGunComponent extends Component {
-    public float cooldown = 0.0f;
-    public float initialCd = 0.0f;
-    public float bulletSpeed = 0.0f;
+/**
+ * component for physic objects with bodies to give them a constant rotation
+ */
+
+public class RotatingComponent extends Component{
+
+    /**
+     * angular speed of the object
+     */
+    public float rotatingSpeed = 0f;
+
     @Override
     public void dispose(JavaKnight instance) {
 
@@ -17,29 +24,24 @@ public class PlayerGunComponent extends Component {
 
     @Override
     public Component clone(JavaKnight instance, Entity ent, Vector4 pol, JsonValue properties) {
-        PlayerGunComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
+        RotatingComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
+        comp.rotatingSpeed = rotatingSpeed;
 
-        comp.cooldown = cooldown;
-        comp.initialCd = initialCd;
-        comp.bulletSpeed = bulletSpeed;
         return comp;
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
-        initialCd = jsonValue.getFloat("initialCd");
-        bulletSpeed = jsonValue.getFloat("bulletSpeed");
+        rotatingSpeed = jsonValue.getFloat("rotatingSpeed");
     }
 
     @Override
     public void write(Json json) {
-        json.writeFields(this);
+        json.writeField(rotatingSpeed, "rotatingSpeed");
     }
 
     @Override
     public void reset() {
-        cooldown = 0f;
-        initialCd = 0f;
-        bulletSpeed = 0f;
+        rotatingSpeed = 0f;
     }
 }

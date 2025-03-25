@@ -74,7 +74,7 @@ public class BulletSpawnComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         bulletID = EntityID.valueOf(jsonValue.getString("bulletID"));
         width = jsonValue.getFloat("width");
         height = jsonValue.getFloat("height");

@@ -47,7 +47,7 @@ public class BounceComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         maxBounces = jsonValue.getInt("maxBounces");
         bounces = jsonValue.getInt("bounces");
     }

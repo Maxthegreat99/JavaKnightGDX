@@ -76,7 +76,7 @@ public class ScreenRecoilComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         maxDis = jsonValue.getFloat("maxDis");
         divisor = jsonValue.getFloat("divisor");
         initialRetainTime = jsonValue.getFloat("initialRetainTime");

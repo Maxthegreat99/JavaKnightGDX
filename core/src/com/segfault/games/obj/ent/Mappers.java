@@ -25,4 +25,8 @@ public class Mappers {
     public final ComponentMapper<BulletSpawnComponent> BulletSpawn = ComponentMapper.getFor(BulletSpawnComponent.class);
     public final ComponentMapper<PhysicComponent> Physic = ComponentMapper.getFor(PhysicComponent.class);
     public final ComponentMapper<CollisionEventComponent> CollisionEvent = ComponentMapper.getFor(CollisionEventComponent.class);
+    public final ComponentMapper<CameraFollowerComponent> CameraFollower = ComponentMapper.getFor(CameraFollowerComponent.class);
+    public final ComponentMapper<NormalComponent> Normal = ComponentMapper.getFor(NormalComponent.class);
+    public final ComponentMapper<LightHolderComponent> LightHolder = ComponentMapper.getFor(LightHolderComponent.class);
+    public final ComponentMapper<RotatingComponent> Rotating = ComponentMapper.getFor(RotatingComponent.class);
 }

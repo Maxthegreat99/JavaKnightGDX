@@ -59,7 +59,7 @@ public class CollisionEventComponent extends Component {
      *  ]
      */
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         long events = 0L;
         String key = null;
 

@@ -4,11 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -19,7 +17,6 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.comp.*;
 import com.segfault.games.obj.wld.MapID;
-import com.sun.org.apache.xpath.internal.operations.Equals;
 
 /**
  * Handles loading entities from the JSON
@@ -44,7 +41,7 @@ public class EntityLoader {
             for (JsonValue i : comps)
             {
                 Component comp = getComponentFromName(i.name, manager);
-                comp.read(i, instance);
+                comp.read(i, instance, false, entity);
                 entity.add(comp);
             }
 
@@ -56,7 +53,7 @@ public class EntityLoader {
     }
 
     private final Vector4 pol = new Vector4();
-    private final String[] defaultFilter = new String[]{"PLAYER", "OUT_OF_BOUNDS", "OBSTACLE", "BULLET"};
+    private final String[] defaultFilter = new String[]{"PLAYER", "OUT_OF_BOUNDS", "OBSTACLE", "OBJECT","BULLET"};
     public void LoadMapEntities(MapID id, JavaKnight instance) {
         TiledMap map = instance.GetMapLoader().maps.get(id);
         JsonReader reader = instance.GetEntityManager().GetEntityLoader().reader;
@@ -164,7 +161,7 @@ public class EntityLoader {
                     for (JsonValue j : jValue)
                     {
                         Component comp = getComponentFromName(j.name, instance.GetEntityManager());
-                        comp.read(j, instance);
+                        comp.read(j, instance, true, e);
                         e.add(comp);
                     }
 
@@ -240,6 +237,17 @@ public class EntityLoader {
             case "collisionEvent":
                 return manager.GetEngine().createComponent(CollisionEventComponent.class);
 
+            case "cameraFollower":
+                return manager.GetEngine().createComponent(CameraFollowerComponent.class);
+
+            case "normal":
+                return manager.GetEngine().createComponent(NormalComponent.class);
+
+            case "lightHolder":
+                return manager.GetEngine().createComponent(LightHolderComponent.class);
+
+            case "rotating":
+                return manager.GetEngine().createComponent(RotatingComponent.class);
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);
 

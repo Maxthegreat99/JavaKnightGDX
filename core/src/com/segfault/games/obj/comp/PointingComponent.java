@@ -93,7 +93,7 @@ public class PointingComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         cursor = jsonValue.getBoolean("cursor");
         if (jsonValue.has("targetMethod"))
             targetMethod = TargettingMethodID.valueOf(jsonValue.getString("targetMethod"));

@@ -78,7 +78,7 @@ public class DrawableComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         alpha = jsonValue.getFloat("alpha");
         spriteID = indexT.valueOf(jsonValue.getString("sprite"));
         sprite = new Sprite(instance.GetAssetManager().GetTextures().get(spriteID));

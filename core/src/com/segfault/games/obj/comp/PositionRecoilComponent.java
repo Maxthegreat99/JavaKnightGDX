@@ -58,7 +58,7 @@ public class PositionRecoilComponent extends Component{
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         maxDis = jsonValue.getFloat("maxDis");
         initialDistanceSpeed = distanceSpeed = jsonValue.getFloat("initialDistanceSpeed");
         distanceDecceleration = jsonValue.getFloat("distanceDecceleration");

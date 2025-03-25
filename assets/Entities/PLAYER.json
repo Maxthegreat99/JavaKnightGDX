@@ -12,13 +12,18 @@
       "linearDamping": 7.0,
       "filter": [
         "OBSTACLE",
-        "OUT_OF_BOUNDS"
+        "OUT_OF_BOUNDS",
+        "OBJECT"
       ]
     },
     "drawable": {
       "sprite": "PLAYER",
       "alpha": 1.0,
       "order": 3
+    },
+    "cameraFollower": {
+      "alpha": 0.15,
+      "priority": 1
     },
     "movementInput": {
       "speed": 2.46065
@@ -39,6 +44,29 @@
         "MOVEMENT_SYSTEM",
         "MOVEMENT_INPUT_SYSTEM"
       ]
+    },
+    "lightHolder":{
+      "lights": {
+        "light1": {
+          "direction": 0.0,
+          "distance": 5,
+          "rays": 128,
+          "xRay": false,
+          "R": 1,
+          "G": 0.3,
+          "B": 0.3,
+          "A": 0.4,
+          "soft": true,
+          "softLength": 1,
+          "isStatic": false,
+          "lightType": "POINT",
+          "size": 45,
+          "relationship": "OBJECT",
+          "filter": [
+            "OUT_OF_BOUNDS"
+          ]
+        }
+      }
     }
   }
 

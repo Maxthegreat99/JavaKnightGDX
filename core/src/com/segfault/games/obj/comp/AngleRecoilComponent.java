@@ -74,7 +74,7 @@ public class AngleRecoilComponent extends Component{
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         intialAngleSpeed = angleSpeed = jsonValue.getFloat("angleSpeed");
         angleDecceleration = jsonValue.getFloat("angleDecceleration");
         maxAngle = jsonValue.getFloat("maxAngle");

@@ -56,7 +56,7 @@ public class PhysicComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         for (int i = 0; i < jsonValue.get("physicSystems").size; i++) {
             String name = jsonValue.get("physicSystems").getString(i);
 

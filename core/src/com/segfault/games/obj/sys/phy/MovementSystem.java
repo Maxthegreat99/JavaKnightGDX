@@ -22,7 +22,6 @@ public class MovementSystem implements SubSystem {
 
     }
 
-    private final Vector2 vec = new Vector2();
     private final Vector2 velToApply = new Vector2();
     public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;

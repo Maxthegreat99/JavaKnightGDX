@@ -10,7 +10,8 @@ public enum CollisionRelationship {
     PLAYER(0),
     OBSTACLE(1),
     OUT_OF_BOUNDS(2),
-    BULLET(3 );
+    BULLET(3 ),
+    OBJECT(4);
 
 
     public final int flag;

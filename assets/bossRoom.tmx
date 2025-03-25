@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="28">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="38">
  <objectgroup id="2" name="Objects" opacity="0.22">
   <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
    <properties>
@@ -63,11 +63,11 @@
   </object>
   <object id="17" name="PLAYER" x="305" y="186" width="16" height="16"/>
   <object id="19" name="GUN" x="322.739" y="186.148" width="32" height="16"/>
-  <object id="21" name="Col" x="151" y="224" width="32" height="32">
+  <object id="31" name="Col" x="74.6667" y="81.3333" width="64" height="64">
    <properties>
     <property name="properties">{
     &quot;collides&quot; : {
-        &quot;relationship&quot; : &quot;OBSTACLE&quot;,
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
         &quot;restitution&quot;: 1.0,
         &quot;density&quot;: 1.0,
         &quot;friction&quot;: 5.75,
@@ -75,42 +75,191 @@
         &quot;bodyType&quot;: &quot;DynamicBody&quot;,
         &quot;rotationFixed&quot;: false,
         &quot;linearDamping&quot;: 0.0,
-        &quot;shape&quot;: &quot;CIRCLE&quot;
-    },
-    &quot;collisionEvent&quot;:{
-        &quot;collisionEvents&quot;: [
-            &quot;PLAYER&quot;,
-            &quot;BOUNCING&quot;,
-            &quot;OBSTACLE&quot;,
-            &quot;BOUNCING&quot;,
-            &quot;OUT_OF_BOUNDS&quot;,
-            &quot;BOUNCING&quot;,
-            &quot;BULLET&quot;
-            &quot;BOUNCING&quot;,
-        ]
+        &quot;shape&quot;: &quot;POLYGONE&quot;
     },
     &quot;physic&quot;:{
         &quot;physicSystems&quot;: [
-            &quot;MOVEMENT_SYSTEM&quot;
+            &quot;ROTATING_SYSTEM&quot;
         ]
     },
-    &quot;moving&quot; : {
-        &quot;dx&quot; : 4.50,
-        &quot;dy&quot; : 6.70
-    },
     &quot;drawable&quot;: {
-      &quot;order&quot;: 3,
-      &quot;sprite&quot;: &quot;ACID_BEAM_BALL&quot;,
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
       &quot;alpha&quot;: 1.0
     },
-    &quot;bounce&quot; : {
-        &quot;maxBounces&quot; : 50000,
-        &quot;relationship&quot; : &quot;NULL&quot;,
-        &quot;bounces&quot; : 0
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
     }
 }</property>
    </properties>
-   <ellipse/>
+  </object>
+  <object id="33" name="Col" x="241.333" y="65.3333" width="64" height="64">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 5.75,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;ROTATING_SYSTEM&quot;
+        ]
+    },
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
+    }
+}</property>
+   </properties>
+  </object>
+  <object id="34" name="Col" x="477.333" y="276" width="64" height="64">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 5.75,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;ROTATING_SYSTEM&quot;
+        ]
+    },
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
+    }
+}</property>
+   </properties>
+  </object>
+  <object id="35" name="Col" x="92" y="261.333" width="64" height="64">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 5.75,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;ROTATING_SYSTEM&quot;
+        ]
+    },
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
+    }
+}</property>
+   </properties>
+  </object>
+  <object id="36" name="Col" x="306.667" y="252" width="64" height="64">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 5.75,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;ROTATING_SYSTEM&quot;
+        ]
+    },
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
+    }
+}</property>
+   </properties>
+  </object>
+  <object id="37" name="Col" x="474.667" y="50.6667" width="64" height="64">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 1.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 5.75,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;bodyType&quot;: &quot;DynamicBody&quot;,
+        &quot;rotationFixed&quot;: false,
+        &quot;linearDamping&quot;: 0.0,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    },
+    &quot;physic&quot;:{
+        &quot;physicSystems&quot;: [
+            &quot;ROTATING_SYSTEM&quot;
+        ]
+    },
+    &quot;drawable&quot;: {
+      &quot;order&quot;: 4,
+      &quot;sprite&quot;: &quot;TEST&quot;,
+      &quot;alpha&quot;: 1.0
+    },
+    &quot;rotating&quot; : {
+        &quot;rotatingSpeed&quot; : 0.5
+    },
+    &quot;normal&quot;: {
+        &quot;texID&quot;: &quot;TEST_N&quot;
+    }
+}</property>
+   </properties>
   </object>
  </objectgroup>
  <layer id="5" name="TestTileLayer" width="616" height="385">

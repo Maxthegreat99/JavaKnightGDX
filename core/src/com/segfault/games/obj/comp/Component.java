@@ -29,7 +29,7 @@ public abstract class Component implements com.badlogic.ashley.core.Component, P
      * @param jsonValue
      * @param instance
      */
-    public abstract void read(JsonValue jsonValue, JavaKnight instance);
+    public abstract void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent);
 
     /**
      * For writing / saving entities, to be used for loading entities when rejoining

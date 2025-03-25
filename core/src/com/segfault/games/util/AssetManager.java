@@ -57,6 +57,8 @@ public class AssetManager {
         textures.put(indexT.BG_GREEN, atlas.findRegion("greenBG"));
         textures.put(indexT.BG_RED, atlas.findRegion("redBG"));
         textures.put(indexT.BG_GRAY, atlas.findRegion("grayBG"));
+        textures.put(indexT.TEST_N, atlas.findRegion("object-deferred-n"));
+        textures.put(indexT.TEST, atlas.findRegion("object-deferred"));
 
         loadMeshes();
     }

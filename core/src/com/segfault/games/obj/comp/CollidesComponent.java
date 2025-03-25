@@ -249,7 +249,7 @@ public class CollidesComponent extends Component {
     }
 
     @Override
-    public void read(JsonValue jsonValue, JavaKnight instance) {
+    public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         relationship = CollisionRelationship.valueOf(jsonValue.getString("relationship"));
         String shape = jsonValue.getString("shape");
         this.shape = EntityManager.Shapes.valueOf(shape);

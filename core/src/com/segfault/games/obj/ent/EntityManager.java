@@ -78,6 +78,7 @@ public class EntityManager {
     public void InitializeSystems(JavaKnight instance, SpriteBatch batch) {
         pooledECS.addEntityListener(new EntityListener(instance));
 
+        systems.put(indexEntitySystems.CAMERA_FOLLOWER_SYSTEM, new CameraFollowerSystem(instance, 0));
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
         systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
         systems.put(indexEntitySystems.SPRITE_POSITIONING_SYSTEM, new SpritePositioningSystem(instance, 30));
@@ -89,12 +90,14 @@ public class EntityManager {
         systems.put(indexEntitySystems.POSITION_RECOIL_SYSTEM, new PositionRecoilSystem(instance, 90));
         systems.put(indexEntitySystems.SCREEN_RECOIL_SYSTEM, new ScreenRecoilSystem(instance, 100));
         systems.put(indexEntitySystems.BULLET_SPAWN_SYSTEM, new BulletSpawnSystem(instance, 110));
+        systems.put(indexEntitySystems.NORMAL_RENDERING_SYSTEM, new NormalRenderingSystem(instance, instance.GetRenderer().GetNormalBatch(), 115));
         systems.put(indexEntitySystems.RENDERING_SYSTEM, new RenderingSystem(instance, batch, 120));
 
         for (Object system : systems.values())
             pooledECS.addSystem( (EntitySystem) system);
 
 
+        systems.put(indexEntitySystems.ROTATING_SYSTEM, new RotatingSystem(instance));
         systems.put(indexEntitySystems.SPEED_DECREASE_SYSTEM, new SpeedDecreaseSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_INPUT_SYSTEM, new MovementInputSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_SYSTEM, new MovementSystem(instance));
