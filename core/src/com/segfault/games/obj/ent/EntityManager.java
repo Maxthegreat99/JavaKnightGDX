@@ -36,6 +36,7 @@ public class EntityManager {
      */
     private final Shape[] shapes = {
             new CircleShape(),
+            new PolygonShape(),
             new PolygonShape()
     };
 
@@ -44,6 +45,7 @@ public class EntityManager {
      */
     public enum Shapes {
         CIRCLE,
+        RECTANGLE,
         POLYGONE
     }
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.MathUtils;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.ent.EntityManager;
@@ -49,6 +50,9 @@ public class RenderingSystem extends SortedSystem {
     protected void processEntity(Entity entity, float deltaTime) {
 
         DrawableComponent drawableComp = manager.GetMappers().Drawable.get(entity);
+
+        drawableComp.sprite.setX(MathUtils.round(drawableComp.sprite.getX()));
+        drawableComp.sprite.setY(MathUtils.round(drawableComp.sprite.getY()));
 
         drawableComp.sprite.draw(batch);
     }

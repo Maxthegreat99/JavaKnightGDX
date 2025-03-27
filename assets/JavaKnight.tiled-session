@@ -5,8 +5,8 @@
     },
     "activeFile": "bossRoom.tmx",
     "expandedProjectPaths": [
-        ".",
-        "Entities"
+        "Entities",
+        "."
     ],
     "fileStates": {
         "BaseTileSetJavaKnight.tsx": {
@@ -19,11 +19,11 @@
             "scaleInEditor": 1
         },
         "bossRoom.tmx": {
-            "scale": 0.75,
+            "scale": 32,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 308,
-                "y": 143.33333333333331
+                "x": 521.65625,
+                "y": 144.75
             }
         }
     },

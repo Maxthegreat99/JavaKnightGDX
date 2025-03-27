@@ -113,7 +113,7 @@ public class CollidesComponent extends Component {
      * the type of shape this physics object has
      */
 
-    public EntityManager.Shapes shape = EntityManager.Shapes.POLYGONE;
+    public EntityManager.Shapes shape = EntityManager.Shapes.RECTANGLE;
 
     /**
      * The entity the component is referred to, used by the engine to

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -191,10 +192,10 @@ public class Renderer {
 
         if (Float.compare(CameraZoom, worldCamera.zoom) != 0 || UpdateCamera) {
             worldCamera.zoom = CameraZoom;
-            worldCamera.position.set(CameraPos.x + ScreenTranslationX,
-                    CameraPos.y + ScreenTranslationY, 0);
-            physicsCamera.position.set(CameraPos.x / PIXEL_TO_METERS + ScreenTranslationX / PIXEL_TO_METERS,
-                    CameraPos.y / PIXEL_TO_METERS + ScreenTranslationY / PIXEL_TO_METERS, 0);
+            worldCamera.position.set(MathUtils.round(CameraPos.x) + MathUtils.round(ScreenTranslationX),
+                    MathUtils.round(CameraPos.y) + MathUtils.round(ScreenTranslationY), 0);
+            physicsCamera.position.set(MathUtils.round(CameraPos.x) / PIXEL_TO_METERS + MathUtils.round(ScreenTranslationX) / PIXEL_TO_METERS,
+                    MathUtils.round(CameraPos.y) / PIXEL_TO_METERS + MathUtils.round(ScreenTranslationY) / PIXEL_TO_METERS, 0);
             worldCamera.update();
             physicsCamera.update();
             UpdateCamera = false;

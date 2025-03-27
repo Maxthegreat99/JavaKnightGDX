@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.MathUtils;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.gra.NormalBatch;
 import com.segfault.games.obj.comp.DrawableComponent;
@@ -55,7 +56,7 @@ public class NormalRenderingSystem extends SortedSystem {
 
         TextureRegion reg = assetManager.GetTextures().get(normalComp.texID);
         Sprite sprite = drawableComp.sprite;
-        batch.draw(reg, sprite.getX(), sprite.getY(), sprite.getWidth() / 2, sprite.getHeight() / 2,
+        batch.draw(reg, MathUtils.round(sprite.getX()), MathUtils.round(sprite.getY()), sprite.getWidth() / 2, sprite.getHeight() / 2,
                   sprite.getWidth(), sprite.getHeight(), sprite.getScaleX(), -sprite.getScaleY(), sprite.getRotation());
 
     }

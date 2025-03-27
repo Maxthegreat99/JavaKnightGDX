@@ -5,12 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.segfault.games.JavaKnight;
@@ -66,14 +69,49 @@ public class EntityLoader {
             float y;
             float w;
             float h;
+
+            float[] vertices = null;
             if (o instanceof RectangleMapObject){
                 x = ((RectangleMapObject)o).getRectangle().x;
                 y = ((RectangleMapObject)o).getRectangle().y;
                 w = ((RectangleMapObject)o).getRectangle().width;
                 h = ((RectangleMapObject)o).getRectangle().height;
 
-
             }
+
+            /**
+             * currently only support triangles
+             */
+
+            else if (o instanceof PolygonMapObject) {
+                x = ((PolygonMapObject) o).getPolygon().getX();
+                y = ((PolygonMapObject) o).getPolygon().getY();
+                vertices = ((PolygonMapObject) o).getPolygon().getTransformedVertices();
+
+                float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
+                float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
+
+                for (int l = 0; l < vertices.length; l += 2) {
+                    float X = vertices[l];     // X coordinate
+                    float Y = vertices[l + 1]; // Y coordinate
+
+                    // Update min/max values
+                    if (X < minX) minX = X;
+                    if (X > maxX) maxX = X;
+                    if (Y < minY) minY = Y;
+                    if (Y > maxY) maxY = Y;
+                }
+
+                w = maxX - minX;
+                h = maxY - minY;
+
+
+                for (int j = 0; j < vertices.length; j+=2) {
+                    vertices[j] = (vertices[j] - (x + w / 2)) / Renderer.PIXEL_TO_METERS;
+                    vertices[j + 1] = (vertices[j + 1] - (y + h / 2)) / Renderer.PIXEL_TO_METERS;
+                }
+            }
+
             else if (o instanceof EllipseMapObject){
                 x = ((EllipseMapObject) o).getEllipse().x;
                 y = ((EllipseMapObject) o).getEllipse().y;
@@ -93,7 +131,7 @@ public class EntityLoader {
                 JsonValue collides = jValue.get("collides");
                 col.relationship = CollisionRelationship.valueOf(collides.getString("relationship"));
 
-                String shape = collides.getString("shape", "POLYGONE");
+                String shape = collides.getString("shape", "RECTANGLE");
                 col.shape = EntityManager.Shapes.valueOf(shape);
 
                 col.restitution = collides.getFloat("restitution");
@@ -134,7 +172,8 @@ public class EntityLoader {
                 fixDef.shape = instance.GetEntityManager().GetShape(col.shape.ordinal());
 
                 if (col.shape.equals(EntityManager.Shapes.CIRCLE)) fixDef.shape.setRadius(col.width / 2);
-                else ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
+                else if (col.shape.equals(EntityManager.Shapes.RECTANGLE)) ((PolygonShape)fixDef.shape).setAsBox(col.width / 2, col.height / 2);
+                else ((PolygonShape)fixDef.shape).set(vertices);
 
                 fixDef.filter.maskBits = col.collisionFilter;
                 fixDef.filter.categoryBits = (short) col.relationship.flag;
