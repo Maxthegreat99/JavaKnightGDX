@@ -51,8 +51,8 @@ public class RenderingSystem extends SortedSystem {
 
         DrawableComponent drawableComp = manager.GetMappers().Drawable.get(entity);
 
-        drawableComp.sprite.setX(MathUtils.round(drawableComp.sprite.getX()));
-        drawableComp.sprite.setY(MathUtils.round(drawableComp.sprite.getY()));
+        drawableComp.sprite.setX(MathUtils.floor(drawableComp.sprite.getX()) + 0.5f);
+        drawableComp.sprite.setY(MathUtils.floor(drawableComp.sprite.getY()) + 0.5f);
 
         drawableComp.sprite.draw(batch);
     }

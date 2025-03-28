@@ -3,6 +3,7 @@ package com.segfault.games.obj.sys.phy;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.gra.Renderer;
@@ -24,6 +25,7 @@ public class SpritePositioningSystem extends IteratingSystem {
         manager = instance.GetEntityManager();
     }
 
+    private final Vector2 vel = new Vector2();
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
@@ -32,6 +34,11 @@ public class SpritePositioningSystem extends IteratingSystem {
 
         Vector2 pos = collidesComponent.physicBody.getPosition();
 
-        drawableComponent.sprite.setPosition(pos.x * Renderer.PIXEL_TO_METERS - collidesComponent.width * Renderer.PIXEL_TO_METERS / 2, pos.y * Renderer.PIXEL_TO_METERS - collidesComponent.height * Renderer.PIXEL_TO_METERS / 2);
+        float x = pos.x * Renderer.PIXEL_TO_METERS - collidesComponent.width * Renderer.PIXEL_TO_METERS / 2;
+        float y = pos.y * Renderer.PIXEL_TO_METERS - collidesComponent.height * Renderer.PIXEL_TO_METERS / 2;
+
+        drawableComponent.sprite.setPosition(x,  y);
+
+
     }
 }

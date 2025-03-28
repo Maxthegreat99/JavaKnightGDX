@@ -141,6 +141,21 @@ public class CollidesComponent extends Component {
      */
     public Array<String> collisionFilterStrings = new Array<>();
 
+    /**
+     * amount of collisions the body is colliding with
+     */
+    public int collisionCount = 0;
+
+    /**
+     * x position last update
+     */
+    public float lastX = 0f;
+
+    /**
+     * y position last update
+     */
+    public float lastY = 0f;
+
     @Override
     public void reset() {
 
@@ -155,6 +170,9 @@ public class CollidesComponent extends Component {
         rotationFixed = true;
         collisionFilter = 0;
         collisionFilterStrings.clear();
+        collisionCount = 0;
+        lastX = 0f;
+        lastY = 0f;
 
         relationship = null;
         width = 0f;

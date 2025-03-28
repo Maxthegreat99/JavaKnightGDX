@@ -12,7 +12,7 @@
     },
     "playerGun": {
       "initialCd": 0.35,
-      "bulletSpeed": 3.5
+      "bulletSpeed": 400
     },
     "recoil": {
       "maxAngle": 30.0,

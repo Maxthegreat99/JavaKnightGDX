@@ -8,7 +8,7 @@ import com.segfault.games.JavaKnight;
 
 /**
  * trail component expects the entity to have a drawableComponent,
- * adss a trail which are entities that copies the current state of
+ * adds a trail which are entities that copies the current state of
  * the entity's sprite and who have the AlphaDecreaseComponent added
  */
 public class TrailComponent extends Component {

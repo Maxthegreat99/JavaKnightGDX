@@ -18,10 +18,15 @@ public class CollisionListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
 
+
+
         CollidesComponent collidesComponentA = (CollidesComponent) contact.getFixtureA().getUserData();
         CollidesComponent collidesComponentB = (CollidesComponent) contact.getFixtureB().getUserData();
 
-        if (collidesComponentA == null || collidesComponentB == null || (!collidesComponentA.hasCollisionEvent && !collidesComponentB.hasCollisionEvent)) return;
+        collidesComponentA.collisionCount++;
+        collidesComponentB.collisionCount++;
+
+        if (!collidesComponentA.hasCollisionEvent && !collidesComponentB.hasCollisionEvent) return;
 
         CollisionEventComponent colEventA = manager.GetMappers().CollisionEvent.get(collidesComponentA.entity);
         CollisionEventComponent colEventB = manager.GetMappers().CollisionEvent.get(collidesComponentB.entity);
@@ -62,7 +67,11 @@ public class CollisionListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        CollidesComponent collidesComponentA = (CollidesComponent) contact.getFixtureA().getUserData();
+        CollidesComponent collidesComponentB = (CollidesComponent) contact.getFixtureB().getUserData();
 
+        collidesComponentA.collisionCount--;
+        collidesComponentB.collisionCount--;
     }
 
     @Override

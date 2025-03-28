@@ -56,7 +56,7 @@ public class NormalRenderingSystem extends SortedSystem {
 
         TextureRegion reg = assetManager.GetTextures().get(normalComp.texID);
         Sprite sprite = drawableComp.sprite;
-        batch.draw(reg, MathUtils.round(sprite.getX()), MathUtils.round(sprite.getY()), sprite.getWidth() / 2, sprite.getHeight() / 2,
+        batch.draw(reg, MathUtils.floor(sprite.getX()) + 0.5f, MathUtils.floor(sprite.getY()) + 0.5f, sprite.getWidth() / 2, sprite.getHeight() / 2,
                   sprite.getWidth(), sprite.getHeight(), sprite.getScaleX(), -sprite.getScaleY(), sprite.getRotation());
 
     }

@@ -1,6 +1,7 @@
 package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.gra.Renderer;
@@ -21,7 +22,7 @@ public class MovementSystem implements SubSystem {
         manager = ins.GetEntityManager();
 
     }
-
+    private final Vector2 snapedPos = new Vector2();
     private final Vector2 velToApply = new Vector2();
     public void processEntity(Entity entity, float interval, float accumulator) {
         if (entity.isScheduledForRemoval()) return;
@@ -31,8 +32,6 @@ public class MovementSystem implements SubSystem {
 
         CollidesComponent collisionInfo = manager.GetMappers().Collides.get(entity);
         boolean hasBox2DCol = collisionInfo != null;
-
-        if (Float.compare(movement.dx, 0f) == 0 && Float.compare(movement.dy, 0f) == 0) return;
 
         float x = drawable.sprite.getX();
         float y = drawable.sprite.getY();
@@ -52,16 +51,23 @@ public class MovementSystem implements SubSystem {
 
         // if box2d collision exists we let it handle the movement
         else {
-            Vector2 vec = collisionInfo.physicBody.getWorldCenter();
             Vector2 vel = collisionInfo.physicBody.getLinearVelocity();
+
+            collisionInfo.lastX = collisionInfo.physicBody.getPosition().x;
+            collisionInfo.lastY = collisionInfo.physicBody.getPosition().y;
+
+            if (!movement.dir.hasSameDirection(vel.nor())) {
+                snapedPos.set(collisionInfo.physicBody.getPosition());
+                snapedPos.scl(Renderer.PIXEL_TO_METERS).set(MathUtils.floor(snapedPos.x), MathUtils.floor(snapedPos.y));
+                collisionInfo.physicBody.setTransform(snapedPos.add(0.5f, 0.5f).scl(1f / Renderer.PIXEL_TO_METERS), collisionInfo.physicBody.getAngle());
+
+            }
+
+            movement.dir = vel.nor();
 
             velToApply.set(dx, dy);
 
-            if (Math.abs(vel.x) > Math.abs(movement.dx) && Math.signum(vel.x) == Math.signum(movement.dx)) velToApply.x = 0;
-            if (Math.abs(vel.y) > Math.abs(movement.dy) && Math.signum(vel.y) == Math.signum(movement.dy)) velToApply.y = 0;
-            if (velToApply.len2() > 0)
-                collisionInfo.physicBody.applyLinearImpulse(velToApply, vec, true);
-
+            collisionInfo.physicBody.setLinearVelocity(velToApply);
         }
 
 

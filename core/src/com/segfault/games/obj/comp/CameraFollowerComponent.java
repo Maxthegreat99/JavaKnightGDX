@@ -44,12 +44,19 @@ public class CameraFollowerComponent extends Component {
      */
     public float alpha = 0.15f;
 
+    /**
+     * maximum distance that the camera can reach from the target
+     */
+
+    public float maxDis = 0f;
+
     @Override
     public void reset() {
         targetX = targetY = currentY = currentX = 0f;
         priority = 0;
         fresh = true;
         alpha = 0.15f;
+        maxDis = 0f;
     }
 
     @Override
@@ -66,6 +73,7 @@ public class CameraFollowerComponent extends Component {
         comp.currentY = currentY;
         comp.fresh = true;
         comp.alpha = alpha;
+        comp.maxDis = maxDis;
         return comp;
     }
 
@@ -73,11 +81,13 @@ public class CameraFollowerComponent extends Component {
     public void write(Json json) {
         json.writeField(priority, "priority");
         json.writeField(alpha, "alpha");
+        json.writeField(maxDis, "maxDis");
     }
 
     @Override
     public void read(JsonValue jsonValue, JavaKnight instance, boolean maploading, Entity ent) {
         priority = jsonValue.getInt("priority");
         alpha = jsonValue.getFloat("alpha");
+        maxDis = jsonValue.getFloat("maxDis");
     }
 }

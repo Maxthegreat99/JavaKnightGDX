@@ -1,6 +1,7 @@
 package com.segfault.games.obj.comp;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -21,11 +22,14 @@ public class MovingComponent extends Component {
      */
     public float dy = 0.0f;
 
+    public Vector2 dir = new Vector2();
+
 
     @Override
     public void reset() {
         dx = 0.0f;
         dy = 0.0f;
+        dir.set(0,0);
     }
 
     @Override
@@ -38,6 +42,7 @@ public class MovingComponent extends Component {
         MovingComponent comp = instance.GetEntityManager().GetEngine().createComponent(this.getClass());
         comp.dy = dy;
         comp.dx = dx;
+        comp.dir.set(dir);
         return comp;
     }
 

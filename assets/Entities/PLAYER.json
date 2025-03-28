@@ -22,11 +22,12 @@
       "order": 3
     },
     "cameraFollower": {
-      "alpha": 0.15,
-      "priority": 1
+      "alpha": 0.08,
+      "priority": 1,
+      "maxDis": 65
     },
     "movementInput": {
-      "speed": 2.46065
+      "speed": 200
     },
     "moving": {
       "dx": 0.0,
@@ -53,9 +54,9 @@
           "rays": 128,
           "xRay": false,
           "R": 1,
-          "G": 0.3,
-          "B": 0.3,
-          "A": 0.4,
+          "G": 1,
+          "B": 1,
+          "A": 0.2,
           "soft": true,
           "softLength": 1,
           "isStatic": false,

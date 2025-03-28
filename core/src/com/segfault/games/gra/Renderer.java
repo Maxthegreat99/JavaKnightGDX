@@ -69,7 +69,7 @@ public class Renderer {
 
     public static final float PIXEL_TO_METERS = 60f;
     private static final Vector3 screenCoord = new Vector3();
-    private static final Color ambientColor = new Color(0.15f, 0.0f, 0.15f, 0.4f);
+    private static final Color ambientColor = new Color(0.15f, 0.15f, 0.15f, 0.4f);
 
     public Renderer(AssetManager assetManager, EntityManager entityManager, World world , int frameWidth, int frameHeight, float zoom) {
 
@@ -192,10 +192,10 @@ public class Renderer {
 
         if (Float.compare(CameraZoom, worldCamera.zoom) != 0 || UpdateCamera) {
             worldCamera.zoom = CameraZoom;
-            worldCamera.position.set(MathUtils.round(CameraPos.x) + MathUtils.round(ScreenTranslationX),
-                    MathUtils.round(CameraPos.y) + MathUtils.round(ScreenTranslationY), 0);
-            physicsCamera.position.set(MathUtils.round(CameraPos.x) / PIXEL_TO_METERS + MathUtils.round(ScreenTranslationX) / PIXEL_TO_METERS,
-                    MathUtils.round(CameraPos.y) / PIXEL_TO_METERS + MathUtils.round(ScreenTranslationY) / PIXEL_TO_METERS, 0);
+            worldCamera.position.set(CameraPos.x + ScreenTranslationX,
+                    CameraPos.y + ScreenTranslationY, 0);
+            physicsCamera.position.set(CameraPos.x / PIXEL_TO_METERS + ScreenTranslationX / PIXEL_TO_METERS,
+                    CameraPos.y / PIXEL_TO_METERS + ScreenTranslationY / PIXEL_TO_METERS, 0);
             worldCamera.update();
             physicsCamera.update();
             UpdateCamera = false;
