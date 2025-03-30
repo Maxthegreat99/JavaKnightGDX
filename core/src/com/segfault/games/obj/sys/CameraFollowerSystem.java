@@ -2,19 +2,21 @@ package com.segfault.games.obj.sys;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.CameraFollowerComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.ent.Mappers;
+import com.segfault.games.obj.sys.abs.SortedSystem;
 
 import java.util.Comparator;
 
-public class CameraFollowerSystem extends SortedIteratingSystem {
+public class CameraFollowerSystem extends SortedSystem {
 
     private final Mappers mappers;
     private final JavaKnight instance;
+    private final Vector2 dir = new Vector2();
+    private final Vector2 len = new Vector2();
     private final Vector2 current = new Vector2();
     private final Vector2 target = new Vector2();
 
@@ -32,6 +34,16 @@ public class CameraFollowerSystem extends SortedIteratingSystem {
         this.instance = instance;
         mappers = instance.GetEntityManager().GetMappers();
         this.priority = priority;
+    }
+
+    @Override
+    public void update (float deltaTime) {
+        sort();
+        for (int i = 0; i < sortedEntities.size; ++i) {
+            processEntity(sortedEntities.get(i), deltaTime);
+        }
+
+        instance.GetRenderer().UpdateCameras();
     }
 
     @Override
@@ -58,6 +70,12 @@ public class CameraFollowerSystem extends SortedIteratingSystem {
 
         current.set(cameraFollower.currentX, cameraFollower.currentY);
         target.set(cameraFollower.targetX, cameraFollower.targetY);
+
+        if (current.dst2(target) > cameraFollower.maxDis * cameraFollower.maxDis) {
+            dir.set(len.set(target).sub(current).nor());
+            dir.setLength(cameraFollower.maxDis);
+            current.set(len.set(target).sub(dir));
+        }
 
         instance.GetRenderer().CameraPos.set(current.lerp(target, cameraFollower.alpha), 0);
 

@@ -29,4 +29,6 @@ public class Mappers {
     public final ComponentMapper<NormalComponent> Normal = ComponentMapper.getFor(NormalComponent.class);
     public final ComponentMapper<LightHolderComponent> LightHolder = ComponentMapper.getFor(LightHolderComponent.class);
     public final ComponentMapper<RotatingComponent> Rotating = ComponentMapper.getFor(RotatingComponent.class);
+    public final ComponentMapper<PlayerAcceleratedComponent> PlayerAcceleration = ComponentMapper.getFor(PlayerAcceleratedComponent.class);
+    public final ComponentMapper<AcceleratedBodyComponent> AcceleratedBody = ComponentMapper.getFor(AcceleratedBodyComponent.class);
 }

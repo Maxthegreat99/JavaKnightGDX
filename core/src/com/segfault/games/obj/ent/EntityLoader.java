@@ -287,6 +287,13 @@ public class EntityLoader {
 
             case "rotating":
                 return manager.GetEngine().createComponent(RotatingComponent.class);
+
+            case "playerAcceleration":
+                return manager.GetEngine().createComponent(PlayerAcceleratedComponent.class);
+
+            case "acceleratedBody":
+                return manager.GetEngine().createComponent(AcceleratedBodyComponent.class);
+
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);
 

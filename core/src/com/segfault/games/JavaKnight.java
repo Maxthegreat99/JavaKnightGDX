@@ -26,6 +26,7 @@ public class JavaKnight extends ApplicationAdapter {
 	public static final int FRAME_WIDTH = 560;
 	public static final int FRAME_HEIGHT = 350;
 	public static final float ZOOM = 1f;
+	public static final float TARGET_FRAME_TIME = 1f / 60f;
 
 	@Override
 	public void create () {
@@ -98,6 +99,8 @@ public class JavaKnight extends ApplicationAdapter {
 		renderer.Dispose();
 		assetManager.Dispose();
 		entityManager.Dispose();
+		mapLoader.maps.forEach(x -> x.value.dispose());
+		mapLoader.maps.clear();
 
 		texts.clear();
 		for (BitmapFontCache i : staticFonts)

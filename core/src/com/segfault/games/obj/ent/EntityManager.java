@@ -63,7 +63,7 @@ public class EntityManager {
 
     public EntityManager(JavaKnight instance) {
         pooledECS = new PooledEngine();
-        physicWorld = new World(new Vector2(0, 0), true);
+        physicWorld = new World(new Vector2(0, -9.81f), true);
         entityCreator = new EntityCreator(instance);
         mappers = new Mappers();
         targetGetter = new TargetGetter(this);
@@ -80,8 +80,8 @@ public class EntityManager {
     public void InitializeSystems(JavaKnight instance, SpriteBatch batch) {
         pooledECS.addEntityListener(new EntityListener(instance));
 
-        systems.put(indexEntitySystems.CAMERA_FOLLOWER_SYSTEM, new CameraFollowerSystem(instance, 0));
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
+        systems.put(indexEntitySystems.PLAYER_ACCELERATION_SYSTEM, new PlayerAccelerationSystem(instance, 15));
         systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
         systems.put(indexEntitySystems.SPRITE_POSITIONING_SYSTEM, new SpritePositioningSystem(instance, 30));
         systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 40));
@@ -92,6 +92,7 @@ public class EntityManager {
         systems.put(indexEntitySystems.POSITION_RECOIL_SYSTEM, new PositionRecoilSystem(instance, 90));
         systems.put(indexEntitySystems.SCREEN_RECOIL_SYSTEM, new ScreenRecoilSystem(instance, 100));
         systems.put(indexEntitySystems.BULLET_SPAWN_SYSTEM, new BulletSpawnSystem(instance, 110));
+        systems.put(indexEntitySystems.CAMERA_FOLLOWER_SYSTEM, new CameraFollowerSystem(instance, 112));
         systems.put(indexEntitySystems.NORMAL_RENDERING_SYSTEM, new NormalRenderingSystem(instance, instance.GetRenderer().GetNormalBatch(), 115));
         systems.put(indexEntitySystems.RENDERING_SYSTEM, new RenderingSystem(instance, batch, 120));
 
@@ -182,6 +183,7 @@ public class EntityManager {
     public void Dispose() {
         pooledECS.clearPools();
         for (Shape shape : shapes) shape.dispose();
+
     }
 
 }

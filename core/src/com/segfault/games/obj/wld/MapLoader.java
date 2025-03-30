@@ -16,6 +16,7 @@ public class MapLoader {
 
     public void CacheMaps() {
         maps.put(MapID.BOSS_ROOM, mapLoader.load("bossRoom.tmx"));
+
     }
 
 

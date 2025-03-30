@@ -19,11 +19,11 @@
             "scaleInEditor": 1
         },
         "bossRoom.tmx": {
-            "scale": 32,
+            "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 521.65625,
-                "y": 144.75
+                "x": 1808,
+                "y": 0.5
             }
         }
     },
@@ -34,14 +34,13 @@
     "map.tileWidth": 1,
     "map.width": 616,
     "openFiles": [
-        "bossRoom.tmx",
-        "TestTileset.tsx"
+        "bossRoom.tmx"
     ],
     "project": "JavaKnight.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "TestTileset.tsx",
         "bossRoom.tmx",
+        "TestTileset.tsx",
         "BaseTileSetJavaKnight.tsx"
     ],
     "textEdit.monospace": true,

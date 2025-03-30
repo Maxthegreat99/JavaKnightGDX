@@ -3,13 +3,13 @@
     "collides": {
       "relationship": "PLAYER",
       "hasCollisionEvent": false,
-      "shape": "RECTANGLE",
+      "shape": "CIRCLE",
       "restitution": 0.0,
       "density": 0.5,
-      "friction": 0.35,
+      "friction": 0.000,
       "bodyType": "DynamicBody",
       "rotationFixed": true,
-      "linearDamping": 7.0,
+      "linearDamping": 0.000,
       "filter": [
         "OBSTACLE",
         "OUT_OF_BOUNDS",
@@ -24,26 +24,24 @@
     "cameraFollower": {
       "alpha": 0.08,
       "priority": 1,
-      "maxDis": 65
+      "maxDis": 20
     },
-    "movementInput": {
-      "speed": 200
+    "acceleratedBody": {
+
     },
-    "moving": {
-      "dx": 0.0,
-      "dy": 0.0
-    },
-    "trail": {
-      "alphaComparator": 0.6,
-      "trailInitialAlpha": 0.75,
-      "trailCooldown": 0.25,
-      "trailInitialCooldown": 0.15,
-      "trailAlphaDecrease": 1.5
+    "playerAcceleration": {
+      "velCapX": 3.15,
+      "maxAcceX": 2.18,
+      "initAcceY": 102.5,
+      "acceAlphaX": 0.38,
+      "frictionTime": 0.40,
+      "airControl": 0.30,
+      "constantAcceY": 27.8,
+      "acceTimeY": 0.15
     },
     "physic": {
       "physicSystems": [
-        "MOVEMENT_SYSTEM",
-        "MOVEMENT_INPUT_SYSTEM"
+        "MOVEMENT_SYSTEM"
       ]
     },
     "lightHolder":{
