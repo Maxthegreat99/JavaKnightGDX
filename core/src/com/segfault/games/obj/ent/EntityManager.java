@@ -105,7 +105,7 @@ public class EntityManager {
         systems.put(indexEntitySystems.MOVEMENT_INPUT_SYSTEM, new MovementInputSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_SYSTEM, new MovementSystem(instance));
         systems.put(indexEntitySystems.PLAYER_ACCELERATION_SYSTEM, new PlayerAccelerationSystem(instance));
-
+        systems.put(indexEntitySystems.PLAYER_DASH_SYSTEM, new PlayerDashSystem(instance));
 
         collisionEvents[CollisionEvents.DISPOSE.ordinal()] = new DisposeCollisionSystem(instance);
         collisionEvents[CollisionEvents.BOUNCING.ordinal()] = new BouncingCollisionSystem(instance);

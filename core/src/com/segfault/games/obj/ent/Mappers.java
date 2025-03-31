@@ -32,4 +32,5 @@ public class Mappers {
     public final ComponentMapper<PlayerAcceleratedComponent> PlayerAcceleration = ComponentMapper.getFor(PlayerAcceleratedComponent.class);
     public final ComponentMapper<AcceleratedBodyComponent> AcceleratedBody = ComponentMapper.getFor(AcceleratedBodyComponent.class);
     public final ComponentMapper<GroundCheckComponent> GroundCheck = ComponentMapper.getFor(GroundCheckComponent.class);
+    public final ComponentMapper<PlayerDashComponent> PlayerDash = ComponentMapper.getFor(PlayerDashComponent.class);
 }

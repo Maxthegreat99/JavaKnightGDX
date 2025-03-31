@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="100">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="104">
  <objectgroup id="2" name="Objects" opacity="0.22">
   <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
    <properties>
@@ -16,7 +16,7 @@
 }</property>
    </properties>
   </object>
-  <object id="4" name="Col4" x="0" y="367.5" width="9671" height="17.5">
+  <object id="4" name="Col4" x="0" y="367.5" width="2895" height="17.5">
    <properties>
     <property name="properties">{
     &quot;collides&quot; : {
@@ -932,6 +932,66 @@
    </properties>
   </object>
   <object id="65" name="Col" x="3068" y="44" width="122" height="16">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="100" name="Col" x="3004" y="216" width="122" height="16">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="101" name="Col" x="3852" y="224" width="122" height="16">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="102" name="Col" x="3616" y="336" width="122" height="16">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+    }
+
+}</property>
+   </properties>
+  </object>
+  <object id="103" name="Col" x="3132" y="352" width="122" height="16">
    <properties>
     <property name="properties">{
     &quot;collides&quot; : {

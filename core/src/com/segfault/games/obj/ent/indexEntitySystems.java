@@ -20,5 +20,6 @@ public enum indexEntitySystems {
     MOVEMENT_INPUT_SYSTEM,
     MOVEMENT_SYSTEM,
     PLAYER_ACCELERATION_SYSTEM,
+    PLAYER_DASH_SYSTEM
 
 }

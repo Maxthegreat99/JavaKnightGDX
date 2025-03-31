@@ -297,6 +297,9 @@ public class EntityLoader {
             case "groundCheck":
                 return manager.GetEngine().createComponent(GroundCheckComponent.class);
 
+            case "playerDash":
+                return manager.GetEngine().createComponent(PlayerDashComponent.class);
+
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);
 

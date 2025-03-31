@@ -121,7 +121,7 @@ public class PlayerAccelerationSystem implements SubSystem {
         }
 
 
-        if (groundCheck.isOnGround && acceComp.acceTimeYElapsed < 0) {
+        if (groundCheck.isOnGround) {
             movement.ay = 0f;
             acceComp.isJumping = false;
             acceComp.acceTimeYElapsed = -0.001f;
