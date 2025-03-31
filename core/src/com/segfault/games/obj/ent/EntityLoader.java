@@ -35,23 +35,30 @@ public class EntityLoader {
 
     public void LoadEntities(EntityManager manager, JavaKnight instance) {
 
-        for (FileHandle jsonEntity : Gdx.files.internal("Entities").list()) {
-            if (!jsonEntity.name().endsWith(".json")) continue;
+        String[] entityFiles = {
+                "Entities/PLAYER.json",
+                "Entities/GUN.json",
+                "Entities/BULLET.json"
+        };
+
+        for (String path : entityFiles) {
+            FileHandle jsonEntity = Gdx.files.internal(path);
+            if (!jsonEntity.exists()) {
+                System.err.println("File not found: " + path);
+                continue;
+            }
 
             JsonValue comps = reader.parse(jsonEntity).get("components");
             Entity entity = manager.GetEngine().createEntity();
 
-            for (JsonValue i : comps)
-            {
+            for (JsonValue i : comps) {
                 Component comp = getComponentFromName(i.name, manager);
                 comp.read(i, instance, false, entity);
                 entity.add(comp);
             }
 
-            String fileName = jsonEntity.file().getName().replace(".json", "");
-
+            String fileName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
             manager.GetEntityCreator().AddPrototype(entity, EntityID.valueOf(fileName));
-
         }
     }
 
@@ -212,7 +219,6 @@ public class EntityLoader {
 
             JsonValue value = null;
             if (o.getProperties().containsKey("properties")) value = reader.parse(o.getProperties().get("properties", String.class));
-
 
             Entity e = instance.GetEntityManager().GetEntityCreator().SpawnEntity(EntityID.valueOf(o.getName()), true, pol, value);
 

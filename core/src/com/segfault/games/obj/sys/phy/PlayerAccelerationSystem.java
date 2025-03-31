@@ -131,7 +131,7 @@ public class PlayerAccelerationSystem implements SubSystem {
             acceComp.koyoteTime -= interval;
 
 
-        if ((groundCheck.isOnGround || acceComp.koyoteTime > 0) && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if ((groundCheck.isOnGround || acceComp.koyoteTime > 0) && (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.K))) {
             movement.ay = acceComp.initAcceY;
             acceComp.isJumping = true;
             acceComp.acceTimeYElapsed = -0.001f;
@@ -140,7 +140,7 @@ public class PlayerAccelerationSystem implements SubSystem {
             return;
         }
 
-        if (acceComp.isJumping && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (acceComp.isJumping && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.K))) {
             float time = Math.min(acceComp.acceTimeYElapsed + interval, acceComp.acceTimeY);
 
             movement.ay = acceComp.constantAcceY * (1 - (time / acceComp.acceTimeY));

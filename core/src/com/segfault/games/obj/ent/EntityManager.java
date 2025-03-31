@@ -11,10 +11,7 @@ import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.CollisionEvents;
 import com.segfault.games.obj.sys.*;
 import com.segfault.games.obj.sys.phy.*;
-import com.segfault.games.obj.sys.phy.col_event.BouncingCollisionSystem;
-import com.segfault.games.obj.sys.phy.col_event.CollisionEventSystem;
-import com.segfault.games.obj.sys.phy.col_event.DisposeCollisionSystem;
-import com.segfault.games.obj.sys.phy.col_event.GroundCheckCollisionSystem;
+import com.segfault.games.obj.sys.phy.col_event.*;
 import com.segfault.games.obj.wld.MapID;
 
 /**
@@ -110,6 +107,7 @@ public class EntityManager {
         collisionEvents[CollisionEvents.DISPOSE.ordinal()] = new DisposeCollisionSystem(instance);
         collisionEvents[CollisionEvents.BOUNCING.ordinal()] = new BouncingCollisionSystem(instance);
         collisionEvents[CollisionEvents.GROUND_CHECK.ordinal()] = new GroundCheckCollisionSystem(instance);
+        collisionEvents[CollisionEvents.DASH_CANCEL.ordinal()] = new DashCancelCollisionSystem(instance);
 
         physicWorld.setContactListener(new CollisionListener(this));
 

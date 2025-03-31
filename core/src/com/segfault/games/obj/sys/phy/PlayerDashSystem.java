@@ -114,7 +114,7 @@ public class PlayerDashSystem implements SubSystem {
         if (Float.compare(dash.dir.len2(), 0f) == 0)
             return;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+        if (!groundCheckComponent.isOnGround && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.J) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))) {
             dash.isDashing = true;
             dash.dashElapsedTime = 0f;
             dash.canDash = false;

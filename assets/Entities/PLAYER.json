@@ -20,8 +20,10 @@
       "collisionEvents": [
         "OUT_OF_BOUNDS",
         "GROUND_CHECK",
+        "DASH_CANCEL",
         "OBSTACLE",
-        "GROUND_CHECK"
+        "GROUND_CHECK",
+        "DASH_CANCEL"
       ]
     },
     "groundCheck": {
@@ -52,12 +54,12 @@
       "koyoteTime": 0.1
     },
     "playerDash": {
-      "maxAcce": 7,
-      "maxVelCap": 7,
-      "dashTime": 0.1,
+      "maxAcce": 6.4,
+      "maxVelCap": 6.4,
+      "dashTime": 0.04,
       "dashCooldown": 1,
-      "dashCounterTime": 0.1,
-      "counterDamping": 7.5
+      "dashCounterTime": 0.01,
+      "counterDamping": 2.5
 
     },
     "physic": {

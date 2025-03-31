@@ -35,7 +35,12 @@ public class EntityCreator {
      */
     public Entity SpawnEntity(EntityID id, boolean addToEngine, Vector4 pol, JsonValue properties) {
         Entity e = instance.GetEntityManager().GetEngine().createEntity();
-        for (com.badlogic.ashley.core.Component c : prototypes.get(id).getComponents()) {
+        Entity prototype = prototypes.get(id);
+        if (prototype == null) {
+            throw new IllegalArgumentException("No prototype registered for ID: " + id);
+        }
+
+        for (com.badlogic.ashley.core.Component c : prototype.getComponents()) {
             Component comp = (Component) c;
 
             e.add(comp.clone(instance, e, pol, properties));
