@@ -72,6 +72,41 @@ public class CollisionListener implements ContactListener {
 
         collidesComponentA.collisionCount--;
         collidesComponentB.collisionCount--;
+
+        if (!collidesComponentA.hasCollisionEvent && !collidesComponentB.hasCollisionEvent) return;
+
+        CollisionEventComponent colEventA = manager.GetMappers().CollisionEvent.get(collidesComponentA.entity);
+        CollisionEventComponent colEventB = manager.GetMappers().CollisionEvent.get(collidesComponentB.entity);
+
+        CollisionEventSystem[] events = manager.GetCollisionEvents();
+
+        if (colEventA != null && colEventA.collisionEvents.containsKey(collidesComponentB.relationship)) {
+            Long flags = colEventA.collisionEvents.get(collidesComponentB.relationship);
+            while (flags != 0) {
+                long flag = flags & -flags; // Isolate the lowest set bit (get the first flag)
+                int index = Long.numberOfTrailingZeros(flag); // Get the index of the flag (0001 is 0, 0010 is 1 etc...)
+
+                // Trigger the corresponding handler
+                events[index].HandleEndCollision(collidesComponentA.entity, collidesComponentB.entity, contact);
+
+                // Clear the processed bit (ex. 1101 & ~0001 becomes 1100)
+                flags &= ~flag;
+            }
+        }
+
+        if (colEventB != null && colEventB.collisionEvents.containsKey(collidesComponentA.relationship)) {
+            Long flags = colEventB.collisionEvents.get(collidesComponentA.relationship);
+            while (flags != 0) {
+                long flag = flags & -flags; // Isolate the lowest set bit (get the first flag)
+                int index = Long.numberOfTrailingZeros(flag); // Get the index of the flag (0001 is 0, 0010 is 1 etc...)
+
+                // Trigger the corresponding handler
+                events[index].HandleEndCollision(collidesComponentB.entity, collidesComponentA.entity, contact);
+
+                // Clear the processed bit (ex. 1101 & ~0001 becomes 1100)
+                flags &= ~flag;
+            }
+        }
     }
 
     @Override

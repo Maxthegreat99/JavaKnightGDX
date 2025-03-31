@@ -37,12 +37,6 @@ public class PlayerAcceleratedComponent extends Component {
     public boolean hitCeil = false;
 
     /**
-     * whether the body is touching the ground
-     */
-
-    public boolean onGround = false;
-
-    /**
      * horizontal acceleration alpha
      */
     public float acceAlphaX = 0f;
@@ -66,7 +60,7 @@ public class PlayerAcceleratedComponent extends Component {
     /**
      * elapsed time during which player is accelerating on the y axis
      */
-    public float acceTimeYElapsed = 0f;
+    public float acceTimeYElapsed = -0.0001f;
 
 
     /**
@@ -79,20 +73,32 @@ public class PlayerAcceleratedComponent extends Component {
      */
     public float constantAcceY = 0f;
 
+    /**
+     * koyote time frame
+     */
+    public float koyoteTime = 0f;
+
+    /**
+     * initial koyote time
+     */
+
+    public float initialKoyoteTime = 0f;
+
     @Override
     public void reset() {
         velcapX = 0f;
         maxAcceX = 0f;
         initAcceY = 0f;
         hitCeil = false;
-        onGround = false;
         acceAlphaX = 0;
         frictionTime = 0f;
         airControl = 0f;
         acceTimeY = 0f;
-        acceTimeYElapsed = 0f;
+        acceTimeYElapsed = -0.0001f;
         isJumping = false;
         constantAcceY = 0f;
+        koyoteTime = 0f;
+        initialKoyoteTime = 0f;
     }
 
     @Override
@@ -112,6 +118,7 @@ public class PlayerAcceleratedComponent extends Component {
         comp.airControl = airControl;
         comp.acceTimeY = acceTimeY;
         comp.constantAcceY = constantAcceY;
+        comp.initialKoyoteTime = comp.koyoteTime = koyoteTime;
         return comp;
     }
 
@@ -125,6 +132,7 @@ public class PlayerAcceleratedComponent extends Component {
         airControl = jsonValue.getFloat("airControl");
         acceTimeY = jsonValue.getFloat("acceTimeY");
         constantAcceY = jsonValue.getFloat("constantAcceY");
+        initialKoyoteTime = koyoteTime = jsonValue.getFloat("koyoteTime");
     }
 
     @Override
@@ -137,6 +145,7 @@ public class PlayerAcceleratedComponent extends Component {
         json.writeField(airControl, "airControl");
         json.writeField(acceTimeY, "acceTimeY");
         json.writeField(constantAcceY, "constantAcceY");
+        json.writeField(initialKoyoteTime, "koyoteTime");
     }
 
 }

@@ -19,4 +19,9 @@ public class DisposeCollisionSystem implements CollisionEventSystem {
     public void HandleCollision(Entity entity, Entity target, Contact collision) {
         manager.GetEngine().removeEntity(entity);
     }
+
+    @Override
+    public void HandleEndCollision(Entity entity, Entity target, Contact collision) {
+        return;
+    }
 }

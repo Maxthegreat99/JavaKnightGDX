@@ -1,4 +1,4 @@
-package com.segfault.games.obj.sys;
+package com.segfault.games.obj.sys.phy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -13,13 +13,15 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.segfault.games.JavaKnight;
 import com.segfault.games.obj.comp.AcceleratedBodyComponent;
 import com.segfault.games.obj.comp.CollidesComponent;
+import com.segfault.games.obj.comp.GroundCheckComponent;
 import com.segfault.games.obj.comp.PlayerAcceleratedComponent;
 import com.segfault.games.obj.ent.Mappers;
+import com.segfault.games.obj.sys.SubSystem;
 
 /**
  * System for player movement, that being jumping and horizontal movement
  */
-public class PlayerAccelerationSystem extends IteratingSystem {
+public class PlayerAccelerationSystem implements SubSystem {
     private final Mappers mappers;
     private final World physicWorld;
 
@@ -39,19 +41,7 @@ public class PlayerAccelerationSystem extends IteratingSystem {
         }
     };
 
-    private final RayCastCallback groundRaycast = new RayCastCallback() {
-
-        @Override
-        public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-
-            acceComp.onGround = true;
-            return 0;
-        }
-
-    };
-
-    public PlayerAccelerationSystem(JavaKnight instance, int priority) {
-        super(Family.all(PlayerAcceleratedComponent.class).get(), priority);
+    public PlayerAccelerationSystem(JavaKnight instance) {
 
         physicWorld = instance.GetEntityManager().GetPhysicWorld();
         mappers = instance.GetEntityManager().GetMappers();
@@ -68,23 +58,17 @@ public class PlayerAccelerationSystem extends IteratingSystem {
      *
      *
      * @param entity The current Entity being processed
-     * @param deltaTime The delta time between the last and current frame
+     * @param interval The constant update time
      */
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    public void processEntity(Entity entity, float interval, float acumulator) {
         CollidesComponent colComp = mappers.Collides.get(entity);
         acceComp = mappers.PlayerAcceleration.get(entity);
 
-        acceComp.onGround = false;
+        GroundCheckComponent groundCheck = mappers.GroundCheck.get(entity);
         acceComp.hitCeil = false;
 
         AcceleratedBodyComponent movement = mappers.AcceleratedBody.get(entity);
-
-        start.set(colComp.physicBody.getWorldCenter()).add(0, -colComp.physicBody.getFixtureList().first().getShape().getRadius());
-        end.set(start).add(0, -0.01f);
-
-        /* is player on ground */
-        physicWorld.rayCast(groundRaycast, start, end);
 
         Vector2 vel = colComp.physicBody.getLinearVelocity();
 
@@ -99,10 +83,10 @@ public class PlayerAccelerationSystem extends IteratingSystem {
         /*
          * horizontal acceleration
          */
-        if (acceComp.onGround && dirX == 0) {
+        if (groundCheck.isOnGround && dirX == 0) {
             movement.ax = (-vel.x / acceComp.frictionTime);
         }
-        else if (acceComp.onGround) {
+        else if (groundCheck.isOnGround) {
             if (Math.abs(vel.x) >= acceComp.velcapX && Math.signum(vel.x) == Math.signum(dirX))
                 movement.ax = MathUtils.lerp(movement.ax, 0, acceComp.acceAlphaX);
             else {
@@ -137,30 +121,37 @@ public class PlayerAccelerationSystem extends IteratingSystem {
         }
 
 
-        if (acceComp.onGround) {
+        if (groundCheck.isOnGround && acceComp.acceTimeYElapsed < 0) {
             movement.ay = 0f;
             acceComp.isJumping = false;
-            acceComp.acceTimeYElapsed = 0f;
+            acceComp.acceTimeYElapsed = -0.001f;
+            acceComp.koyoteTime = acceComp.initialKoyoteTime;
         }
+        else
+            acceComp.koyoteTime -= interval;
 
 
-        if (acceComp.onGround && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if ((groundCheck.isOnGround || acceComp.koyoteTime > 0) && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             movement.ay = acceComp.initAcceY;
             acceComp.isJumping = true;
-            acceComp.acceTimeYElapsed = 0f;
-
+            acceComp.acceTimeYElapsed = -0.001f;
+            acceComp.koyoteTime = -1;
+            groundCheck.isOnGround = false;
             return;
         }
 
         if (acceComp.isJumping && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            movement.ay = MathUtils.lerp(acceComp.constantAcceY, 0, acceComp.acceTimeYElapsed / acceComp.acceTimeY);
+            float time = Math.min(acceComp.acceTimeYElapsed + interval, acceComp.acceTimeY);
 
-            acceComp.acceTimeYElapsed += deltaTime;
+            movement.ay = acceComp.constantAcceY * (1 - (time / acceComp.acceTimeY));
+
+            acceComp.acceTimeYElapsed += interval;
 
             if (acceComp.acceTimeYElapsed >= acceComp.acceTimeY) {
                 acceComp.isJumping = false;
-                acceComp.acceTimeYElapsed = 0f;
+                acceComp.acceTimeYElapsed = -0.0001f;
                 movement.ay = 0;
+
             }
 
             return;
@@ -174,4 +165,5 @@ public class PlayerAccelerationSystem extends IteratingSystem {
         }
 
     }
+
 }

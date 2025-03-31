@@ -294,6 +294,9 @@ public class EntityLoader {
             case "acceleratedBody":
                 return manager.GetEngine().createComponent(AcceleratedBodyComponent.class);
 
+            case "groundCheck":
+                return manager.GetEngine().createComponent(GroundCheckComponent.class);
+
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);
 

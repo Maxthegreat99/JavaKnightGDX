@@ -36,7 +36,7 @@ public class PhysicsSystem extends EntitySystem {
     public void update(float deltaTime) {
 
         // avoid the accumulator being constantly too high on slower devices
-        float frameTime = Math.min(deltaTime, 0.25f);
+        float frameTime = Math.min(deltaTime, 0.025f);
         accumulator += frameTime;
         while (accumulator >= interval) {
 

@@ -14,6 +14,7 @@ import com.segfault.games.obj.sys.phy.*;
 import com.segfault.games.obj.sys.phy.col_event.BouncingCollisionSystem;
 import com.segfault.games.obj.sys.phy.col_event.CollisionEventSystem;
 import com.segfault.games.obj.sys.phy.col_event.DisposeCollisionSystem;
+import com.segfault.games.obj.sys.phy.col_event.GroundCheckCollisionSystem;
 import com.segfault.games.obj.wld.MapID;
 
 /**
@@ -81,7 +82,6 @@ public class EntityManager {
         pooledECS.addEntityListener(new EntityListener(instance));
 
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
-        systems.put(indexEntitySystems.PLAYER_ACCELERATION_SYSTEM, new PlayerAccelerationSystem(instance, 15));
         systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
         systems.put(indexEntitySystems.SPRITE_POSITIONING_SYSTEM, new SpritePositioningSystem(instance, 30));
         systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 40));
@@ -104,9 +104,12 @@ public class EntityManager {
         systems.put(indexEntitySystems.SPEED_DECREASE_SYSTEM, new SpeedDecreaseSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_INPUT_SYSTEM, new MovementInputSystem(instance));
         systems.put(indexEntitySystems.MOVEMENT_SYSTEM, new MovementSystem(instance));
+        systems.put(indexEntitySystems.PLAYER_ACCELERATION_SYSTEM, new PlayerAccelerationSystem(instance));
+
 
         collisionEvents[CollisionEvents.DISPOSE.ordinal()] = new DisposeCollisionSystem(instance);
         collisionEvents[CollisionEvents.BOUNCING.ordinal()] = new BouncingCollisionSystem(instance);
+        collisionEvents[CollisionEvents.GROUND_CHECK.ordinal()] = new GroundCheckCollisionSystem(instance);
 
         physicWorld.setContactListener(new CollisionListener(this));
 

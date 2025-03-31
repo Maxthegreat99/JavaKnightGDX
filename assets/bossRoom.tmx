@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="98">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="100">
  <objectgroup id="2" name="Objects" opacity="0.22">
   <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
    <properties>
@@ -945,6 +945,23 @@
 
 }</property>
    </properties>
+  </object>
+  <object id="98" name="Col" x="-1" y="14">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OUT_OF_BOUNDS&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.35,
+        &quot;hasCollisionEvent&quot;: false,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+        &quot;shape&quot;: &quot;POLYGONE&quot;
+    }
+
+}</property>
+   </properties>
+   <polygon points="1130,354 1017,354 1130,306"/>
   </object>
  </objectgroup>
  <layer id="5" name="TestTileLayer" width="616" height="385">

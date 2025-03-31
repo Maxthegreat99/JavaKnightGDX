@@ -40,4 +40,9 @@ public class BouncingCollisionSystem implements CollisionEventSystem {
         if (normal.x != 0)
             MvInf.dx = -MvInf.dx;
     }
+
+    @Override
+    public void HandleEndCollision(Entity entity, Entity target, Contact collision) {
+        return;
+    }
 }

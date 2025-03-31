@@ -5,4 +5,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 
 public interface CollisionEventSystem {
     void HandleCollision(Entity entity, Entity target, Contact collision);
+
+    void HandleEndCollision(Entity entity, Entity target, Contact collision);
 }

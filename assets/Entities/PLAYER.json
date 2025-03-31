@@ -2,7 +2,7 @@
   "components": {
     "collides": {
       "relationship": "PLAYER",
-      "hasCollisionEvent": false,
+      "hasCollisionEvent": true,
       "shape": "CIRCLE",
       "restitution": 0.0,
       "density": 0.5,
@@ -15,6 +15,17 @@
         "OUT_OF_BOUNDS",
         "OBJECT"
       ]
+    },
+    "collisionEvent": {
+      "collisionEvents": [
+        "OUT_OF_BOUNDS",
+        "GROUND_CHECK",
+        "OBSTACLE",
+        "GROUND_CHECK"
+      ]
+    },
+    "groundCheck": {
+      "normalReq": 0.2
     },
     "drawable": {
       "sprite": "PLAYER",
@@ -32,15 +43,17 @@
     "playerAcceleration": {
       "velCapX": 3.15,
       "maxAcceX": 2.18,
-      "initAcceY": 102.5,
+      "initAcceY": 92.5,
       "acceAlphaX": 0.38,
       "frictionTime": 0.40,
       "airControl": 0.30,
       "constantAcceY": 27.8,
-      "acceTimeY": 0.15
+      "acceTimeY": 0.16,
+      "koyoteTime": 0.1
     },
     "physic": {
       "physicSystems": [
+        "PLAYER_ACCELERATION_SYSTEM",
         "MOVEMENT_SYSTEM"
       ]
     },
