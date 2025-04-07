@@ -35,7 +35,7 @@ public class PointingSystem extends IteratingSystem {
 
         if (pointing.cursor) {
             targetPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            targetPoint.set(ins.GetRenderer().GetCamera().unproject(targetPoint));
+            targetPoint.set(ins.GetRenderer().GetWorldCamera().unproject(targetPoint));
         }
         else targetPoint.set(pointing.target.sprite.getX() + pointing.target.sprite.getWidth() / 2,
                              pointing.target.sprite.getY() + pointing.target.sprite.getHeight() / 2, 0);

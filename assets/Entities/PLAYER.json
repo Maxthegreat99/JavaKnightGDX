@@ -29,11 +29,6 @@
     "groundCheck": {
       "normalReq": 0.2
     },
-    "drawable": {
-      "sprite": "PLAYER",
-      "alpha": 1.0,
-      "order": 3
-    },
     "cameraFollower": {
       "alpha": 0.08,
       "priority": 1,
@@ -53,6 +48,7 @@
       "acceTimeY": 0.16,
       "koyoteTime": 0.1
     },
+
     "playerDash": {
       "maxAcce": 6.4,
       "maxVelCap": 6.4,
@@ -76,10 +72,10 @@
           "distance": 5,
           "rays": 128,
           "xRay": false,
-          "R": 1,
-          "G": 1,
-          "B": 1,
-          "A": 0.2,
+          "R": 0.5,
+          "G": 0.5,
+          "B": 0.5,
+          "A": 0.4,
           "soft": true,
           "softLength": 1,
           "isStatic": false,
@@ -91,7 +87,47 @@
           ]
         }
       }
+    },
+    "playerParticles": {
+      "sizeRandomMin": 0.1,
+      "sizeRandomMax": 0.18,
+      "startColorR": 0.0,
+      "startColorG": 1.0,
+      "startColorB": 1.0,
+      "startColorA": 1.0,
+      "endColorR": 0.035,
+      "endColorG": 0.078,
+      "endColorB": 0.23,
+      "endColorA": 1.0,
+      "angleRandomMin": 0.0,
+      "angleRandomMax": 360.0,
+      "lifetimeRandomMin": 0.5,
+      "lifetimeRandomMax": 1.0,
+      "velXRandomMin": -0.5,
+      "velXRandomMax": 0.5,
+      "velYRandomMin": 0.4,
+      "velYRandomMax": 1.4,
+      "voronoiScaleMin": 2.0,
+      "voronoiScaleMax": 3.5,
+      "voronoiSpeedMin": 1,
+      "voronoiSpeedMax": 5,
+      "fresnelPower": 0.02,
+      "partSpawnChance": 0.00,
+      "maxParts": 300,
+      "texID": "PLAYER_FIRE_PARTICLE",
+      "sizeCurve": [
+        {"x": 0.00, "y": 0.66, "tanX": 0.00, "tanY": 0.00},
+        {"x": 0.46, "y": 0.56, "tanX": 0.95, "tanY": 1.19},
+        {"x": 1.00, "y": 0.99, "tanX": 0.00, "tanY": -0.10}
+      ],
+      "alphaClipCurve": [
+        {"x": 0.00, "y": 0.50, "tanX": 0.00, "tanY": 0.00},
+        {"x": 0.50, "y": 0.20, "tanX": 0.34, "tanY": 1.70},
+        {"x": 1.00, "y": 1.00, "tanX": 0.00, "tanY": -0.10}
+      ]
     }
+
+
   }
 
 }

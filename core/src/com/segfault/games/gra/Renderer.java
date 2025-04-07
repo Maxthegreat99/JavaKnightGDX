@@ -64,6 +64,10 @@ public class Renderer {
 
     public boolean UpdateCamera = false;
 
+    private final FrameBuffer[] chainFBO = new FrameBuffer[2];
+
+    private final TextureRegion[] chainTexReg = new TextureRegion[2];
+
     public static final float PIXEL_TO_METERS = 60f;
     private static final Vector3 screenCoord = new Vector3();
     private static final Color ambientColor = new Color(0.15f, 0.15f, 0.15f, 0.4f);
@@ -86,6 +90,17 @@ public class Renderer {
         physicsCamera = new OrthographicCamera(FRAME_WIDTH / PIXEL_TO_METERS, FRAME_HEIGHT / PIXEL_TO_METERS);
 
         screenBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, frameWidth, frameHeight, false);
+        chainFBO[0] = new FrameBuffer(Pixmap.Format.RGBA8888, frameWidth, frameHeight, false);
+        chainFBO[1] = new FrameBuffer(Pixmap.Format.RGBA8888, frameWidth, frameHeight, false);
+
+        chainTexReg[0] = new TextureRegion(chainFBO[0].getColorBufferTexture());
+        chainTexReg[1] = new TextureRegion(chainFBO[1].getColorBufferTexture());
+
+        chainTexReg[0].flip(false, true);
+        chainTexReg[1].flip(false, true);
+
+        chainTexReg[0].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        chainTexReg[1].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         Gdx.graphics.setFullscreenMode(displayMode);
 
@@ -162,7 +177,7 @@ public class Renderer {
         };
         rayHandler.setLightShader(lightShader);
         rayHandler.setAmbientLight(ambientColor);
-        rayHandler.setBlurNum(1);
+        rayHandler.setBlurNum(2);
 
         rayHandler.useCustomViewport(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
@@ -189,11 +204,15 @@ public class Renderer {
      * @param physicWorld
      */
     public void Render(JavaKnight instance, World physicWorld) {
+/*
+        screenBuffer.begin();
+        batch.begin();
 
         renderShapes(physicsCamera, debugRenderer, physicWorld);
 
         batch.end();
         screenBuffer.end();
+*/
 
         rayHandler.setCombinedMatrix(physicsCamera);
         rayHandler.update();
@@ -209,7 +228,8 @@ public class Renderer {
         batch.setTransformMatrix(screenCamera.view);
 
         batch.begin();
-        batch.draw(fboTextureRegion.getTexture(), 0, 0, FRAME_WIDTH, FRAME_HEIGHT, 0, 0, 1, 1);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.draw(fboTextureRegion, 0, 0);
         if (!instance.GetTexts().isEmpty() || !instance.GetStaticFonts().isEmpty()) {
             // Draw text objects
             batch.setShader(fontShader);
@@ -311,8 +331,9 @@ public class Renderer {
                 "// Blend the base color (v_color) with the light effect based on normal strength\n" +
                 "vec3 finalColor = mix(v_color.rgb, lightEffect, normalMapStrength);\n" +
                 "\n" +
+                "vec3 premultiplied = finalColor * v_color.a;" +
                 "// Output the final color with the alpha from v_color\n" +
-                "gl_FragColor = vec4(finalColor, v_color.a);" //
+                "gl_FragColor = vec4(premultiplied, 1);" //
                 + "}";
 
         ShaderProgram.pedantic = false;
@@ -331,6 +352,184 @@ public class Renderer {
 
 
         shaders.put(Shaders.LIGHT, lightShader);
+
+
+        final String fireParticleVertex = "#ifdef GL_ES\n" +
+                "precision mediump float;\n" +
+                "#endif\n" +
+                "\n" +
+                "attribute vec4 a_position;\n" +
+                 "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+                "uniform mat4 u_projTrans;\n" +
+                "uniform vec3 u_cameraPosition;\n" +
+                "\n" +
+                "varying vec2 v_texCoords;\n" +
+                "varying float v_fresnel;\n" +
+                "\n" +
+                "void main() {\n" +
+                "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n"  +
+                "\n" +
+                "    // Fake Fresnel effect\n" +
+                "    vec3 worldPos = (u_projTrans * a_position).xyz; \n" +
+                "    vec3 viewDir = normalize(u_cameraPosition - worldPos);\n" +
+                "    vec3 normal = vec3(0.0, 0.0, 1.0);\n" +
+                "\n" +
+                "    v_fresnel = pow(1.0 - dot(viewDir, normal), 1.0);\n" +
+                "\n" +
+                "    gl_Position = u_projTrans * a_position;\n" +
+                "}";
+
+        final String fireParticleFragement = "#ifdef GL_ES\n" +
+                "precision mediump float;\n" +
+                "#endif\n" +
+                "\n" +
+                "uniform sampler2D u_texture;\n" +
+                "uniform float u_alphaThreshold;\n" +
+                "uniform sampler2D u_gradient;\n" +
+                "uniform float u_fresnelPower;\n" +
+                "uniform float u_voronoiScale;\n" +
+                "uniform float u_time;\n" +
+                "uniform float u_voronoiSpeed;\n" +
+                "uniform float u_startUgradient;\n" +
+                "uniform float u_startVgradient;\n" +
+                "uniform float u_gradientWidth;\n" +
+                "\n" +
+                "varying vec2 v_texCoords;\n" +
+                "varying float v_fresnel;\n" +
+                "\n" +
+                "// Hash function for randomness\n" +
+                "vec2 hash(vec2 p) {\n" +
+                "    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));\n" +
+                "    return fract(sin(p) * 43758.5453);\n" +
+                "}\n" +
+                "\n" +
+                "// Voronoi noise function\n" +
+                "float voronoi(vec2 uv) {\n" +
+                "    uv *= u_voronoiScale;\n" +
+                "    vec2 i_uv = floor(uv);\n" +
+                "    vec2 f_uv = fract(uv);\n" +
+                "\n" +
+                "    float minDist = 1.0;\n" +
+                "    \n" +
+                "    for (int y = -1; y <= 1; y++) {\n" +
+                "        for (int x = -1; x <= 1; x++) {\n" +
+                "            vec2 neighbor = vec2(float(x), float(y));\n" +
+                "            vec2 point = hash(i_uv + neighbor);\n" +
+                "            \n" +
+                "            float angle = u_time * u_voronoiSpeed;\n" +
+                "            point = 0.5 + 0.5 * vec2(cos(angle) * point.x - sin(angle) * point.y, \n" +
+                "                                     sin(angle) * point.x + cos(angle) * point.y);\n" +
+                "            \n" +
+                "            vec2 diff = neighbor + point - f_uv;\n" +
+                "            float dist = length(diff);\n" +
+                "            \n" +
+                "            minDist = min(minDist, dist);\n" +
+                "        }\n" +
+                "    }\n" +
+                "    \n" +
+                "    return minDist;\n" +
+                "}\n" +
+                "\n" +
+                "void main() {\n" +
+                "    vec4 color = texture2D(u_texture, v_texCoords);\n" +
+                "float luminance = dot(color.rgb, vec3(0.299, 0.587, 0.114));\n" +
+                "\n" +
+                "// Use luminance as alpha\n" +
+                "   vec4 clr =  texture2D(u_gradient, vec2(u_startUgradient + u_gradientWidth * u_time, u_startVgradient));" +
+                "float baseAlpha = luminance * clr.a;\n" +
+                "\n" +
+                "    \n" +
+                "    // Voronoi noise in alpha channel\n" +
+                "    float noise = voronoi(gl_FragCoord.xy);\n" +
+                "" +
+                "    \n" +
+                "    // Alpha Clipping using Voronoi noise\n" +
+                "    if (noise < u_alphaThreshold) discard; // Ensures cutout effect\n" +
+                "\n" +
+                "    // Fresnel effect\n" +
+                "    float fresnelFactor = pow(v_fresnel, u_fresnelPower);\n" +
+                "\n" +
+                "    // Opaque blending (no transparency)\n" +
+                "    vec3 finalColor = color.rgb * clr.rgb * (1.0 + fresnelFactor * 3.0);\n" +
+                "    \n" +
+                "    gl_FragColor = vec4(clr.rgb, baseAlpha); // Force full opacity\n" +
+                "}";
+
+
+        ShaderProgram fireParticles = new ShaderProgram(fireParticleVertex,
+                fireParticleFragement);
+        if (!fireParticles.isCompiled()) {
+            Gdx.app.log("ERROR", fireParticles.getLog());
+        }
+
+        fireParticles.begin();
+        fireParticles.setUniformi("u_gradient", 1);
+        fireParticles.setUniformf("u_alphaThreshold", 0.5f);
+        fireParticles.setUniformf("u_fresnelPower", 3.0f);
+        fireParticles.setUniformf("u_color", 1.0f, 0.5f, 0.5f, 1.0f);
+        fireParticles.setUniformf("u_voronoiScale", 10.0f);
+        fireParticles.setUniformf("u_voronoiSpeed", 2.0f);
+        fireParticles.end();
+
+        shaders.put(Shaders.FIRE_PARTICLE, fireParticles);
+
+        final String defaultVertex = "// default.vert\n" +
+                "attribute vec4 a_position;\n" +
+                "attribute vec2 a_texCoord0;\n" +
+                "\n" +
+                "varying vec2 tex_coord;\n" +
+                "uniform mat4 u_projTrans;\n" +
+                "\n" +
+                "void main() {\n" +
+                "    tex_coord = a_texCoord0;\n" +
+                "    gl_Position = u_projTrans * a_position;\n" +
+                "}";
+
+        final String bloomFrag = "#ifdef GL_ES\n" +
+                "precision mediump float;\n" +
+                "#endif\n" +
+                "\n" +
+                "varying vec2 tex_coord;\n" +
+                "\n" +
+                "uniform sampler2D u_texture;\n" +
+                "uniform vec2 u_resolution;  \n" +
+                "uniform float bloom_spread;     \n" +
+                "uniform float bloom_intensity;  \n" +
+                "\n" +
+                "void main() {\n" +
+                "    vec2 texelSize = 1.0 / u_resolution;\n" +
+                "    vec4 bloom = vec4(0.0);\n" +
+                "\n" +
+                "    for (int y = -4; y <= 4; ++y) {\n" +
+                "        float offsetY = float(y) * bloom_spread * texelSize.y;\n" +
+                "\n" +
+                "        for (int x = -4; x <= 4; ++x) {\n" +
+                "            float offsetX = float(x) * bloom_spread * texelSize.x;\n" +
+                "            bloom += texture2D(u_texture, tex_coord + vec2(offsetX, offsetY));\n" +
+                "        }\n" +
+                "    }\n" +
+                "\n" +
+                "    bloom /= 81.0; // 9x9 samples\n" +
+                "    vec4 original = texture2D(u_texture, tex_coord);\n" +
+                "\n" +
+                "    // Add the bloom glow onto the original texture\n" +
+                "    gl_FragColor = vec4((original.rgb + bloom.rgb * bloom_intensity) / (1.0 + bloom_intensity), 1.0);\n" +
+                "}\n";
+
+        ShaderProgram bloomShader = new ShaderProgram(defaultVertex,
+                bloomFrag);
+        if (!bloomShader.isCompiled()) {
+            Gdx.app.log("ERROR", bloomShader.getLog());
+        }
+
+        bloomShader.bind();
+        bloomShader.setUniformi("u_texture", 0);
+        bloomShader.end();
+
+        shaders.put(Shaders.BLOOM_SHADER, bloomShader);
+
+
+
     }
 
     public SpriteBatch GetSpriteBatch() {
@@ -342,8 +541,11 @@ public class Renderer {
     public FrameBuffer GetNormalBuffer() {
         return normalBuffer;
     }
-    public OrthographicCamera GetCamera() {
+    public OrthographicCamera GetWorldCamera() {
         return worldCamera;
+    }
+    public OrthographicCamera GetScreenCamera() {
+        return screenCamera;
     }
     public FitViewport GetViewport() {
         return viewport;
@@ -353,6 +555,25 @@ public class Renderer {
     }
     public RayHandler GetRayHandler() {
         return rayHandler;
+    }
+    public ObjectMap<Shaders, ShaderProgram> GetShaders() {
+        return shaders;
+    }
+
+    /**
+     * gives the engine's chained framebuffer object for applying multiple shader
+     * to a buffer
+     */
+    public FrameBuffer[] GetChainFBO()
+    {
+        return chainFBO;
+    }
+
+    /**
+     * gives the engine's chainedFBO tex regions
+     */
+    public TextureRegion[] GetChainTexReg() {
+        return chainTexReg;
     }
 
     public void UpdateCameras() {
@@ -373,6 +594,9 @@ public class Renderer {
 
         normalBatch.setProjectionMatrix(worldCamera.projection);
         normalBatch.setTransformMatrix(worldCamera.view);
+
+        viewport.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+
     }
 
     public ObjectMap<Light, LightHolderComponent.LightObject> GetLights() {
@@ -381,6 +605,9 @@ public class Renderer {
     public void Dispose() {
         batch.dispose();
         screenBuffer.dispose();
+        chainFBO[0].dispose();
+        chainFBO[1].dispose();
+        normalBuffer.dispose();
         font.dispose();
         fontShader.dispose();
         debugRenderer.dispose();

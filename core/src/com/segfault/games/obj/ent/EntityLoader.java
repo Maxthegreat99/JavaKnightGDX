@@ -144,6 +144,7 @@ public class EntityLoader {
                 col.restitution = collides.getFloat("restitution");
                 col.friction = collides.getFloat("friction");
                 col.density = collides.getFloat("density");
+                col.isSensor = collides.getBoolean("isSensor", false);
 
                 col.bodyType = BodyDef.BodyType.valueOf(collides.getString("bodyType"));
                 col.hasCollisionEvent = collides.getBoolean("hasCollisionEvent");
@@ -175,6 +176,7 @@ public class EntityLoader {
                 fixDef.friction = col.friction;
                 fixDef.density = col.density;
                 fixDef.restitution = col.restitution;
+                fixDef.isSensor = col.isSensor;
 
                 fixDef.shape = instance.GetEntityManager().GetShape(col.shape.ordinal());
 
@@ -305,6 +307,18 @@ public class EntityLoader {
 
             case "playerDash":
                 return manager.GetEngine().createComponent(PlayerDashComponent.class);
+
+            case "childBody":
+                return manager.GetEngine().createComponent(ChildBodyComponent.class);
+
+            case "motherBody":
+                return manager.GetEngine().createComponent(MotherBodyComponent.class);
+
+            case "orbObject":
+                return manager.GetEngine().createComponent(OrbObjectComponent.class);
+
+            case "playerParticles":
+                return manager.GetEngine().createComponent(PlayerParticlesComponent.class);
 
             default:
                 throw new IllegalArgumentException("Unknown component: " + name);

@@ -45,6 +45,8 @@ public class RenderingSystem extends SortedSystem {
         for (int i = 0; i < sortedEntities.size; ++i) {
             processEntity(sortedEntities.get(i), deltaTime);
         }
+        batch.end();
+        screenBuffer.end();
     }
 
     protected void processEntity(Entity entity, float deltaTime) {

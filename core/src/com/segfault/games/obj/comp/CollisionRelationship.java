@@ -11,7 +11,8 @@ public enum CollisionRelationship {
     OBSTACLE(1),
     OUT_OF_BOUNDS(2),
     BULLET(3 ),
-    OBJECT(4);
+    OBJECT(4),
+    ORB(5);
 
 
     public final int flag;

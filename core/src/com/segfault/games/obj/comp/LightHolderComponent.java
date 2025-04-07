@@ -115,6 +115,10 @@ public class LightHolderComponent extends Component {
             newLight.light.setContactFilter((short) l.relationship.flag, (short) 0, l.collisionFilter);
 
             comp.lights.add(newLight);
+
+            if (newLight.isStatic) {
+                newLight.light.setPosition(phy.physicBody.getWorldCenter());
+            }
             instance.GetRenderer().GetLights().put(newLight.light, newLight);
         }
         return comp;
@@ -177,6 +181,10 @@ public class LightHolderComponent extends Component {
             l.light.setSoftnessLength(l.softLength);
             l.light.setXray(l.xRay);
             l.light.setContactFilter((short) l.relationship.flag, (short) 0, l.collisionFilter);
+
+            if (l.isStatic)
+                l.light.setPosition(phy.physicBody.getWorldCenter());
+
 
             instance.GetRenderer().GetLights().put(l.light, l);
 

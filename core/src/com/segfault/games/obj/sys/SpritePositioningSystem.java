@@ -1,4 +1,4 @@
-package com.segfault.games.obj.sys.phy;
+package com.segfault.games.obj.sys;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;

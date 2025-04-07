@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="104">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="616" height="385" tilewidth="1" tileheight="1" infinite="0" nextlayerid="6" nextobjectid="108">
  <objectgroup id="2" name="Objects" opacity="0.22">
   <object id="3" name="Col5" x="0" y="0" width="616" height="17.5">
    <properties>
@@ -1022,6 +1022,59 @@
 }</property>
    </properties>
    <polygon points="1130,354 1017,354 1130,306"/>
+  </object>
+  <object id="106" name="ColOrb" x="396" y="200" width="35" height="35">
+   <properties>
+    <property name="properties">{
+    &quot;collides&quot; : {
+        &quot;relationship&quot; : &quot;OBJECT&quot;,
+        &quot;restitution&quot;: 0.0,
+        &quot;density&quot;: 1.0,
+        &quot;friction&quot;: 0.0,
+        &quot;hasCollisionEvent&quot;: true,
+        &quot;isSensor&quot;: true,
+        &quot;bodyType&quot;: &quot;StaticBody&quot;,
+        &quot;filter&quot;: [
+        &quot;PLAYER&quot;
+        ],
+        &quot;shape&quot;: &quot;CIRCLE&quot;
+    },
+    &quot;collisionEvent&quot;: {
+      &quot;collisionEvents&quot;: [
+        &quot;PLAYER&quot;,
+        &quot;ORB_COLLIDE&quot;,
+      ]
+    },
+    &quot;orbObject&quot;: {
+        &quot;cooldown&quot;: 1
+    },
+    &quot;lightHolder&quot;:{
+      &quot;lights&quot;: {
+        &quot;light1&quot;: {
+          &quot;direction&quot;: 0.0,
+          &quot;distance&quot;: 5,
+          &quot;rays&quot;: 32,
+          &quot;xRay&quot;: true,
+          &quot;R&quot;: 1,
+          &quot;G&quot;: 1,
+          &quot;B&quot;: 1,
+          &quot;A&quot;: 0.2,
+          &quot;soft&quot;: true,
+          &quot;softLength&quot;: 1,
+          &quot;isStatic&quot;: true,
+          &quot;lightType&quot;: &quot;POINT&quot;,
+          &quot;size&quot;: 45,
+          &quot;relationship&quot;: &quot;OBJECT&quot;,
+          &quot;filter&quot;: [
+          ]
+        }
+      }
+    }
+    
+
+}</property>
+   </properties>
+   <ellipse/>
   </object>
  </objectgroup>
  <layer id="5" name="TestTileLayer" width="616" height="385">

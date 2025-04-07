@@ -27,6 +27,7 @@ public class EntityManager {
     private final EntityLoader entityLoader;
     private final ObjectMap<indexEntitySystems, Object> systems = new ObjectMap<>();
     private final CollisionEventSystem[] collisionEvents = new CollisionEventSystem[32];
+    private final ObjectMap<String, Body> motherBodies = new ObjectMap<>(); /* string key, body */
     private Entity player;
 
     /**
@@ -79,6 +80,7 @@ public class EntityManager {
         pooledECS.addEntityListener(new EntityListener(instance));
 
         systems.put(indexEntitySystems.LIFETIME_SYSTEM, new LifetimeSystem(instance, 10));
+        systems.put(indexEntitySystems.ORB_UPDATE_SYSTEM, new OrbUpdateSystem(instance, 15));
         systems.put(indexEntitySystems.PHYSICS_SYSTEM, new PhysicsSystem(instance, 0.01666666666f, 20));
         systems.put(indexEntitySystems.SPRITE_POSITIONING_SYSTEM, new SpritePositioningSystem(instance, 30));
         systems.put(indexEntitySystems.POINTING_SYSTEM, new PointingSystem(instance, 40));
@@ -92,6 +94,7 @@ public class EntityManager {
         systems.put(indexEntitySystems.CAMERA_FOLLOWER_SYSTEM, new CameraFollowerSystem(instance, 112));
         systems.put(indexEntitySystems.NORMAL_RENDERING_SYSTEM, new NormalRenderingSystem(instance, instance.GetRenderer().GetNormalBatch(), 115));
         systems.put(indexEntitySystems.RENDERING_SYSTEM, new RenderingSystem(instance, batch, 120));
+        systems.put(indexEntitySystems.PLAYER_PARTICLE_SYSTEM, new PlayerParticleSystem(instance, 121));
 
         for (Object system : systems.values())
             pooledECS.addSystem( (EntitySystem) system);
@@ -108,6 +111,7 @@ public class EntityManager {
         collisionEvents[CollisionEvents.BOUNCING.ordinal()] = new BouncingCollisionSystem(instance);
         collisionEvents[CollisionEvents.GROUND_CHECK.ordinal()] = new GroundCheckCollisionSystem(instance);
         collisionEvents[CollisionEvents.DASH_CANCEL.ordinal()] = new DashCancelCollisionSystem(instance);
+        collisionEvents[CollisionEvents.ORB_COLLIDE.ordinal()] = new OrbCollisionSystem(instance);
 
         physicWorld.setContactListener(new CollisionListener(this));
 
@@ -172,6 +176,9 @@ public class EntityManager {
     public EntityLoader GetEntityLoader() {
         return entityLoader;
     }
+    public ObjectMap<String, Body> GetMotherBodies() {
+        return motherBodies;
+    }
 
     public ObjectMap<indexEntitySystems, Object> GetSystems() {
         return systems;
@@ -183,6 +190,7 @@ public class EntityManager {
 
     public void Dispose() {
         pooledECS.clearPools();
+        pooledECS.removeAllSystems();
         for (Shape shape : shapes) shape.dispose();
 
     }

@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
 import com.segfault.games.JavaKnight;
+import com.segfault.games.gra.Renderer;
 import com.segfault.games.obj.comp.CameraFollowerComponent;
+import com.segfault.games.obj.comp.CollidesComponent;
 import com.segfault.games.obj.comp.DrawableComponent;
 import com.segfault.games.obj.ent.Mappers;
 import com.segfault.games.obj.sys.abs.SortedSystem;
@@ -49,10 +51,10 @@ public class CameraFollowerSystem extends SortedSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
         CameraFollowerComponent cameraFollower = mappers.CameraFollower.get(entity);
-        DrawableComponent drawable = mappers.Drawable.get(entity);
+        CollidesComponent col = mappers.Collides.get(entity);
 
-        cameraFollower.targetX = drawable.sprite.getX();
-        cameraFollower.targetY = drawable.sprite.getY();
+        cameraFollower.targetX = col.physicBody.getWorldCenter().x * Renderer.PIXEL_TO_METERS;
+        cameraFollower.targetY = col.physicBody.getWorldCenter().y * Renderer.PIXEL_TO_METERS;
 
         if(cameraFollower.fresh) {
             cameraFollower.currentX = cameraFollower.targetX;

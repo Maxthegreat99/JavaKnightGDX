@@ -2,6 +2,7 @@ package com.segfault.games.obj.ent;
 
 public enum indexEntitySystems {
     LIFETIME_SYSTEM,
+    ORB_UPDATE_SYSTEM,
     PHYSICS_SYSTEM,
     SPRITE_POSITIONING_SYSTEM,
     POINTING_SYSTEM,
@@ -15,6 +16,7 @@ public enum indexEntitySystems {
     CAMERA_FOLLOWER_SYSTEM,
     NORMAL_RENDERING_SYSTEM,
     RENDERING_SYSTEM,
+    PLAYER_PARTICLE_SYSTEM,
     ROTATING_SYSTEM,
     SPEED_DECREASE_SYSTEM,
     MOVEMENT_INPUT_SYSTEM,

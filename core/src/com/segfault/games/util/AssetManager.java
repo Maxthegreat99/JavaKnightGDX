@@ -59,6 +59,10 @@ public class AssetManager {
         textures.put(indexT.BG_GRAY, atlas.findRegion("grayBG"));
         textures.put(indexT.TEST_N, atlas.findRegion("object-deferred-n"));
         textures.put(indexT.TEST, atlas.findRegion("object-deferred"));
+        textures.put(indexT.PLAYER_FIRE_PARTICLE, atlas.findRegion("firePart"));
+        textures.put(indexT.FIRE_GRADIENT, atlas.findRegion("gradient"));
+
+
 
         loadMeshes();
     }

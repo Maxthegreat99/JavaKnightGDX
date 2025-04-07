@@ -156,6 +156,11 @@ public class CollidesComponent extends Component {
      */
     public float lastY = 0f;
 
+    /**
+     *
+     */
+    public boolean isSensor = false;
+
     @Override
     public void reset() {
 
@@ -174,6 +179,7 @@ public class CollidesComponent extends Component {
         lastX = 0f;
         lastY = 0f;
 
+        isSensor = false;
         relationship = null;
         width = 0f;
         height = 0f;
@@ -217,6 +223,7 @@ public class CollidesComponent extends Component {
         fixDef.friction = friction;
         fixDef.density = density;
         fixDef.restitution = restitution;
+        fixDef.isSensor = isSensor;
 
         fixDef.shape = instance.GetEntityManager().GetShape(shape.ordinal());
 
@@ -253,6 +260,7 @@ public class CollidesComponent extends Component {
         json.writeField(restitution, "restitution");
         json.writeField(density, "density");
         json.writeField(friction, "friction");
+        json.writeField(isSensor, "isSensor");
 
         json.writeField(bodyType.toString(), "bodyType");
         json.writeField(rotationFixed, "rotationFixed");
@@ -279,6 +287,7 @@ public class CollidesComponent extends Component {
         restitution = jsonValue.getFloat("restitution");
         friction = jsonValue.getFloat("friction");
         density = jsonValue.getFloat("density");
+        isSensor = jsonValue.getBoolean("isSensor", false);
 
 
         bodyType = BodyDef.BodyType.valueOf(jsonValue.getString("bodyType"));

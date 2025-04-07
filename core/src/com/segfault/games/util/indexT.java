@@ -35,6 +35,8 @@ public enum indexT {
     BG_RED,
     TEST_N,
     TEST,
+    PLAYER_FIRE_PARTICLE,
+    FIRE_GRADIENT,
     ROCKET_GUN /* please try to keep this the last Enum, thank you */
 
 

@@ -2,5 +2,7 @@ package com.segfault.games.obj.comp;
 
 public enum Shaders {
     NORMAL,
-    LIGHT
+    LIGHT,
+    FIRE_PARTICLE,
+    BLOOM_SHADER,
 }

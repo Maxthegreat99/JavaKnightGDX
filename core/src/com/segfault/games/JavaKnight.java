@@ -36,7 +36,7 @@ public class JavaKnight extends ApplicationAdapter {
 		// with the zoom in consideration, the player see is aprox, 560 : 350 of the buffer
 		Box2D.init();
 		entityManager = new EntityManager(this);
-		renderer = new Renderer(assetManager, entityManager, entityManager.GetPhysicWorld(),FRAME_WIDTH, FRAME_HEIGHT, ZOOM);
+		renderer = new Renderer(assetManager, entityManager, entityManager.GetPhysicWorld(), FRAME_WIDTH, FRAME_HEIGHT, ZOOM);
 		mapLoader = new MapLoader();
 		mapLoader.CacheMaps();
 
