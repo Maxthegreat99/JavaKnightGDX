@@ -61,7 +61,9 @@ public class AssetManager {
         textures.put(indexT.TEST, atlas.findRegion("object-deferred"));
         textures.put(indexT.PLAYER_FIRE_PARTICLE, atlas.findRegion("firePart"));
         textures.put(indexT.FIRE_GRADIENT, atlas.findRegion("gradient"));
-
+        textures.put(indexT.FIRE_CORE, atlas.findRegion("particleCore"));
+        textures.put(indexT.FIRE_CORE_NOISE_VORONOI, atlas.findRegion("noiseFireVoronoi"));
+        textures.put(indexT.FIRE_CORE_NOISE_PERLIN, atlas.findRegion("noiseFire"));
 
 
         loadMeshes();

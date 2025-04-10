@@ -1,2 +1,3 @@
-- ordering by
-- particles rendering
+- Glow shader
+- 2nd particle emmiter
+- re-tweak everything till its good enough

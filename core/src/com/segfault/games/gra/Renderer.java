@@ -529,6 +529,144 @@ public class Renderer {
         shaders.put(Shaders.BLOOM_SHADER, bloomShader);
 
 
+        final String fireCoreVert = "attribute vec4 a_position;\n" +
+                "attribute vec2 a_texCoord0;\n" +
+                "attribute vec4 a_color;\n" +
+                "\n" +
+                "uniform mat4 u_projTrans;\n" +
+                "\n" +
+                "varying vec2 v_texCoord;\n" +
+                "varying vec4 v_color;\n" +
+                "\n" +
+                "void main() {\n" +
+                "    v_texCoord = a_texCoord0;\n" +
+                "    v_color = a_color;\n" +
+                "    gl_Position = u_projTrans * a_position;\n" +
+                "}\n";
+
+        final String fireCoreFrag = "#ifdef GL_ES\n" +
+                "precision mediump float;\n" +
+                "#endif\n" +
+                "\n" +
+                "// Textures\n" +
+                "uniform sampler2D u_mainTex;    // Main sprite shape\n" +
+                "uniform sampler2D u_noiseTex;   // Base dissolve noise\n" +
+                "uniform sampler2D u_distortTex; // Distortion noise\n" +
+                "uniform sampler2D u_gradient;" +
+                "\n" +
+                "// UV input\n" +
+                "varying vec2 v_texCoord;\n" +
+                "varying vec4 v_color;\n" +
+                "\n" +
+                "// Uniforms\n" +
+                "uniform float u_time;          // Time in seconds\n" +
+                "uniform float u_scale;         // Noise scale\n" +
+                "uniform float u_distortScale;  // Distortion scale\n" +
+                "uniform float u_cutoff;        // Smoothstep edge\n" +
+                "uniform float u_speed;         // Flow speed\n" +
+                "uniform float u_brightness;    // Brightness boost\n" +
+                "uniform float u_edgeWidth;     // Width of edge highlight\n" +
+                "uniform float u_particleAge;   // From 0 to 1\n" +
+                "uniform float u_particleShift; // Shift in age cutoff\n" +
+                "uniform float u_stretch;       // Y distortion stretch\n" +
+                "uniform bool u_multiply;       // Multiply or add noise\n" +
+                "uniform float u_startUgradient;\n" +
+                "uniform float u_startVgradient;\n" +
+                "uniform float u_gradientWidth;\n" +
+                "uniform float u_startUnoise;" +
+                "uniform float u_startVnoise;" +
+                "uniform float u_heightNoise;" +
+                "uniform float u_widthNoise;" +
+                "uniform float u_startUdistort;" +
+                "uniform float u_startVdistort;" +
+                "uniform float u_heightDistort;" +
+                "uniform float u_widthDistort;" +
+                "uniform float u_mainTexWidth;" +
+                "uniform float u_mainTexHeight;" +
+                "uniform float u_mainStartU;" +
+                "uniform float u_mainStartV;" +
+                "\n" +
+                "uniform vec4 u_tint;       // Main tint\n" +
+                "uniform vec4 u_edgeColor;  // Edge color\n" +
+                "\n" +
+                "void main()\n" +
+                "{\n" +
+                "    vec2 uv = v_texCoord;\n" +
+                "\n" +
+                "    // Simulate vertical scrolling noise\n" +
+                "    // Step 1: Normalize UV to [0,1] within the subregion\n" +
+                "vec2 noiseUV = (uv - vec2(u_mainStartU, u_mainStartV)) / vec2(u_mainTexWidth, u_mainTexHeight);\n" +
+                "\n" +
+                "// Step 2: Scroll and stretch vertically\n" +
+                "noiseUV.y = (noiseUV.y - u_time * u_speed) * u_stretch * u_scale;\n" +
+                "\n" +
+                "// Step 3: Wrap Y back into [0,1] to avoid going out of bounds\n" +
+                "noiseUV.y = mod(noiseUV.y, 1.0);\n" +
+                "noiseUV.x = mod(noiseUV.x * u_scale, 1.0);" +
+                "\n" +
+                "// Step 4: Remap UV back to the subregion on the full texture\n" +
+                "vec2 sampleUV = vec2(u_startUnoise, u_startVnoise) + noiseUV * vec2(u_widthNoise, u_heightNoise);\n" +
+                "\n" +
+                "\n" +
+                "    vec2 distortUV = (uv - vec2(u_mainStartU, u_mainStartV)) / vec2(u_mainTexWidth, u_mainTexHeight);\n" +
+                "    distortUV.y = (distortUV.y - u_time * u_speed);\n" +
+                "    distortUV.y = mod(distortUV.y * u_distortScale, 1.0);" +
+                "   distortUV.x = mod(distortUV.x * u_distortScale, 1.0);" +
+                "    vec2 sampleDistortUV = vec2(u_startUdistort, u_startVdistort) + distortUV * vec2(u_widthDistort, u_heightDistort);" +
+                "\n" +
+                "    // Sample distort noise\n" +
+                "    float distort = texture2D(u_distortTex, sampleDistortUV).r;\n" +
+                "\n" +
+                "    // Sample base noise\n" +
+                "    float baseNoise = texture2D(u_noiseTex, sampleUV).r;\n" +
+                "\n" +
+                "    // Combine them\n" +
+                "    float finalNoise = u_multiply ? (baseNoise * distort * 2.0) : ((baseNoise + distort) * 2.0);\n" +
+                "\n" +
+                "    // Sample main shape\n" +
+                "    float shapeAlpha = dot(texture2D(u_mainTex, uv).rgb, vec3(0.2126, 0.7152, 0.0722));\n" +
+                "\n" +
+                "    // Dissolve factor based on age\n" +
+                "    float age = u_particleAge - u_particleShift;\n" +
+                "    float dis" +
+                "solve = smoothstep(age - u_cutoff, age, finalNoise * shapeAlpha);\n" +
+                "\n" +
+                "    // Edge highlight\n" +
+                "    float edge = dissolve * step(finalNoise * shapeAlpha, age + u_edgeWidth) * shapeAlpha;\n" +
+                "\n" +
+                "    // Final color\n" +
+                "    vec4 result = vec4(0.0);\n" +
+                "    result.rgb = u_tint.rgb * dissolve * shapeAlpha;\n" +
+                "    result.rgb += result.rgb * u_brightness;\n" +
+                "\n" +
+                "    // Remove edge from main color and add it as glow\n" +
+                "    result.rgb -= edge * u_tint.rgb;\n" +
+                "    result.rgb += edge * u_edgeColor.rgb;\n" +
+                "\n" +
+                "    result.a = dissolve * shapeAlpha;\n" +
+                "    result *= texture2D(u_gradient, vec2(u_startUgradient + u_gradientWidth * u_particleAge, u_startVgradient)); // Per-vertex tint (optional)\n" +
+                "\n" +
+                "    gl_FragColor = result;\n" +
+                "}";
+
+
+
+        ShaderProgram fireCoreShader = new ShaderProgram(fireCoreVert,
+                fireCoreFrag);
+        if (!fireCoreShader.isCompiled()) {
+            Gdx.app.log("ERROR", fireCoreShader.getLog());
+        }
+
+        fireCoreShader.bind();
+        fireCoreShader.setUniformi("u_mainTex", 0);
+        fireCoreShader.setUniformi("u_noiseTex", 1);
+        fireCoreShader.setUniformi("u_distortTex", 2);
+        fireCoreShader.setUniformi("u_gradient", 3);
+        fireCoreShader.end();
+
+        shaders.put(Shaders.FIRE_CORE, fireCoreShader);
+
+
 
     }
 

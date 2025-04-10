@@ -96,17 +96,19 @@ public class JavaKnight extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		renderer.Dispose();
-		assetManager.Dispose();
-		entityManager.Dispose();
-		mapLoader.maps.forEach(x -> x.value.dispose());
-		mapLoader.maps.clear();
 
 		texts.clear();
 		for (BitmapFontCache i : staticFonts)
 			i.clear();
 
 		staticFonts.clear();
+
+		renderer.Dispose();
+		assetManager.Dispose();
+		entityManager.Dispose();
+		mapLoader.maps.forEach(x -> x.value.dispose());
+		mapLoader.maps.clear();
+		super.dispose();
 
 	}
 

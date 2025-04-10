@@ -5,4 +5,5 @@ public enum Shaders {
     LIGHT,
     FIRE_PARTICLE,
     BLOOM_SHADER,
+    FIRE_CORE
 }

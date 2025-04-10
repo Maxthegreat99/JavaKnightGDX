@@ -37,6 +37,9 @@ public enum indexT {
     TEST,
     PLAYER_FIRE_PARTICLE,
     FIRE_GRADIENT,
+    FIRE_CORE_NOISE_VORONOI,
+    FIRE_CORE_NOISE_PERLIN,
+    FIRE_CORE,
     ROCKET_GUN /* please try to keep this the last Enum, thank you */
 
 
